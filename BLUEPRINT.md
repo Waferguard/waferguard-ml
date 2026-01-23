@@ -1,0 +1,556 @@
+# WaferGuard ML - Project Blueprint
+
+**Team:** Milos, Hernan, Rolando, Oliver
+**Duration:** 10-12 weeks (5-6 sprints)
+**Sprint Length:** 2 weeks
+
+---
+
+## System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Data["Data Ingestion Layer"]
+        SECOM[(SECOM Sensor Data)]
+        WM811K[(WM811K Wafer Images)]
+        VAL[Data Validation]
+    end
+
+    subgraph ML["Machine Learning Pipeline"]
+        PRE[Preprocessing]
+        FE[Feature Engineering]
+        CNN[CNN Model]
+        AE[Autoencoder]
+        ENS[Ensemble Model]
+    end
+
+    subgraph INF["Inference & Alert System"]
+        API[FastAPI Endpoint]
+        CONF[Confidence Scoring]
+        ALERT[Alert Generator]
+    end
+
+    subgraph VIZ["Visualization Dashboard"]
+        STREAM[Streamlit Dashboard]
+        KPI[KPI Metrics]
+        GCAM[GradCAM Views]
+        HIST[Historical Trends]
+    end
+
+    subgraph MES["MES Integration"]
+        SIM[MES Simulator]
+        HOOK[Integration Hooks]
+    end
+
+    SECOM --> VAL
+    WM811K --> VAL
+    VAL --> PRE
+    PRE --> FE
+    FE --> CNN
+    FE --> AE
+    CNN --> ENS
+    AE --> ENS
+    ENS --> API
+    API --> CONF
+    CONF --> ALERT
+    API --> STREAM
+    ALERT --> STREAM
+    STREAM --> KPI
+    STREAM --> GCAM
+    STREAM --> HIST
+    API --> HOOK
+    SIM --> HOOK
+```
+
+---
+
+## Data Flow
+
+```mermaid
+flowchart LR
+    A[Raw Data] --> B[Preprocessing]
+    B --> C[Feature Engineering]
+    C --> D[Model Training]
+    D --> E[Validation]
+    E --> F[Deployment]
+    F --> G[Real-time Inference]
+    G --> H[Dashboard]
+    H --> I[Alerts]
+
+    style A fill:#e1f5fe
+    style D fill:#fff3e0
+    style H fill:#e8f5e9
+    style I fill:#ffebee
+```
+
+---
+
+## Epics Overview
+
+### Recommended Epic Structure
+
+| Epic ID | Name | Description | Phase Alignment |
+|---------|------|-------------|-----------------|
+| **KAN-1** | Data Pipeline & Foundation | Environment setup, data acquisition, EDA, preprocessing | Phase 1-2 |
+| **KAN-2** | Anomaly Detection (ML) Model | CNN + Autoencoder development, training, validation | Phase 3 |
+| **KAN-3** | MES Integration & API | FastAPI inference endpoints, MES simulation, alert system | Phase 4 |
+| **KAN-4** | Analytics + Dashboard | Streamlit dashboard, visualizations, KPIs, GradCAM | Phase 4 |
+| **KAN-5** | Governance & Audit-ability | Model versioning (MLflow), documentation, evaluation reports | Phase 5 |
+
+### Why This Structure?
+
+Your original epics were solid. I recommend:
+- **Split KAN-1** into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2)
+- **Keep KAN-2** (MES Integration) as KAN-3
+- **Keep KAN-3** (Analytics+Dashboard) as KAN-4
+- **Keep KAN-4** (Governance) as KAN-5
+
+This gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation
+
+### Epic Dependency Flow
+
+```mermaid
+flowchart LR
+    KAN1[KAN-1<br/>Data Pipeline]
+    KAN2[KAN-2<br/>ML Model]
+    KAN3[KAN-3<br/>MES Integration]
+    KAN4[KAN-4<br/>Dashboard]
+    KAN5[KAN-5<br/>Governance]
+
+    KAN1 --> KAN2
+    KAN2 --> KAN3
+    KAN2 --> KAN4
+    KAN3 --> KAN4
+    KAN4 --> KAN5
+    KAN3 --> KAN5
+
+    style KAN1 fill:#bbdefb,color:#000000
+    style KAN2 fill:#c8e6c9,color:#000000
+    style KAN3 fill:#fff9c4,color:#000000
+    style KAN4 fill:#ffccbc,color:#000000
+    style KAN5 fill:#e1bee7,color:#000000
+```
+
+---
+
+## Sprint Timeline
+
+```mermaid
+gantt
+    title WaferGuard ML - Sprint Timeline
+    dateFormat  YYYY-MM-DD
+    section KAN-1 Data Pipeline
+        Sprint 1 - Foundation     :s1, 2026-01-27, 14d
+        Sprint 2 - Data Pipeline  :s2, after s1, 14d
+    section KAN-2 ML Model
+        Sprint 3 - Model Dev      :s3, after s2, 14d
+        Sprint 4 - Refinement     :s4, after s3, 14d
+    section KAN-3 & KAN-4
+        Sprint 4 - API            :s4b, after s3, 14d
+        Sprint 5 - Dashboard      :s5, after s4, 14d
+    section KAN-5 Governance
+        Sprint 6 - Documentation  :s6, after s5, 14d
+```
+
+---
+
+## Sprint Breakdown
+
+### Sprint 1: Foundation (Week 1-2)
+**Epic:** KAN-1 (Data Pipeline & Foundation)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-1-001 | Set up Python environment (requirements.txt, venv) | TBD | 2 | TODO |
+| KAN-1-002 | Initialize Git repo with branching strategy | TBD | 1 | TODO |
+| KAN-1-003 | Download SECOM dataset + verify integrity | TBD | 2 | TODO |
+| KAN-1-004 | Download WM811K wafer images + verify | TBD | 2 | TODO |
+| KAN-1-005 | EDA notebook - SECOM sensor data | TBD | 3 | TODO |
+| KAN-1-006 | EDA notebook - WM811K image analysis | TBD | 3 | TODO |
+| KAN-1-007 | Data quality assessment report | TBD | 3 | TODO |
+| KAN-1-008 | Set up Jira board with epics/stories | TBD | 2 | TODO |
+| KAN-1-009 | Set up MLflow for experiment tracking | TBD | 3 | TODO |
+
+**Sprint 1 Goal:** Development environment ready, datasets loaded, initial EDA complete
+
+---
+
+### Sprint 2: Data Pipeline (Week 3-4)
+**Epic:** KAN-1 (Data Pipeline & Foundation)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-1-010 | SECOM preprocessing pipeline (missing values, outliers) | TBD | 5 | TODO |
+| KAN-1-011 | Feature engineering for sensor data | TBD | 5 | TODO |
+| KAN-1-012 | WM811K image preprocessing (resize, normalize) | TBD | 3 | TODO |
+| KAN-1-013 | Image augmentation strategy (rotation, flip) | TBD | 3 | TODO |
+| KAN-1-014 | Train/validation/test split implementation | TBD | 2 | TODO |
+| KAN-1-015 | Data loader classes (PyTorch/TensorFlow) | TBD | 5 | TODO |
+| KAN-1-016 | Handle class imbalance (SMOTE/class weights) | TBD | 3 | TODO |
+
+**Sprint 2 Goal:** Clean, processed datasets ready for model training
+
+---
+
+### Sprint 3: ML Model Development (Week 5-6)
+**Epic:** KAN-2 (Anomaly Detection Model)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-2-001 | CNN architecture design for wafer classification | TBD | 5 | TODO |
+| KAN-2-002 | Implement CNN model (PyTorch/TensorFlow) | TBD | 5 | TODO |
+| KAN-2-003 | Autoencoder architecture for sensor anomaly | TBD | 5 | TODO |
+| KAN-2-004 | Implement Autoencoder model | TBD | 5 | TODO |
+| KAN-2-005 | Training pipeline with early stopping | TBD | 3 | TODO |
+| KAN-2-006 | Hyperparameter tuning setup | TBD | 3 | TODO |
+| KAN-2-007 | Baseline model benchmarking | TBD | 3 | TODO |
+
+**Sprint 3 Goal:** Working CNN and Autoencoder models with baseline metrics
+
+---
+
+### Sprint 4: Model Refinement + API (Week 7-8)
+**Epics:** KAN-2 (Model), KAN-3 (MES Integration)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-2-008 | Model validation and cross-validation | TBD | 3 | TODO |
+| KAN-2-009 | Ensemble model (CNN + Autoencoder) | TBD | 5 | TODO |
+| KAN-2-010 | GradCAM implementation for explainability | TBD | 5 | TODO |
+| KAN-3-001 | FastAPI inference endpoint design | TBD | 3 | TODO |
+| KAN-3-002 | Implement /predict endpoint | TBD | 5 | TODO |
+| KAN-3-003 | Confidence scoring and threshold logic | TBD | 3 | TODO |
+| KAN-3-004 | MES simulation mock data generator | TBD | 3 | TODO |
+| KAN-3-005 | Alert generation logic | TBD | 3 | TODO |
+
+**Sprint 4 Goal:** Optimized models, working inference API
+
+---
+
+### Sprint 5: Dashboard Development (Week 9-10)
+**Epic:** KAN-4 (Analytics + Dashboard)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-4-001 | Dashboard wireframes in Figma | TBD | 3 | TODO |
+| KAN-4-002 | Streamlit app skeleton | TBD | 2 | TODO |
+| KAN-4-003 | Real-time anomaly detection view | TBD | 5 | TODO |
+| KAN-4-004 | Historical trend analysis charts | TBD | 5 | TODO |
+| KAN-4-005 | Model confidence visualization | TBD | 3 | TODO |
+| KAN-4-006 | GradCAM attention map display | TBD | 5 | TODO |
+| KAN-4-007 | Production KPIs (OEE, defect rate) | TBD | 3 | TODO |
+| KAN-4-008 | Alert notification panel | TBD | 3 | TODO |
+| KAN-4-009 | Interactive filtering and drill-down | TBD | 5 | TODO |
+
+**Sprint 5 Goal:** Functional dashboard with all visualizations
+
+---
+
+### Sprint 6: Evaluation & Documentation (Week 11-12)
+**Epic:** KAN-5 (Governance & Audit-ability)
+
+| Task ID | Task | Owner | Story Points | Status |
+|---------|------|-------|--------------|--------|
+| KAN-5-001 | Comprehensive model evaluation report | TBD | 5 | TODO |
+| KAN-5-002 | Comparison vs baseline (SPC, manual) | TBD | 5 | TODO |
+| KAN-5-003 | Model versioning documentation | TBD | 3 | TODO |
+| KAN-5-004 | API documentation (OpenAPI/Swagger) | TBD | 3 | TODO |
+| KAN-5-005 | User guide for dashboard | TBD | 3 | TODO |
+| KAN-5-006 | Technical architecture documentation | TBD | 3 | TODO |
+| KAN-5-007 | Final presentation slides | TBD | 5 | TODO |
+| KAN-5-008 | Live demo preparation | TBD | 3 | TODO |
+| KAN-5-009 | Code cleanup and refactoring | TBD | 3 | TODO |
+
+**Sprint 6 Goal:** Complete documentation, presentation ready
+
+---
+
+## Work Stream Assignments
+
+| Work Stream | Specialist | Assistant | Primary Epics |
+|-------------|------------|-----------|---------------|
+| Data Engineering & ML Pipeline | TBD | TBD | KAN-1 |
+| Model Development & Training | TBD | TBD | KAN-2 |
+| Dashboard & Integration | TBD | TBD | KAN-3, KAN-4 |
+| Evaluation & Documentation | TBD | TBD | KAN-5 |
+
+### Team Structure
+
+```mermaid
+flowchart TB
+    subgraph Team["WaferGuard ML Team"]
+        subgraph WS1["Data Engineering"]
+            DE1[Specialist: TBD]
+            DE2[Assistant: TBD]
+        end
+        subgraph WS2["Model Development"]
+            MD1[Specialist: TBD]
+            MD2[Assistant: TBD]
+        end
+        subgraph WS3["Dashboard & Integration"]
+            DI1[Specialist: TBD]
+            DI2[Assistant: TBD]
+        end
+        subgraph WS4["Evaluation & Docs"]
+            ED1[Specialist: TBD]
+            ED2[Assistant: TBD]
+        end
+    end
+
+    WS1 -->|Data| WS2
+    WS2 -->|Models| WS3
+    WS3 -->|System| WS4
+
+    style WS1 fill:#bbdefb
+    style WS2 fill:#c8e6c9
+    style WS3 fill:#fff9c4
+    style WS4 fill:#e1bee7
+```
+
+---
+
+## ML Model Architecture
+
+```mermaid
+flowchart TB
+    subgraph Input["Input Data"]
+        IMG[Wafer Images<br/>WM811K]
+        SEN[Sensor Data<br/>SECOM]
+    end
+
+    subgraph CNN["CNN Pipeline"]
+        C1[Conv2D + ReLU]
+        C2[MaxPool]
+        C3[Conv2D + ReLU]
+        C4[MaxPool]
+        C5[Flatten]
+        C6[Dense + Softmax]
+    end
+
+    subgraph AE["Autoencoder Pipeline"]
+        E1[Encoder]
+        E2[Latent Space]
+        E3[Decoder]
+        E4[Reconstruction Error]
+    end
+
+    subgraph Ensemble["Ensemble Decision"]
+        COMB[Score Combination]
+        THRESH[Threshold Logic]
+        OUT[Final Prediction]
+    end
+
+    IMG --> C1 --> C2 --> C3 --> C4 --> C5 --> C6
+    SEN --> E1 --> E2 --> E3 --> E4
+    C6 --> COMB
+    E4 --> COMB
+    COMB --> THRESH --> OUT
+
+    style CNN fill:#e3f2fd
+    style AE fill:#f3e5f5
+    style Ensemble fill:#e8f5e9
+```
+
+---
+
+## Technology Stack (Recommended)
+
+```
+Core:           Python 3.9+
+ML Framework:   PyTorch (recommended) or TensorFlow/Keras
+Data:           NumPy, Pandas, Scikit-learn, OpenCV
+Dashboard:      Streamlit (faster dev) or Plotly Dash
+API:            FastAPI
+Tracking:       MLflow
+Explainability: SHAP, GradCAM
+Version Control: Git + GitHub
+Project Mgmt:   Jira
+```
+
+### Tech Stack Diagram
+
+```mermaid
+flowchart LR
+    subgraph Frontend["Frontend"]
+        ST[Streamlit]
+        FIG[Figma]
+    end
+
+    subgraph Backend["Backend"]
+        FA[FastAPI]
+        ML[MLflow]
+    end
+
+    subgraph ML_Stack["ML Stack"]
+        PT[PyTorch]
+        SK[Scikit-learn]
+        CV[OpenCV]
+    end
+
+    subgraph Data_Stack["Data"]
+        PD[Pandas]
+        NP[NumPy]
+    end
+
+    subgraph DevOps["DevOps"]
+        GIT[Git/GitHub]
+        JIRA[Jira]
+    end
+
+    Data_Stack --> ML_Stack --> Backend --> Frontend
+    DevOps -.-> Backend
+    DevOps -.-> ML_Stack
+```
+
+---
+
+## Key Datasets
+
+| Dataset | Description | Size | Source |
+|---------|-------------|------|--------|
+| SECOM | Sensor data (590 features) | ~1,500 samples | UCI ML Repository |
+| WM811K | Wafer map images | ~38,000 images | Kaggle |
+
+### Data Pipeline Overview
+
+```mermaid
+flowchart LR
+    subgraph Sources["Data Sources"]
+        S1[(SECOM<br/>UCI Repository)]
+        S2[(WM811K<br/>Kaggle)]
+    end
+
+    subgraph Processing["Processing"]
+        P1[Missing Value<br/>Imputation]
+        P2[Outlier<br/>Detection]
+        P3[Normalization]
+        P4[Image Resize<br/>& Augment]
+    end
+
+    subgraph Output["Processed Data"]
+        O1[Train Set<br/>70%]
+        O2[Val Set<br/>15%]
+        O3[Test Set<br/>15%]
+    end
+
+    S1 --> P1 --> P2 --> P3 --> O1 & O2 & O3
+    S2 --> P4 --> O1 & O2 & O3
+
+    style Sources fill:#e3f2fd
+    style Processing fill:#fff8e1
+    style Output fill:#e8f5e9
+```
+
+---
+
+## Success Criteria
+
+| Metric | Target |
+|--------|--------|
+| CNN Accuracy | >90% |
+| False Positive Rate | <5% |
+| Inference Latency | <500ms |
+| Dashboard Refresh | <2s |
+
+### Story Points by Epic
+
+```mermaid
+pie showData
+    title Story Points Distribution
+    "KAN-1 Data Pipeline" : 47
+    "KAN-2 ML Model" : 42
+    "KAN-3 MES Integration" : 17
+    "KAN-4 Dashboard" : 34
+    "KAN-5 Governance" : 33
+```
+
+---
+
+## Inference Flow
+
+```mermaid
+sequenceDiagram
+    participant MES as MES System
+    participant API as FastAPI
+    participant Model as ML Model
+    participant DB as MLflow
+    participant Dash as Dashboard
+    participant Eng as Process Engineer
+
+    MES->>API: POST /predict (wafer data)
+    API->>Model: Load model from registry
+    Model->>DB: Get latest model version
+    DB-->>Model: Return model weights
+    Model->>Model: Run inference
+    Model-->>API: Prediction + confidence
+    API->>API: Apply threshold logic
+
+    alt Anomaly Detected
+        API->>Dash: Send alert
+        Dash->>Eng: Display notification
+        API-->>MES: Response (anomaly: true)
+    else Normal
+        API-->>MES: Response (anomaly: false)
+    end
+
+    API->>Dash: Update real-time view
+```
+
+---
+
+## Sprint Workflow
+
+```mermaid
+stateDiagram-v2
+    [*] --> Planning: Sprint Start
+    Planning --> InProgress: Tasks Assigned
+    InProgress --> CodeReview: PR Created
+    CodeReview --> Testing: Approved
+    Testing --> Done: Tests Pass
+    CodeReview --> InProgress: Changes Requested
+    Testing --> InProgress: Tests Fail
+    Done --> [*]: Sprint End
+
+    note right of Planning: 2 hour session
+    note right of InProgress: Daily standups
+    note right of Done: Sprint review
+```
+
+---
+
+## Current Sprint Status
+
+**Active Sprint:** Sprint 1 - Foundation
+**Sprint Start:** TBD
+**Sprint End:** TBD
+
+### Sprint 1 Progress
+- [ ] Environment setup
+- [ ] Data acquisition
+- [ ] EDA complete
+- [ ] Jira configured
+
+---
+
+## Meeting Schedule
+
+| Meeting | Frequency | Duration | Day/Time |
+|---------|-----------|----------|----------|
+| Sprint Planning | Bi-weekly | 2 hours | Sprint Day 1 |
+| Daily Standup | Daily | 15 min | TBD |
+| Sprint Review | Bi-weekly | 1.5 hours | Sprint Last Day |
+| Sprint Retro | Bi-weekly | 1 hour | Sprint Last Day |
+
+---
+
+## Quick Links
+
+- [ ] Jira Board: TBD
+- [ ] GitHub Repo: TBD
+- [ ] Figma Designs: TBD
+- [ ] MLflow Dashboard: TBD
+- [ ] Google Drive: TBD
+
+---
+
+*Last Updated: 2026-01-23*
