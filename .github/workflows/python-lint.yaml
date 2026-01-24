@@ -1,0 +1,36 @@
+name: Python Linting
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v2
+    - uses: aws-actions/configure-aws-credentials@v1
+      if: ${{ inputs.useAwsCodeArtifact == 'true' }}
+      with:
+        aws-access-key-id: ${{ inputs.awsAccessKeyId }}
+        aws-secret-access-key: ${{ inputs.awsSecretAccessKey }}
+        aws-region: eu-central-1
+    - uses: actions/setup-python@v2
+      with:
+        python-version: ${{ inputs.pythonVersion }}
+    - name: Install requirements
+      run: |
+        cd ${{ inputs.workingDirectory }}
+        pip install poetry==${{ inputs.poetryVersion }}
+        if [ "${{ inputs.useAwsCodeArtifact }}" == 'true' ]; then
+          CODEARTIFACT_AUTH_TOKEN=`aws codeartifact get-authorization-token --domain sccc --domain-owner 448462418772 --region us-east-1 --query authorizationToken --output text`
+          poetry config http-basic.aws_codeartifact  user $CODEARTIFACT_AUTH_TOKEN
+        fi
+        poetry install --no-root
+      shell: bash
+    - name: Run linting
+      run: |
+        cd ${{ inputs.workingDirectory }}
+        poetry run ruff format --check ${{ inputs.ruffCheckDirectory }}
+        poetry run ruff check ${{ inputs.ruffCheckDirectory }}
+        poetry run bandit -r ${{ inputs.banditCheckDirectory }}
+        poetry run mypy ${{ inputs.mypyCheckDirectory }}
+        if [ "${{ inputs.useVulture }}" == "true" ]; then
+          poetry run vulture ${{ inputs.vultureCheckDirectory }} vulture_whitelist
+        fi
+      shell: bash
