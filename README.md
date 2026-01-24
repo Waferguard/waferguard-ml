@@ -33,3 +33,17 @@ poetry install --no-root
   ```bash
   poetry run ruff format .
   ```
+
+# Download Datasets
+
+## Kaggle
+
+```bash
+poetry run python data/download_kaggle_data.py
+```
+
+## SECOM
+
+```bash
+poetry run python data/download_secom_data.py
+```
