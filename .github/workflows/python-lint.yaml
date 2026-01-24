@@ -15,13 +15,11 @@ jobs:
         python-version: "3.11"
     - name: Install requirements
       run: |
-        cd .
         pip install poetry==2.2.1
         poetry install --no-root
       shell: bash
     - name: Run linting
       run: |
-        cd .
         poetry run ruff format --check .
         poetry run ruff check .
       shell: bash
