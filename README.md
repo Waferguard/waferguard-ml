@@ -4,7 +4,7 @@ Github for Waferguard-ML. an AI-powered anomaly detection system designed to rev
 # Set up
 
 - Install python 3.11
-- Install (poetry )[https://python-poetry.org/docs/#installation]
+- Install [poetry](https://python-poetry.org/docs/#installation)
 - Set up virtual environment with `poetry install`
 
 ```bash
