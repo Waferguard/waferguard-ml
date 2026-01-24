@@ -1,4 +1,4 @@
-name: clinical-api
+name: waferguard-ml
 on:
   workflow_dispatch:
   push:
