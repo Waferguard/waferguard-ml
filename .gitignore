@@ -76,3 +76,6 @@ logs/
 # OS
 Thumbs.db
 .DS_Store
+
+data/mixedtype-wafer-defect-datasets
+data/secom
