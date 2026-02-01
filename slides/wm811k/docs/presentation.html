@@ -201,9 +201,49 @@ Deloitte AI Team
 <section id="four-types-of-multi-defect-patterns" class="slide level2">
 <h2>Four Types of Multi-Defect Patterns</h2>
 
-
-
 <img data-src="images/four-defects.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="defect-patter-labels" class="slide level2">
+<h2>Defect Patter Labels</h2>
+<ul>
+<li>The labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).
+<ul>
+<li>Normal: [0, 0, 0, 0, 0, 0, 0, 0]</li>
+<li>Center: [1, 0, 0, 0, 0, 0, 0, 0]</li>
+<li>Donut: [0, 1, 0, 0, 0, 0, 0, 0]</li>
+<li>Edge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]</li>
+<li>Center-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]</li>
+</ul></li>
+</ul>
+</section>
+<section id="patern-distribution" class="slide level2">
+<h2>Patern Distribution</h2>
+
+<img data-src="images/pattern-distribution.png" class="quarto-figure quarto-figure-center r-stretch"></section>
+<section id="dataset-summary" class="slide level2">
+<h2>Dataset Summary</h2>
+<ul>
+<li>38K Wafer Maps</li>
+<li>52x52 Pixel Resolution</li>
+<li>One-Hot Encoded Pattern Labels</li>
+<li>38 types in the mixed-type wafer map defect dataset
+<ul>
+<li>1 normal type</li>
+<li>8 single defect types</li>
+<li>29 mixed-type (2: 13, 3: 12, 4: 4) defect types.</li>
+</ul></li>
+</ul>
+</section>
+<section id="data-quality-excelent" class="slide level2">
+<h2>Data Quality: Excelent</h2>
+<ul>
+<li>No missing values</li>
+<li>Complete Coverage of Defect Types</li>
+<li>Mostly Balanced Classes</li>
+<li>Ready for Modeling</li>
+</ul>
+
+
+</section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">

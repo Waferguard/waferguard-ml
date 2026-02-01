@@ -68,3 +68,32 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 
 ## Four Types of Multi-Defect Patterns
 ![](images/four-defects.png){fig-align="center"}
+
+## Defect Patter Labels
+
+- The labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).
+  - Normal: [0, 0, 0, 0, 0, 0, 0, 0]
+  - Center: [1, 0, 0, 0, 0, 0, 0, 0]
+  - Donut: [0, 1, 0, 0, 0, 0, 0, 0]
+  - Edge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]
+  - Center-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]
+
+## Patern Distribution
+
+![](images/pattern-distribution.png){fig-align="center"}
+
+## Dataset Summary
+
+- 38K Wafer Maps
+- 52x52 Pixel Resolution
+- One-Hot Encoded Pattern Labels
+- 38 types in the mixed-type wafer map defect dataset
+  - 1 normal type
+  - 8 single defect types
+  - 29 mixed-type (2: 13, 3: 12, 4: 4) defect types.
+
+## Data Quality: Excelent
+- No missing values
+- Complete Coverage of Defect Types
+- Mostly Balanced Classes
+- Ready for Modeling
