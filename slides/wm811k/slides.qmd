@@ -10,7 +10,6 @@ format:
     slide-number: true
     preview-links: auto
     footer: "WaferGuard ML"
-engine: knitr
 ---
 
 ## What is a Semiconductor Wafer?

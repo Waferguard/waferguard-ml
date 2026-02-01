@@ -1,3 +1,6 @@
+# WaferGuard ML
+- [Project Blueprint](BLUEPRINT.md)
+
 # 📊 Presentations
 
 Welcome! Click a presentation below.
