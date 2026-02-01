@@ -18,6 +18,27 @@
     "href": "presentation.html#wafer-images-dataset",
     "title": "WaferGuard ML",
     "section": "Wafer Images Dataset",
-    "text": "Wafer Images Dataset\n\nDefect data of mixed-type wafer map, 0 means blank spot, 1 represents normal die that passed the electrical test, and 2 represents broken die that failed the electrical test. The data shape is 52×52.\n\nThese wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes."
+    "text": "Wafer Images Dataset\n\nThe data shape is 52×52.\n0 means blank spot\n1 represents normal die that passed the electrical test\n2 represents broken die that failed the electrical test.\nThese wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes."
+  },
+  {
+    "objectID": "presentation.html#example-of-a-normal-wafer",
+    "href": "presentation.html#example-of-a-normal-wafer",
+    "title": "WaferGuard ML",
+    "section": "Example of a Normal Wafer",
+    "text": "Example of a Normal Wafer"
+  },
+  {
+    "objectID": "presentation.html#defect-patterns",
+    "href": "presentation.html#defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Defect Patterns",
+    "text": "Defect Patterns\n8 distinct defect categories analyzed in our dataset"
+  },
+  {
+    "objectID": "presentation.html#two-types-of-multi-defect-patterns",
+    "href": "presentation.html#two-types-of-multi-defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Two Types of Multi-Defect Patterns",
+    "text": "Two Types of Multi-Defect Patterns"
   }
 ]

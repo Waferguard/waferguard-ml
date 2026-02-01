@@ -48,10 +48,21 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 
 ## Wafer Images Dataset
 
-- Defect data of mixed-type wafer map, 0 means blank spot, 1 represents normal die that passed the electrical test, and 2 represents broken die that failed the electrical test. The data shape is 52×52.
-  - These wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes.
+- The data shape is 52×52.
+- 0 means blank spot
+- 1 represents normal die that passed the electrical test
+- 2 represents broken die that failed the electrical test.
+- These wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes.
 
+---
 
+## Example of a Normal Wafer
+![](images/normal-wafer.png){fig-align="center"}
 
-![](images/single-defect-types.png)
+## Defect Patterns
 
+8 distinct defect categories analyzed in our dataset
+![](images/single-defect-types.png){fig-align="center"}
+
+## Two Types of Multi-Defect Patterns
+![](images/two-defects.png){fig-align="center"}
