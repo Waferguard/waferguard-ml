@@ -67,6 +67,10 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<meta name="mermaid-theme" content="neutral">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -91,7 +95,12 @@ ul.task-list li input[type="checkbox"] {
 <hr>
 <section id="system-architecture" class="level2">
 <h2 class="anchored" data-anchor-id="system-architecture">System Architecture</h2>
-<pre class="mermaid"><code>flowchart TB
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
     subgraph Data["Data Ingestion Layer"]
         SECOM[(SECOM Sensor Data)]
         WM811K[(WM811K Wafer Images)]
@@ -141,12 +150,24 @@ ul.task-list li input[type="checkbox"] {
     STREAM --&gt; GCAM
     STREAM --&gt; HIST
     API --&gt; HOOK
-    SIM --&gt; HOOK</code></pre>
+    SIM --&gt; HOOK
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="data-flow" class="level2">
 <h2 class="anchored" data-anchor-id="data-flow">Data Flow</h2>
-<pre class="mermaid"><code>flowchart LR
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
     A[Raw Data] --&gt; B[Preprocessing]
     B --&gt; C[Feature Engineering]
     C --&gt; D[Model Training]
@@ -159,7 +180,13 @@ ul.task-list li input[type="checkbox"] {
     style A fill:#e1f5fe
     style D fill:#fff3e0
     style H fill:#e8f5e9
-    style I fill:#ffebee</code></pre>
+    style I fill:#ffebee
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="epics-overview" class="level2">
@@ -222,7 +249,12 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="epic-dependency-flow" class="level3">
 <h3 class="anchored" data-anchor-id="epic-dependency-flow">Epic Dependency Flow</h3>
-<pre class="mermaid"><code>flowchart LR
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
     KAN1[KAN-1&lt;br/&gt;Data Pipeline]
     KAN2[KAN-2&lt;br/&gt;ML Model]
     KAN3[KAN-3&lt;br/&gt;MES Integration]
@@ -240,13 +272,24 @@ ul.task-list li input[type="checkbox"] {
     style KAN2 fill:#c8e6c9,color:#000000
     style KAN3 fill:#fff9c4,color:#000000
     style KAN4 fill:#ffccbc,color:#000000
-    style KAN5 fill:#e1bee7,color:#000000</code></pre>
+    style KAN5 fill:#e1bee7,color:#000000
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
 <section id="sprint-timeline" class="level2">
 <h2 class="anchored" data-anchor-id="sprint-timeline">Sprint Timeline</h2>
-<pre class="mermaid"><code>gantt
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">gantt
     title WaferGuard ML - Sprint Timeline
     dateFormat  YYYY-MM-DD
     section KAN-1 Data Pipeline
@@ -259,7 +302,13 @@ ul.task-list li input[type="checkbox"] {
         Sprint 4 - API            :s4b, after s3, 14d
         Sprint 5 - Dashboard      :s5, after s4, 14d
     section KAN-5 Governance
-        Sprint 6 - Documentation  :s6, after s5, 14d</code></pre>
+        Sprint 6 - Documentation  :s6, after s5, 14d
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="sprint-breakdown" class="level2">
@@ -790,7 +839,12 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <section id="team-structure" class="level3">
 <h3 class="anchored" data-anchor-id="team-structure">Team Structure</h3>
-<pre class="mermaid"><code>flowchart TB
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
     subgraph Team["WaferGuard ML Team"]
         subgraph WS1["Data Engineering"]
             DE1[Specialist: TBD]
@@ -817,13 +871,24 @@ ul.task-list li input[type="checkbox"] {
     style WS1 fill:#bbdefb
     style WS2 fill:#c8e6c9
     style WS3 fill:#fff9c4
-    style WS4 fill:#e1bee7</code></pre>
+    style WS4 fill:#e1bee7
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
 <section id="ml-model-architecture" class="level2">
 <h2 class="anchored" data-anchor-id="ml-model-architecture">ML Model Architecture</h2>
-<pre class="mermaid"><code>flowchart TB
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
     subgraph Input["Input Data"]
         IMG[Wafer Images&lt;br/&gt;WM811K]
         SEN[Sensor Data&lt;br/&gt;SECOM]
@@ -859,7 +924,13 @@ ul.task-list li input[type="checkbox"] {
 
     style CNN fill:#e3f2fd
     style AE fill:#f3e5f5
-    style Ensemble fill:#e8f5e9</code></pre>
+    style Ensemble fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="technology-stack-recommended" class="level2">
@@ -875,7 +946,12 @@ Version Control: Git + GitHub
 Project Mgmt:   Jira</code></pre>
 <section id="tech-stack-diagram" class="level3">
 <h3 class="anchored" data-anchor-id="tech-stack-diagram">Tech Stack Diagram</h3>
-<pre class="mermaid"><code>flowchart LR
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
     subgraph Frontend["Frontend"]
         ST[Streamlit]
         FIG[Figma]
@@ -904,7 +980,13 @@ Project Mgmt:   Jira</code></pre>
 
     Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend
     DevOps -.-&gt; Backend
-    DevOps -.-&gt; ML_Stack</code></pre>
+    DevOps -.-&gt; ML_Stack
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
@@ -942,7 +1024,12 @@ Project Mgmt:   Jira</code></pre>
 </table>
 <section id="data-pipeline-overview" class="level3">
 <h3 class="anchored" data-anchor-id="data-pipeline-overview">Data Pipeline Overview</h3>
-<pre class="mermaid"><code>flowchart LR
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
     subgraph Sources["Data Sources"]
         S1[(SECOM&lt;br/&gt;UCI Repository)]
         S2[(WM811K&lt;br/&gt;Kaggle)]
@@ -966,7 +1053,13 @@ Project Mgmt:   Jira</code></pre>
 
     style Sources fill:#e3f2fd
     style Processing fill:#fff8e1
-    style Output fill:#e8f5e9</code></pre>
+    style Output fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
@@ -1000,19 +1093,35 @@ Project Mgmt:   Jira</code></pre>
 </table>
 <section id="story-points-by-epic" class="level3">
 <h3 class="anchored" data-anchor-id="story-points-by-epic">Story Points by Epic</h3>
-<pre class="mermaid"><code>pie showData
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">pie showData
     title Story Points Distribution
     "KAN-1 Data Pipeline" : 47
     "KAN-2 ML Model" : 42
     "KAN-3 MES Integration" : 17
     "KAN-4 Dashboard" : 34
-    "KAN-5 Governance" : 33</code></pre>
+    "KAN-5 Governance" : 33
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 </section>
 <section id="inference-flow" class="level2">
 <h2 class="anchored" data-anchor-id="inference-flow">Inference Flow</h2>
-<pre class="mermaid"><code>sequenceDiagram
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
     participant MES as MES System
     participant API as FastAPI
     participant Model as ML Model
@@ -1036,12 +1145,23 @@ Project Mgmt:   Jira</code></pre>
         API--&gt;&gt;MES: Response (anomaly: false)
     end
 
-    API-&gt;&gt;Dash: Update real-time view</code></pre>
+    API-&gt;&gt;Dash: Update real-time view
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="sprint-workflow" class="level2">
 <h2 class="anchored" data-anchor-id="sprint-workflow">Sprint Workflow</h2>
-<pre class="mermaid"><code>stateDiagram-v2
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">stateDiagram-v2
     [*] --&gt; Planning: Sprint Start
     Planning --&gt; InProgress: Tasks Assigned
     InProgress --&gt; CodeReview: PR Created
@@ -1053,7 +1173,13 @@ Project Mgmt:   Jira</code></pre>
 
     note right of Planning: 2 hour session
     note right of InProgress: Daily standups
-    note right of Done: Sprint review</code></pre>
+    note right of Done: Sprint review
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 <hr>
 </section>
 <section id="current-sprint-status" class="level2">
