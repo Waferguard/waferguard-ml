@@ -43,4 +43,5 @@ jobs:
 
       - name: Show DEV URL
         if: github.ref != 'refs/heads/main'
-        run: echo "🧪 DEV site: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/${DEV_DESTINATION}/"
+        run: |
+          echo "🧪 DEV site: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/${DEV_DESTINATION}/"
