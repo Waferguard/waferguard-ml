@@ -34,9 +34,6 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 **Silicon wafer = computer chip foundation**
 :::
 
-
----
-
 ## The Challenge
 
 - Traditional manual inspection is slow and inconsistent
@@ -44,7 +41,6 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 - Lost productivity = Millions in yield loss
 - Need real-time, automated detection
 
----
 
 ## Wafer Images Dataset
 
@@ -54,9 +50,8 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 - 2 represents broken die that failed the electrical test.
 - These wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes.
 
----
-
 ## Example of a Normal Wafer
+
 ![](images/normal-wafer.png){fig-align="center"}
 
 ## Defect Patterns
@@ -65,4 +60,11 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 ![](images/single-defect-types.png){fig-align="center"}
 
 ## Two Types of Multi-Defect Patterns
+
 ![](images/two-defects.png){fig-align="center"}
+
+## Three Types of Multi-Defect Patterns
+![](images/three-defects.png){fig-align="center"}
+
+## Four Types of Multi-Defect Patterns
+![](images/four-defects.png){fig-align="center"}
