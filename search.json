@@ -1,5 +1,89 @@
 [
   {
+    "objectID": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
+    "href": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
+    "title": "WaferGuard ML",
+    "section": "What is a Semiconductor Wafer?",
+    "text": "What is a Semiconductor Wafer?\nA semiconductor wafer is a thin, circular slice of silicon used to manufacture computer chips.\n\n\n\n\n\n\n\n\n\nThin circular disk (like a CD, but 12 inches wide)\nPure silicon crystal grown in labs\nHundreds of transistors per mm²\n\n\n\nSilicon wafer = computer chip foundation"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#the-challenge",
+    "href": "slides/wm811k/slides.html#the-challenge",
+    "title": "WaferGuard ML",
+    "section": "The Challenge",
+    "text": "The Challenge\n\nTraditional manual inspection is slow and inconsistent\nDefects detected too late in production\nLost productivity = Millions in yield loss\nNeed real-time, automated detection"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#wafer-images-dataset",
+    "href": "slides/wm811k/slides.html#wafer-images-dataset",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images Dataset",
+    "text": "Wafer Images Dataset\n\nThe data shape is 52×52.\n0 means blank spot\n1 represents normal die that passed the electrical test\n2 represents broken die that failed the electrical test.\nThese wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes."
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#example-of-a-normal-wafer",
+    "href": "slides/wm811k/slides.html#example-of-a-normal-wafer",
+    "title": "WaferGuard ML",
+    "section": "Example of a Normal Wafer",
+    "text": "Example of a Normal Wafer"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#defect-patterns",
+    "href": "slides/wm811k/slides.html#defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Defect Patterns",
+    "text": "Defect Patterns\n8 distinct defect categories analyzed in our dataset"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#two-types-of-multi-defect-patterns",
+    "href": "slides/wm811k/slides.html#two-types-of-multi-defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Two Types of Multi-Defect Patterns",
+    "text": "Two Types of Multi-Defect Patterns"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#three-types-of-multi-defect-patterns",
+    "href": "slides/wm811k/slides.html#three-types-of-multi-defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Three Types of Multi-Defect Patterns",
+    "text": "Three Types of Multi-Defect Patterns"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#four-types-of-multi-defect-patterns",
+    "href": "slides/wm811k/slides.html#four-types-of-multi-defect-patterns",
+    "title": "WaferGuard ML",
+    "section": "Four Types of Multi-Defect Patterns",
+    "text": "Four Types of Multi-Defect Patterns"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#defect-patter-labels",
+    "href": "slides/wm811k/slides.html#defect-patter-labels",
+    "title": "WaferGuard ML",
+    "section": "Defect Patter Labels",
+    "text": "Defect Patter Labels\n\nThe labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).\n\nNormal: [0, 0, 0, 0, 0, 0, 0, 0]\nCenter: [1, 0, 0, 0, 0, 0, 0, 0]\nDonut: [0, 1, 0, 0, 0, 0, 0, 0]\nEdge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]\nCenter-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#patern-distribution",
+    "href": "slides/wm811k/slides.html#patern-distribution",
+    "title": "WaferGuard ML",
+    "section": "Patern Distribution",
+    "text": "Patern Distribution"
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#dataset-summary",
+    "href": "slides/wm811k/slides.html#dataset-summary",
+    "title": "WaferGuard ML",
+    "section": "Dataset Summary",
+    "text": "Dataset Summary\n\n38K Wafer Maps\n52x52 Pixel Resolution\nOne-Hot Encoded Pattern Labels\n38 types in the mixed-type wafer map defect dataset\n\n1 normal type\n8 single defect types\n29 mixed-type (2: 13, 3: 12, 4: 4) defect types."
+  },
+  {
+    "objectID": "slides/wm811k/slides.html#data-quality-excelent",
+    "href": "slides/wm811k/slides.html#data-quality-excelent",
+    "title": "WaferGuard ML",
+    "section": "Data Quality: Excelent",
+    "text": "Data Quality: Excelent\n\nNo missing values\nComplete Coverage of Defect Types\nMostly Balanced Classes\nReady for Modeling"
+  },
+  {
     "objectID": "BLUEPRINT.html",
     "href": "BLUEPRINT.html",
     "title": "WaferGuard ML - Project Blueprint",
@@ -124,89 +208,5 @@
     "title": "WaferGuard ML",
     "section": "🧪 Wafer Images (WM811k)",
     "text": "🧪 Wafer Images (WM811k)\n\nWafer Images EDA"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
-    "href": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
-    "title": "WaferGuard ML",
-    "section": "What is a Semiconductor Wafer?",
-    "text": "What is a Semiconductor Wafer?\nA semiconductor wafer is a thin, circular slice of silicon used to manufacture computer chips.\n\n\n\n\n\n\n\n\n\nThin circular disk (like a CD, but 12 inches wide)\nPure silicon crystal grown in labs\nHundreds of transistors per mm²\n\n\n\nSilicon wafer = computer chip foundation"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#the-challenge",
-    "href": "slides/wm811k/slides.html#the-challenge",
-    "title": "WaferGuard ML",
-    "section": "The Challenge",
-    "text": "The Challenge\n\nTraditional manual inspection is slow and inconsistent\nDefects detected too late in production\nLost productivity = Millions in yield loss\nNeed real-time, automated detection"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#wafer-images-dataset",
-    "href": "slides/wm811k/slides.html#wafer-images-dataset",
-    "title": "WaferGuard ML",
-    "section": "Wafer Images Dataset",
-    "text": "Wafer Images Dataset\n\nThe data shape is 52×52.\n0 means blank spot\n1 represents normal die that passed the electrical test\n2 represents broken die that failed the electrical test.\nThese wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes."
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#example-of-a-normal-wafer",
-    "href": "slides/wm811k/slides.html#example-of-a-normal-wafer",
-    "title": "WaferGuard ML",
-    "section": "Example of a Normal Wafer",
-    "text": "Example of a Normal Wafer"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#defect-patterns",
-    "href": "slides/wm811k/slides.html#defect-patterns",
-    "title": "WaferGuard ML",
-    "section": "Defect Patterns",
-    "text": "Defect Patterns\n8 distinct defect categories analyzed in our dataset"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#two-types-of-multi-defect-patterns",
-    "href": "slides/wm811k/slides.html#two-types-of-multi-defect-patterns",
-    "title": "WaferGuard ML",
-    "section": "Two Types of Multi-Defect Patterns",
-    "text": "Two Types of Multi-Defect Patterns"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#three-types-of-multi-defect-patterns",
-    "href": "slides/wm811k/slides.html#three-types-of-multi-defect-patterns",
-    "title": "WaferGuard ML",
-    "section": "Three Types of Multi-Defect Patterns",
-    "text": "Three Types of Multi-Defect Patterns"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#four-types-of-multi-defect-patterns",
-    "href": "slides/wm811k/slides.html#four-types-of-multi-defect-patterns",
-    "title": "WaferGuard ML",
-    "section": "Four Types of Multi-Defect Patterns",
-    "text": "Four Types of Multi-Defect Patterns"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#defect-patter-labels",
-    "href": "slides/wm811k/slides.html#defect-patter-labels",
-    "title": "WaferGuard ML",
-    "section": "Defect Patter Labels",
-    "text": "Defect Patter Labels\n\nThe labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).\n\nNormal: [0, 0, 0, 0, 0, 0, 0, 0]\nCenter: [1, 0, 0, 0, 0, 0, 0, 0]\nDonut: [0, 1, 0, 0, 0, 0, 0, 0]\nEdge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]\nCenter-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#patern-distribution",
-    "href": "slides/wm811k/slides.html#patern-distribution",
-    "title": "WaferGuard ML",
-    "section": "Patern Distribution",
-    "text": "Patern Distribution"
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#dataset-summary",
-    "href": "slides/wm811k/slides.html#dataset-summary",
-    "title": "WaferGuard ML",
-    "section": "Dataset Summary",
-    "text": "Dataset Summary\n\n38K Wafer Maps\n52x52 Pixel Resolution\nOne-Hot Encoded Pattern Labels\n38 types in the mixed-type wafer map defect dataset\n\n1 normal type\n8 single defect types\n29 mixed-type (2: 13, 3: 12, 4: 4) defect types."
-  },
-  {
-    "objectID": "slides/wm811k/slides.html#data-quality-excelent",
-    "href": "slides/wm811k/slides.html#data-quality-excelent",
-    "title": "WaferGuard ML",
-    "section": "Data Quality: Excelent",
-    "text": "Data Quality: Excelent\n\nNo missing values\nComplete Coverage of Defect Types\nMostly Balanced Classes\nReady for Modeling"
   }
 ]
