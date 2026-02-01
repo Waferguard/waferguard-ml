@@ -13,35 +13,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
-      - name: Render site
+      - name: Render Quarto site
         run: quarto render
 
-      # ✅ PROD: main branch
-      - name: Publish PROD
-        if: github.ref == 'refs/heads/main'
+      - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
-
-      # 🧪 DEV: any non-main branch
-      - name: Set DEV destination
-        if: github.ref != 'refs/heads/main'
-        run: echo "DEV_DESTINATION=dev/${GITHUB_REF_NAME//\//-}" >> $GITHUB_ENV
-
-      - name: Publish DEV
-        if: github.ref != 'refs/heads/main'
-        uses: quarto-dev/quarto-actions/publish@v2
-        with:
-            target: gh-pages
-            destination: ${{ env.DEV_DESTINATION }}
-
-      - name: Show DEV URL
-        if: github.ref != 'refs/heads/main'
-        run: |
-          echo "🧪 DEV site: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/${DEV_DESTINATION}/"
