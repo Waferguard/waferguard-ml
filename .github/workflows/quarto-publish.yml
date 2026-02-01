@@ -35,4 +35,10 @@ jobs:
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
-          destination: dev/${{ github.ref_name }}
+          destination: dev/${{ github.ref_name//\//- }}
+
+      - name: Show DEV URL
+        if: github.ref != 'refs/heads/main'
+        run: |
+            SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
+            echo "🧪 DEV site for branch '${GITHUB_REF_NAME}' is live at: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/dev/$SAFE_BRANCH/"
