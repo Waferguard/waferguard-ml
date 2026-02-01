@@ -1,0 +1,57 @@
+---
+title: "WaferGuard ML"
+subtitle: "Sprint 1: WM811K Dataset Exploration"
+author: "Deloitte AI Team"
+date: "February 2026"
+format: 
+  revealjs:
+    theme: [dark]
+    css: styles/custom.css
+    slide-number: true
+    preview-links: auto
+    footer: "WaferGuard ML"
+engine: knitr
+---
+
+## What is a Semiconductor Wafer?
+
+A semiconductor wafer is a thin, circular slice of silicon used to manufacture computer chips.
+
+:::columns
+::: {.column width="50%" layout-valign="center" }
+![](images/wafer.jpg){width=80% fig-align="center"}
+
+:::
+
+::: {.column width="50%"}
+- **Thin circular disk** (like a CD, but 12 inches wide)
+- **Pure silicon crystal** grown in labs
+- **Hundreds** of transistors per mm²
+:::
+:::
+ 
+:::{.center}
+**Silicon wafer = computer chip foundation**
+:::
+
+
+---
+
+## The Challenge
+
+- Traditional manual inspection is slow and inconsistent
+- Defects detected too late in production
+- Lost productivity = Millions in yield loss
+- Need real-time, automated detection
+
+---
+
+## Wafer Images Dataset
+
+- Defect data of mixed-type wafer map, 0 means blank spot, 1 represents normal die that passed the electrical test, and 2 represents broken die that failed the electrical test. The data shape is 52×52.
+  - These wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes.
+
+
+
+![](images/single-defect-types.png)
+

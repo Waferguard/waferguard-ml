@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "presentation.html#what-is-a-semiconductor-wafer",
+    "href": "presentation.html#what-is-a-semiconductor-wafer",
+    "title": "WaferGuard ML",
+    "section": "What is a Semiconductor Wafer?",
+    "text": "What is a Semiconductor Wafer?\nA semiconductor wafer is a thin, circular slice of silicon used to manufacture computer chips.\n\n\n\n\n\n\n\n\n\nThin circular disk (like a CD, but 12 inches wide)\nPure silicon crystal grown in labs\nHundreds of transistors per mm²\n\n\n\nSilicon wafer = computer chip foundation"
+  },
+  {
+    "objectID": "presentation.html#the-challenge",
+    "href": "presentation.html#the-challenge",
+    "title": "WaferGuard ML",
+    "section": "The Challenge",
+    "text": "The Challenge\n\nTraditional manual inspection is slow and inconsistent\nDefects detected too late in production\nLost productivity = Millions in yield loss\nNeed real-time, automated detection"
+  },
+  {
+    "objectID": "presentation.html#wafer-images-dataset",
+    "href": "presentation.html#wafer-images-dataset",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images Dataset",
+    "text": "Wafer Images Dataset\n\nDefect data of mixed-type wafer map, 0 means blank spot, 1 represents normal die that passed the electrical test, and 2 represents broken die that failed the electrical test. The data shape is 52×52.\n\nThese wafer maps are obtained by testing the electrical performance of each die on the wafer through test probes."
+  }
+]
