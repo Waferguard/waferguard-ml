@@ -22,17 +22,29 @@ jobs:
       - name: Render site
         run: quarto render
 
-      # ✅ PROD: main branch
+      # PROD: main branch
       - name: Publish PROD
         if: github.ref == 'refs/heads/main'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+        env:
+          GITHUB_PAGES_URL: "https://$GITHUB_ACTOR.github.io/$GITHUB_REPOSITORY/"
+          
+      - name: Show PROD URL
+        if: github.ref == 'refs/heads/main'
+        run: echo "✅ PROD site is live at: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/"
 
-      # 🧪 DEV: any non-main branch
+      # DEV: any non-main branch
       - name: Publish DEV
         if: github.ref != 'refs/heads/main'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
           destination: dev/${{ github.ref_name }}
+
+      - name: Show DEV URL
+        if: github.ref != 'refs/heads/main'
+        run: |
+          BRANCH_URL="https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/dev/${GITHUB_REF_NAME}/"
+          echo "🧪 DEV site for branch '${GITHUB_REF_NAME}' is live at: $BRANCH_URL"
