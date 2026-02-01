@@ -30,15 +30,17 @@ jobs:
           target: gh-pages
 
       # 🧪 DEV: any non-main branch
+      - name: Set DEV destination
+        if: github.ref != 'refs/heads/main'
+        run: echo "DEV_DESTINATION=dev/${GITHUB_REF_NAME//\//-}" >> $GITHUB_ENV
+
       - name: Publish DEV
         if: github.ref != 'refs/heads/main'
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          target: gh-pages
-          destination: dev/${{ github.ref_name//\//- }}
+            target: gh-pages
+            destination: ${{ env.DEV_DESTINATION }}
 
-      - name: Show DEV URL
+        - name: Show DEV URL
         if: github.ref != 'refs/heads/main'
-        run: |
-            SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
-            echo "🧪 DEV site for branch '${GITHUB_REF_NAME}' is live at: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/dev/$SAFE_BRANCH/"
+        run: echo "🧪 DEV site: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/${DEV_DESTINATION}/"
