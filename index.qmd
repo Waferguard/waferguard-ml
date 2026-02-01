@@ -1,5 +1,5 @@
 # WaferGuard ML
-- [Project Blueprint](blueprint.html)
+- [Project Blueprint](project-blueprint.html)
 
 # 📊 Presentations
 
