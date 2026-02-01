@@ -41,6 +41,6 @@ jobs:
             target: gh-pages
             destination: ${{ env.DEV_DESTINATION }}
 
-        - name: Show DEV URL
+      - name: Show DEV URL
         if: github.ref != 'refs/heads/main'
         run: echo "🧪 DEV site: https://$GITHUB_ACTOR.github.io/${GITHUB_REPOSITORY}/${DEV_DESTINATION}/"
