@@ -1,0 +1,38 @@
+name: Render and Publish Quarto Site
+
+on:
+  push:
+    branches: [ "**" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+
+      - name: Render site
+        run: quarto render
+
+      # ✅ PROD: main branch
+      - name: Publish PROD
+        if: github.ref == 'refs/heads/main'
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+
+      # 🧪 DEV: any non-main branch
+      - name: Publish DEV
+        if: github.ref != 'refs/heads/main'
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+          destination: dev/${{ github.ref_name }}
