@@ -1,9 +1,15 @@
 # WaferGuard ML
-- [Project Blueprint](blueprint.html)
 
 # 📊 Presentations
 
-Welcome! Click a presentation below.
-
-## 🧪 Wafer Images (WM811k)
+## Wafer Images (WM811k)
 - [Wafer Images EDA](slides/wm811k/slides.html)
+
+# 📓 Notebooks
+
+## Wafer Images (WM811k
+- [Wafer Images EDA Notebook](wafer_images/data_exploration.html)
+
+# 📑 Documentation
+
+- [Project Blueprint](blueprint.html)
