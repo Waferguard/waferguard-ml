@@ -203,18 +203,18 @@
     "text": "Four Types of Multi-Defect Patterns"
   },
   {
-    "objectID": "slides/wm811k/slides.html#defect-patter-labels",
-    "href": "slides/wm811k/slides.html#defect-patter-labels",
+    "objectID": "slides/wm811k/slides.html#defect-pattern-labels",
+    "href": "slides/wm811k/slides.html#defect-pattern-labels",
     "title": "WaferGuard ML",
-    "section": "Defect Patter Labels",
-    "text": "Defect Patter Labels\n\nThe labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).\n\nNormal: [0, 0, 0, 0, 0, 0, 0, 0]\nCenter: [1, 0, 0, 0, 0, 0, 0, 0]\nDonut: [0, 1, 0, 0, 0, 0, 0, 0]\nEdge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]\nCenter-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]"
+    "section": "Defect Pattern Labels",
+    "text": "Defect Pattern Labels\n\nThe labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).\n\nNormal: [0, 0, 0, 0, 0, 0, 0, 0]\nCenter: [1, 0, 0, 0, 0, 0, 0, 0]\nDonut: [0, 1, 0, 0, 0, 0, 0, 0]\nEdge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]\nCenter-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]"
   },
   {
-    "objectID": "slides/wm811k/slides.html#patern-distribution",
-    "href": "slides/wm811k/slides.html#patern-distribution",
+    "objectID": "slides/wm811k/slides.html#pattern-distribution",
+    "href": "slides/wm811k/slides.html#pattern-distribution",
     "title": "WaferGuard ML",
-    "section": "Patern Distribution",
-    "text": "Patern Distribution"
+    "section": "Pattern Distribution",
+    "text": "Pattern Distribution"
   },
   {
     "objectID": "slides/wm811k/slides.html#dataset-summary",
@@ -224,10 +224,10 @@
     "text": "Dataset Summary\n\n38K Wafer Maps\n52x52 Pixel Resolution\nOne-Hot Encoded Pattern Labels\n38 types in the mixed-type wafer map defect dataset\n\n1 normal type\n8 single defect types\n29 mixed-type (2: 13, 3: 12, 4: 4) defect types."
   },
   {
-    "objectID": "slides/wm811k/slides.html#data-quality-excelent",
-    "href": "slides/wm811k/slides.html#data-quality-excelent",
+    "objectID": "slides/wm811k/slides.html#data-quality-excellent",
+    "href": "slides/wm811k/slides.html#data-quality-excellent",
     "title": "WaferGuard ML",
-    "section": "Data Quality: Excelent",
-    "text": "Data Quality: Excelent\n\nNo missing values\nComplete Coverage of Defect Types\nMostly Balanced Classes\nReady for Modeling"
+    "section": "Data Quality: Excellent",
+    "text": "Data Quality: Excellent\n\nNo missing values\nComplete Coverage of Defect Types\nMostly Balanced Classes\nReady for Modeling"
   }
 ]
