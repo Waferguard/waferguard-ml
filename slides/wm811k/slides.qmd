@@ -29,7 +29,7 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 :::
 :::
  
-:::{.center}
+::: {.center}
 **Silicon wafer = computer chip foundation**
 :::
 
@@ -68,7 +68,7 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
 ## Four Types of Multi-Defect Patterns
 ![](images/four-defects.png){fig-align="center"}
 
-## Defect Patter Labels
+## Defect Pattern Labels
 
 - The labels in the data are using one-hot encoding, a total of 8 dimensions, corresponding to the 8 basic types of wafer map defects (single defect).
   - Normal: [0, 0, 0, 0, 0, 0, 0, 0]
@@ -77,8 +77,7 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
   - Edge-Loc: [0, 0, 1, 0, 0, 0, 0, 0]
   - Center-Donut-Edge-Loc: [1, 1, 1, 0, 0, 0, 0, 0]
 
-## Patern Distribution
-
+## Pattern Distribution
 ![](images/pattern-distribution.png){fig-align="center"}
 
 ## Dataset Summary
@@ -91,7 +90,7 @@ A semiconductor wafer is a thin, circular slice of silicon used to manufacture c
   - 8 single defect types
   - 29 mixed-type (2: 13, 3: 12, 4: 4) defect types.
 
-## Data Quality: Excelent
+## Data Quality: Excellent
 - No missing values
 - Complete Coverage of Defect Types
 - Mostly Balanced Classes
