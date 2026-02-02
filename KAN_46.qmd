@@ -3,6 +3,7 @@ title: "Wafer Maps and Sensors in Semiconductor Manufacturing"
 author: "Milos Rodic"
 format:
   revealjs:
+    self-contained: true
     theme: simple
     slide-number: true
     transition: fade
