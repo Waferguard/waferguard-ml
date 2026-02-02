@@ -2,21 +2,21 @@
   {
     "objectID": "wafer_images/data_exploration.html",
     "href": "wafer_images/data_exploration.html",
-    "title": "Data Exploration",
+    "title": "Mixed-type Wafer Map Defect Dataset",
     "section": "",
     "text": "from collections import Counter\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\n\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\n\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]"
   },
   {
     "objectID": "wafer_images/data_exploration.html#labels",
     "href": "wafer_images/data_exploration.html#labels",
-    "title": "Data Exploration",
+    "title": "Mixed-type Wafer Map Defect Dataset",
     "section": "Labels",
     "text": "Labels\n\n# Basic summary of labels\nprint(\"Labels shape:\", labels.shape)\nprint(\"Total entries:\", labels.shape[0])\n\n# Unique values across entire labels array\nunique_vals = np.unique(labels)\nprint(\"Unique values:\", unique_vals)\nprint(\"Number of unique values:\", unique_vals.size)\n\n# Missing data check\nmissing_count = np.isnan(labels).sum()\nprint(\"Missing values (NaN) count:\", missing_count)\n\n# Show a few example label rows\nexamples_df = pd.DataFrame(labels[:5])\nprint(\"Example label rows:\")\ndisplay(examples_df)\n\n# Unique row patterns count\nunique_rows = np.unique(labels, axis=0)\nprint(\"Number of unique label patterns:\", unique_rows.shape[0])\n\nLabels shape: (38015, 8)\nTotal entries: 38015\nUnique values: [0 1]\nNumber of unique values: 2\nMissing values (NaN) count: 0\nExample label rows:\n\n\n\n\n\n\n\n\n\n0\n1\n2\n3\n4\n5\n6\n7\n\n\n\n\n0\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n1\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n2\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n3\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n4\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n\n\n\n\n\nNumber of unique label patterns: 38\n\n\n\nlabel_mapping = {\n    \"00000000\": \"Normal\",\n    \"10000000\": \"Center\",\n    \"01000000\": \"Donut\",\n    \"00100000\": \"Edge_Loc\",\n    \"00010000\": \"Edge_Ring\",\n    \"00001000\": \"Loc\",\n    \"00000100\": \"Near_Full\",\n    \"00000010\": \"Scratch\",\n    \"00000001\": \"Random\",\n    \"10100000\": \"Center+Edge_Loc\",\n    \"10010000\": \"Center+Edge_Ring\",\n    \"10001000\": \"Center+Loc\",\n    \"10000010\": \"Center+Scratch\",\n    \"01100000\": \"Donut+Edge_Loc\",\n    \"01010000\": \"Donut+Edge_Ring\",\n    \"01001000\": \"Donut+Loc\",\n    \"01000010\": \"Donut+Scratch\",\n    \"00101000\": \"Edge_Loc+Loc\",\n    \"00100010\": \"Edge_Loc+Scratch\",\n    \"00011000\": \"Edge_Ring+Loc\",\n    \"00010010\": \"Edge_Ring+Scratch\",\n    \"00001010\": \"Loc+Scratch\",\n    \"10101000\": \"Center+Edge_Loc+Loc\",\n    \"10100010\": \"Center+Edge_Loc+Scratch\",\n    \"10011000\": \"Center+Edge_Ring+Loc\",\n    \"10010010\": \"Center+Edge_Ring+Scratch\",\n    \"10001010\": \"Center+Loc+Scratch\",\n    \"01101000\": \"Donut+Edge_Loc+Loc\",\n    \"01100010\": \"Donut+Edge_Loc+Scratch\",\n    \"01011000\": \"Donut+Edge_Ring+Loc\",\n    \"01010010\": \"Donut+Edge_Ring+Scratch\",\n    \"01001010\": \"Donut+Loc+Scratch\",\n    \"00101010\": \"Edge_Loc+Loc+Scratch\",\n    \"00011010\": \"Edge_Ring+Loc+Scratch\",\n    \"10101010\": \"Center+Edge_Loc+Loc+Scratch\",\n    \"10011010\": \"Center+Edge_Ring+Loc+Scratch\",\n    \"01101010\": \"Donut+Edge_Loc+Loc+Scratch\",\n    \"01011010\": \"Donut+Edge_Ring+Loc+Scratch\",\n}\n\n# Convert one-hot vectors to string keys\nlabel_str = [\"\".join(map(str, map(int, row))) for row in labels]\nlabel_names = [label_mapping.get(key, \"Unknown\") for key in label_str]\n\n# Count frequency\nlabel_counts = Counter(label_str)\n\n# Create DataFrame with label names\nlabel_df = (\n    pd\n    .DataFrame([\n        {\"OneHot\": k, \"Count\": v, \"LabelName\": label_mapping.get(k, \"Unknown\")} for k, v in label_counts.items()\n    ])\n    .sort_values(\"OneHot\")\n    .reset_index(drop=True)\n)\n\n# plot label distribution with seaborn\nsns.set_theme(style=\"whitegrid\")\nplt.figure(figsize=(12, 7))\nsns.barplot(data=label_df, x=\"Count\", y=\"LabelName\", order=label_df.sort_values(\"Count\", ascending=False)[\"LabelName\"])\nplt.xlabel(\"Frequency\")\nplt.ylabel(\"Defect Type\")\nplt.title(\"Distribution of Wafer Defect Types\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n\n\n\nFrom the plot above, we can see that for most of the defect labels we have 1,000 images including the normal wafers. But for Center+Edge_loc+Scratch we have 2,000 images, for Random around 800 and for Near_Full an under representation of ~200 images."
   },
   {
     "objectID": "wafer_images/data_exploration.html#images",
     "href": "wafer_images/data_exploration.html#images",
-    "title": "Data Exploration",
+    "title": "Mixed-type Wafer Map Defect Dataset",
     "section": "Images",
     "text": "Images\n\n# Basic summary of images array\nprint(\"Images shape:\", images.shape)\nprint(\"Total entries:\", images.shape[0])\nprint(\"Single image shape:\", images[0].shape)\nprint(\"Dtype:\", images.dtype)\n\n# Missing data check\nmissing_count_images = np.isnan(images).sum()\nprint(\"Missing values (NaN) count:\", missing_count_images)\n\n# Unique values across entire images array\nunique_vals_images = np.unique(images)\nprint(\"Unique values:\", unique_vals_images)\nprint(\"Number of unique values:\", unique_vals_images.size)\n\n# Count images with at least one pixel value of 3\nimages_with_3 = np.sum(np.any(images == 3, axis=(1, 2)))\nprint(f\"Images with at least one pixel value of 3: {images_with_3}\")\n\n# in the images that have at least one pixel value of 3, tell me the average of many pixels have the value 3\nimages_with_3_pixels = images[np.any(images == 3, axis=(1, 2))]\ncount_3_pixels = np.sum(images_with_3_pixels == 3)\naverage_3_pixels = count_3_pixels / images_with_3\nprint(f\"Average number of pixels with value 3 in those images: {average_3_pixels}\")\n\n# Show a few example images (as arrays)\nsample_images = images[:3]\nprint(\"Sample image arrays:\")\nfor i, img in enumerate(sample_images, start=1):\n    print(f\"Image {i} shape: {img.shape}\")\n    print(img)\n\nImages shape: (38015, 52, 52)\nTotal entries: 38015\nSingle image shape: (52, 52)\nDtype: int32\nMissing values (NaN) count: 0\nUnique values: [0 1 2 3]\nNumber of unique values: 4\nImages with at least one pixel value of 3: 105\nAverage number of pixels with value 3 in those images: 2.038095238095238\nSample image arrays:\nImage 1 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 2 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 3 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\n\n\n\ndef convert_to_rgb(image):\n    height, width = image.shape\n    rgb_image = np.zeros((height, width, 3), dtype=np.uint8)\n    rgb_image[image == 0] = [0, 63, 92]\n    rgb_image[image == 1] = [255, 166, 0]\n    rgb_image[image == 2] = [188, 80, 144]\n    return rgb_image\n\n\n# Separate labels by number of defects (number of '+' in label name)\nunique_labels = label_df[\"LabelName\"].tolist()\n\nlabels_by_defect_count = {0: [], 1: [], 2: [], 3: []}\n\nfor label_name in unique_labels:\n    plus_count = label_name.count(\"+\")\n    labels_by_defect_count[plus_count].append(label_name)\n\n# Plot each group separately\nsns.set_theme(style=\"white\")\n\nfor defect_count, labels_group in labels_by_defect_count.items():\n    if not labels_group:\n        continue\n\n    n_labels = len(labels_group)\n    n_cols = min(5, n_labels)\n    n_rows = (n_labels + n_cols - 1) // n_cols\n\n    fig, axes = plt.subplots(n_rows, n_cols, figsize=(16, n_rows * 3))\n    axes = [axes] if n_labels == 1 else axes.flatten() if n_rows &gt; 1 else axes\n\n    for idx, label_name in enumerate(labels_group):\n        label_idx = label_names.index(label_name)\n        rgb_image = convert_to_rgb(images[label_idx])\n\n        axes[idx].imshow(rgb_image)\n        axes[idx].set_title(label_name, fontsize=10, fontweight=\"bold\", color=\"#333333\")\n        axes[idx].axis(\"off\")\n        axes[idx].spines[\"top\"].set_visible(False)\n        axes[idx].spines[\"right\"].set_visible(False)\n        axes[idx].spines[\"bottom\"].set_visible(False)\n        axes[idx].spines[\"left\"].set_visible(False)\n\n    # Hide unused subplots\n    for idx in range(n_labels, len(axes)):\n        axes[idx].axis(\"off\")\n\n    fig.patch.set_facecolor(\"white\")\n    plt.axis(\"off\")\n    plt.tight_layout()\n\n    # Add a suptitle for the group\n    if defect_count == 0:\n        fig.suptitle(\"Single Defect Types\", fontsize=16, fontweight=\"bold\", y=1.02)\n    else:\n        fig.suptitle(f\"Defect Types with {defect_count} Combined Defects\", fontsize=16, fontweight=\"bold\", y=1.02)\n\n    plt.show()"
   },
@@ -133,18 +133,18 @@
     "text": "Jira Board: TBD\nGitHub Repo: TBD\nFigma Designs: TBD\nMLflow Dashboard: TBD\nGoogle Drive: TBD\n\n\nLast Updated: 2026-01-23"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "WaferGuard ML",
-    "section": "",
-    "text": "Project Blueprint"
-  },
-  {
     "objectID": "index.html#wafer-images-wm811k",
     "href": "index.html#wafer-images-wm811k",
     "title": "WaferGuard ML",
-    "section": "🧪 Wafer Images (WM811k)",
-    "text": "🧪 Wafer Images (WM811k)\n\nWafer Images EDA"
+    "section": "Wafer Images (WM811k)",
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
+  },
+  {
+    "objectID": "index.html#wafer-images-wm811k-1",
+    "href": "index.html#wafer-images-wm811k-1",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images (WM811k",
+    "text": "Wafer Images (WM811k\n\nWafer Images EDA Notebook"
   },
   {
     "objectID": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
