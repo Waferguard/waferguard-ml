@@ -1,0 +1,246 @@
+---
+title: "Wafer Maps and Sensors in Semiconductor Manufacturing"
+author: waferguard-ml team
+format: 
+  html:
+    mermaid: 
+      theme: neutral
+---
+
+
+## Key Terminology (Foundational Concepts)
+
+**Wafer**  
+
+-  A thin, round slice of silicon
+-  Used as the base to build computer chips
+-  One wafer holds many chips
+
+**Die (plural: dies)** 
+
+- A single chip on a wafer
+- Each die becomes one usable chip if it passes testing
+
+**Die-Level Testing (Wafer Probe Test)**  
+
+- Electrical testing done before chips are separated
+- Checks if each die works correctly
+
+**Yield**  
+
+- The percentage of dies that work correctly
+- Higher yield means lower manufacturing cost
+
+**Wafer Map**  
+
+- A 2D picture of a wafer
+- Shows which dies passed or failed testing
+
+**Pixel (in Wafer Maps)**  
+
+- Represents one die
+- Stores test results, not colors or brightness
+
+**Defect Pattern**  
+
+- A visible shape formed by failing dies
+- Often points to a manufacturing problem
+- Examples: center failures, edge rings, scratches
+
+**Process Sensors**  
+
+- Devices inside manufacturing machines
+- Measure conditions like temperature, pressure, and power
+
+**Process Run / Production Instance** 
+ 
+- A single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions.
+
+
+## Introduction
+
+Semiconductor manufacturing is a highly complex, multi-stage process involving hundreds of tightly controlled fabrication steps. Even minor deviations in process conditions can introduce microscopic defects that significantly reduce product yield and reliability.
+
+To monitor, diagnose, and prevent such defects, manufacturers rely on multiple sources of data collected at different stages of production. Two of the most important and complementary data sources are:
+
+- **Wafer map data**, which provides a spatial view of defects across a wafer after fabrication and testing  
+- **Process sensor data**, which captures physical and electrical conditions during wafer fabrication  
+
+While both data sources relate to the same manufacturing process, they capture fundamentally different aspects of it. Wafer maps describe *where* defects occur, whereas sensor data helps explain *why* those defects may have occurred.
+
+This presentation explains how wafer map pixels are generated from physical wafers, how process sensors operate in semiconductor manufacturing, and how these two data modalities complement each other in manufacturing analytics.
+
+
+## Die-Level Electrical Testing
+
+Before a wafer is cut into individual chips, it undergoes **die-level electrical testing**, commonly referred to as **wafer probe testing**.
+
+During this stage:
+- A probe card makes physical contact with each die on the wafer
+- Electrical characteristics such as continuity, leakage current, and voltage thresholds are measured
+- Each die is classified as passing, failing, or untested
+
+The results of this testing stage provide the raw information used to construct wafer maps.
+
+
+## What Is a Wafer Map?
+
+A **wafer map** is a two-dimensional grid representation that preserves the physical layout of dies on a wafer.
+
+- Each grid cell corresponds to a single die
+- The spatial arrangement reflects the physical location of dies on the wafer
+- The circular shape of the wafer naturally emerges from the grid structure
+
+Wafer maps allow engineers to visually inspect defect distributions and identify spatial patterns that are difficult to detect using tabular data alone.
+
+
+## How Wafer Map Pixels Are Generated
+
+In wafer maps, a **pixel does not represent light intensity**, as in conventional digital images.
+
+Instead:
+- Each pixel encodes the **electrical test outcome of a single die**
+- Pixel values are discrete and symbolic
+
+Typical encoding:
+- `0` → No die or untested location  
+- `1` → Die passed electrical test  
+- `2` → Die failed electrical test  
+
+Thus, each pixel corresponds directly to a physical die on the wafer.
+
+
+
+## Spatial Defect Patterns
+
+Because dies are arranged spatially across the wafer surface, defects often form recognizable geometric patterns:
+
+- **Center defects** — commonly associated with lithography focus or exposure issues  
+- **Edge-ring defects** — linked to temperature gradients or etching non-uniformity  
+- **Scratch defects** — caused by mechanical handling or tool contact  
+- **Random defects** — typically resulting from particle contamination  
+
+These spatial regularities make wafer maps well suited for image-based machine learning models such as convolutional neural networks (CNNs).
+
+
+
+## Process Sensors in Semiconductor Manufacturing
+
+Unlike wafer maps, which are generated after fabrication, **process sensors operate during fabrication**.
+
+Sensors are embedded within manufacturing tools such as etchers, deposition chambers, and lithography systems, and they monitor:
+- Temperature
+- Pressure and vacuum levels
+- Gas flow rates
+- Plasma density
+- Radio-frequency (RF) power
+- Chemical concentrations
+- Tool health and calibration indicators
+
+These sensors provide continuous insight into the conditions under which wafers are manufactured.
+
+
+## Characteristics of Sensor Data
+
+Process sensor data differs fundamentally from wafer map data:
+
+- Tabular structure (rows × columns)
+- Continuous numeric values
+- Time-dependent measurements
+- No spatial information
+
+In datasets such as SECOM:
+- Each row represents a production instance (e.g., a wafer or manufacturing run)
+- Each column represents an anonymized sensor measurement
+- Sensor names are generic (e.g., `sensor_0`, `sensor_1`, etc.)
+
+
+
+## Wafer Maps vs Process Sensors
+
+| Aspect | Wafer Maps | Process Sensors |
+|------|-----------|----------------|
+| Data structure | Image (2D grid) | Tabular |
+| Resolution | Die-level (spatial) | Tool-level (global) |
+| Timing | Post-fabrication | During fabrication |
+| Primary insight | Defect location | Process conditions |
+| Key question answered | Where defects occur | Why defects may occur |
+
+
+
+## Why Both Data Sources Matter
+
+In real semiconductor manufacturing environments:
+
+- Sensors detect abnormal process behavior during fabrication
+- Wafer maps reveal how those abnormalities manifest spatially across the wafer
+- Engineers combine both perspectives to identify root causes and improve yield
+
+This combined view enables:
+- More accurate defect detection
+- Faster root-cause analysis
+- Data-driven process optimization
+
+
+
+## Example: Wafer Map Insight (Where Defects Occur)
+
+**What we observe**
+
+- Many failed dies form a ring near the wafer edge
+- The pattern is consistent across multiple wafers
+
+**What this tells us**
+
+- The problem is spatial, not random
+- Defects are linked to wafer position
+
+**Conclusion**
+- The issue likely comes from a process that affects wafer edges
+- Examples: uneven heating or etching near the boundary
+  
+
+
+## Example: Sensor Data Insight (Why Defects Occur)
+
+**What we observe**
+
+- Temperature sensors show higher values near the end of the process
+- Gas flow readings fluctuate outside normal ranges
+
+**What this tells us**
+
+- The manufacturing process was unstable
+- Tool conditions drifted during production
+
+**Conclusion**
+
+- Abnormal process conditions caused the defects
+- These sensor signals explain why the wafer map shows failures
+  
+
+
+## Key Takeaways
+
+- Wafer map pixels represent die-level electrical test outcomes, not optical images
+- Each pixel corresponds to a physical die on the wafer
+- Process sensors capture fabrication conditions in real time
+- Wafer maps show *where* defects occur
+- Sensor data helps explain *why* defects occur
+- Together, they provide a comprehensive view of semiconductor manufacturing quality
+
+
+## References
+
+
+- Kyeong, S., Kim, H., & Kim, S. (2020). Classification of wafer map defects based on deep learning methods with a small amount of data. IEEE Access, 8, 21796–21806. https://www.researchgate.net/publication/339903705
+
+- Li, Y., Zhang, X., & Wang, J. (2024). Deep learning approaches for wafer defect pattern recognition. arXiv Preprint. https://arxiv.org/html/2411.11029v1
+
+- JMP Community. (2021). How to make a wafer map in JMP in under 30 seconds. https://community.jmp.com/t5/JMPer-Cable/How-to-make-a-wafer-map-in-JMP-in-under-30-seconds/ba-p/348607
+
+- MathWorks. (n.d.). Classify defects on wafer maps using deep learning. https://www.mathworks.com/help/vision/ug/classify-defects-on-wafer-maps-using-deep-learning.html
+
+- PDF.com. (n.d.). Understanding semiconductor data visualization with wafer maps: An introduction. https://www.pdf.com/understanding-semiconductor-data-visualization-with-wafer-maps-an-introduction/
+
+- Wikipedia contributors. (n.d.). Substrate mapping. https://en.wikipedia.org/wiki/Substrate_mapping
