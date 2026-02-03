@@ -4,7 +4,6 @@
 
 ## Wafer Images (WM811k)
 - [Wafer Images EDA](slides/wm811k/slides.html)
-- [Wafer Maps & Sensors Research](slides/wafer-map-pixel/KAN_46.html)
   
 # 📓 Notebooks
 
@@ -14,3 +13,4 @@
 # 📑 Documentation
 
 - [Project Blueprint](blueprint.html)
+- [Wafer Maps & Sensors Research](slides/wafer-map-pixel/KAN_46.html)

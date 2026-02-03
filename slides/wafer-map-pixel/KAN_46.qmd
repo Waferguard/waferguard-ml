@@ -16,36 +16,44 @@ format:
 -  Used as the base to build computer chips
 -  One wafer holds many chips
 
-**Die (plural: dies)**  
+**Die (plural: dies)** 
+
 - A single chip on a wafer
 - Each die becomes one usable chip if it passes testing
 
 **Die-Level Testing (Wafer Probe Test)**  
+
 - Electrical testing done before chips are separated
 - Checks if each die works correctly
 
 **Yield**  
+
 - The percentage of dies that work correctly
 - Higher yield means lower manufacturing cost
 
 **Wafer Map**  
+
 - A 2D picture of a wafer
 - Shows which dies passed or failed testing
 
 **Pixel (in Wafer Maps)**  
+
 - Represents one die
 - Stores test results, not colors or brightness
 
 **Defect Pattern**  
+
 - A visible shape formed by failing dies
 - Often points to a manufacturing problem
 - Examples: center failures, edge rings, scratches
 
 **Process Sensors**  
+
 - Devices inside manufacturing machines
 - Measure conditions like temperature, pressure, and power
 
-**Process Run / Production Instance**  
+**Process Run / Production Instance** 
+ 
 - A single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions.
 
 
