@@ -76,3 +76,9 @@ logs/
 # OS
 Thumbs.db
 .DS_Store
+
+data/mixedtype-wafer-defect-datasets
+data/secom
+/.quarto/
+**/*.quarto_ipynb
+docs

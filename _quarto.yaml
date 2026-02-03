@@ -1,0 +1,10 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "WaferGuard ML Slides"
+
+format:
+  html:
+    theme: cosmo
