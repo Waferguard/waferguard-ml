@@ -1,27 +1,20 @@
 ---
 title: "Wafer Maps and Sensors in Semiconductor Manufacturing"
-author: "Milos Rodic"
-format:
-  revealjs:
-    theme: simple
-    slide-number: true
-    transition: fade
-    incremental: true
-    auto-stretch: true
-    scrollable: true
-    center-title-slide: false
-    self-contained: true
-execute:
-  echo: false
+author: waferguard-ml team
+format: 
+  html:
+    mermaid: 
+      theme: neutral
 ---
 
 
 ## Key Terminology (Foundational Concepts)
 
 **Wafer**  
-- A thin, round slice of silicon
-- Used as the base to build computer chips
-- One wafer holds many chips
+
+-  A thin, round slice of silicon
+-  Used as the base to build computer chips
+-  One wafer holds many chips
 
 **Die (plural: dies)**  
 - A single chip on a wafer
