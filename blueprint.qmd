@@ -1,3 +1,10 @@
+---
+format: 
+  html:
+    mermaid: 
+      theme: neutral
+---
+
 # WaferGuard ML - Project Blueprint
 
 **Team:** Milos, Hernan, Rolando, Oliver
@@ -8,7 +15,7 @@
 
 ## System Architecture
 
-```mermaid
+```{mermaid}
 flowchart TB
     subgraph Data["Data Ingestion Layer"]
         SECOM[(SECOM Sensor Data)]
@@ -60,13 +67,14 @@ flowchart TB
     STREAM --> HIST
     API --> HOOK
     SIM --> HOOK
+
 ```
 
 ---
 
 ## Data Flow
 
-```mermaid
+```{mermaid}
 flowchart LR
     A[Raw Data] --> B[Preprocessing]
     B --> C[Feature Engineering]
@@ -109,7 +117,7 @@ This gives you a clear dependency chain: Data → Model → Integration → Dash
 
 ### Epic Dependency Flow
 
-```mermaid
+```{mermaid}
 flowchart LR
     KAN1[KAN-1<br/>Data Pipeline]
     KAN2[KAN-2<br/>ML Model]
@@ -135,7 +143,7 @@ flowchart LR
 
 ## Sprint Timeline
 
-```mermaid
+```{mermaid}
 gantt
     title WaferGuard ML - Sprint Timeline
     dateFormat  YYYY-MM-DD
@@ -276,7 +284,7 @@ gantt
 
 ### Team Structure
 
-```mermaid
+```{mermaid}
 flowchart TB
     subgraph Team["WaferGuard ML Team"]
         subgraph WS1["Data Engineering"]
@@ -311,7 +319,7 @@ flowchart TB
 
 ## ML Model Architecture
 
-```mermaid
+```{mermaid}
 flowchart TB
     subgraph Input["Input Data"]
         IMG[Wafer Images<br/>WM811K]
@@ -369,7 +377,7 @@ Project Mgmt:   Jira
 
 ### Tech Stack Diagram
 
-```mermaid
+```{mermaid}
 flowchart LR
     subgraph Frontend["Frontend"]
         ST[Streamlit]
@@ -413,7 +421,7 @@ flowchart LR
 
 ### Data Pipeline Overview
 
-```mermaid
+```{mermaid}
 flowchart LR
     subgraph Sources["Data Sources"]
         S1[(SECOM<br/>UCI Repository)]
@@ -454,7 +462,7 @@ flowchart LR
 
 ### Story Points by Epic
 
-```mermaid
+```{mermaid}
 pie showData
     title Story Points Distribution
     "KAN-1 Data Pipeline" : 47
@@ -468,7 +476,7 @@ pie showData
 
 ## Inference Flow
 
-```mermaid
+```{mermaid}
 sequenceDiagram
     participant MES as MES System
     participant API as FastAPI
@@ -500,7 +508,7 @@ sequenceDiagram
 
 ## Sprint Workflow
 
-```mermaid
+```{mermaid}
 stateDiagram-v2
     [*] --> Planning: Sprint Start
     Planning --> InProgress: Tasks Assigned
