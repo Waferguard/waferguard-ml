@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>blueprint – WaferGuard ML Slides</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<meta name="mermaid-theme" content="neutral">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="waferguard-ml---project-blueprint" class="level1">
+<h1>WaferGuard ML - Project Blueprint</h1>
+<p><strong>Team:</strong> Milos, Hernan, Rolando, Oliver <strong>Duration:</strong> 10-12 weeks (5-6 sprints) <strong>Sprint Length:</strong> 2 weeks</p>
+<hr>
+<section id="system-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="system-architecture">System Architecture</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Data["Data Ingestion Layer"]
+        SECOM[(SECOM Sensor Data)]
+        WM811K[(WM811K Wafer Images)]
+        VAL[Data Validation]
+    end
+
+    subgraph ML["Machine Learning Pipeline"]
+        PRE[Preprocessing]
+        FE[Feature Engineering]
+        CNN[CNN Model]
+        AE[Autoencoder]
+        ENS[Ensemble Model]
+    end
+
+    subgraph INF["Inference &amp; Alert System"]
+        API[FastAPI Endpoint]
+        CONF[Confidence Scoring]
+        ALERT[Alert Generator]
+    end
+
+    subgraph VIZ["Visualization Dashboard"]
+        STREAM[Streamlit Dashboard]
+        KPI[KPI Metrics]
+        GCAM[GradCAM Views]
+        HIST[Historical Trends]
+    end
+
+    subgraph MES["MES Integration"]
+        SIM[MES Simulator]
+        HOOK[Integration Hooks]
+    end
+
+    SECOM --&gt; VAL
+    WM811K --&gt; VAL
+    VAL --&gt; PRE
+    PRE --&gt; FE
+    FE --&gt; CNN
+    FE --&gt; AE
+    CNN --&gt; ENS
+    AE --&gt; ENS
+    ENS --&gt; API
+    API --&gt; CONF
+    CONF --&gt; ALERT
+    API --&gt; STREAM
+    ALERT --&gt; STREAM
+    STREAM --&gt; KPI
+    STREAM --&gt; GCAM
+    STREAM --&gt; HIST
+    API --&gt; HOOK
+    SIM --&gt; HOOK
+
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="data-flow" class="level2">
+<h2 class="anchored" data-anchor-id="data-flow">Data Flow</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    A[Raw Data] --&gt; B[Preprocessing]
+    B --&gt; C[Feature Engineering]
+    C --&gt; D[Model Training]
+    D --&gt; E[Validation]
+    E --&gt; F[Deployment]
+    F --&gt; G[Real-time Inference]
+    G --&gt; H[Dashboard]
+    H --&gt; I[Alerts]
+
+    style A fill:#e1f5fe
+    style D fill:#fff3e0
+    style H fill:#e8f5e9
+    style I fill:#ffebee
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="epics-overview" class="level2">
+<h2 class="anchored" data-anchor-id="epics-overview">Epics Overview</h2>
+<section id="recommended-epic-structure" class="level3">
+<h3 class="anchored" data-anchor-id="recommended-epic-structure">Recommended Epic Structure</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 28%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Epic ID</th>
+<th>Name</th>
+<th>Description</th>
+<th>Phase Alignment</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>KAN-1</strong></td>
+<td>Data Pipeline &amp; Foundation</td>
+<td>Environment setup, data acquisition, EDA, preprocessing</td>
+<td>Phase 1-2</td>
+</tr>
+<tr class="even">
+<td><strong>KAN-2</strong></td>
+<td>Anomaly Detection (ML) Model</td>
+<td>CNN + Autoencoder development, training, validation</td>
+<td>Phase 3</td>
+</tr>
+<tr class="odd">
+<td><strong>KAN-3</strong></td>
+<td>MES Integration &amp; API</td>
+<td>FastAPI inference endpoints, MES simulation, alert system</td>
+<td>Phase 4</td>
+</tr>
+<tr class="even">
+<td><strong>KAN-4</strong></td>
+<td>Analytics + Dashboard</td>
+<td>Streamlit dashboard, visualizations, KPIs, GradCAM</td>
+<td>Phase 4</td>
+</tr>
+<tr class="odd">
+<td><strong>KAN-5</strong></td>
+<td>Governance &amp; Audit-ability</td>
+<td>Model versioning (MLflow), documentation, evaluation reports</td>
+<td>Phase 5</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="why-this-structure" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-structure">Why This Structure?</h3>
+<p>Your original epics were solid. I recommend: - <strong>Split KAN-1</strong> into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2) - <strong>Keep KAN-2</strong> (MES Integration) as KAN-3 - <strong>Keep KAN-3</strong> (Analytics+Dashboard) as KAN-4 - <strong>Keep KAN-4</strong> (Governance) as KAN-5</p>
+<p>This gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation</p>
+</section>
+<section id="epic-dependency-flow" class="level3">
+<h3 class="anchored" data-anchor-id="epic-dependency-flow">Epic Dependency Flow</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    KAN1[KAN-1&lt;br/&gt;Data Pipeline]
+    KAN2[KAN-2&lt;br/&gt;ML Model]
+    KAN3[KAN-3&lt;br/&gt;MES Integration]
+    KAN4[KAN-4&lt;br/&gt;Dashboard]
+    KAN5[KAN-5&lt;br/&gt;Governance]
+
+    KAN1 --&gt; KAN2
+    KAN2 --&gt; KAN3
+    KAN2 --&gt; KAN4
+    KAN3 --&gt; KAN4
+    KAN4 --&gt; KAN5
+    KAN3 --&gt; KAN5
+
+    style KAN1 fill:#bbdefb,color:#000000
+    style KAN2 fill:#c8e6c9,color:#000000
+    style KAN3 fill:#fff9c4,color:#000000
+    style KAN4 fill:#ffccbc,color:#000000
+    style KAN5 fill:#e1bee7,color:#000000
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="sprint-timeline" class="level2">
+<h2 class="anchored" data-anchor-id="sprint-timeline">Sprint Timeline</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">gantt
+    title WaferGuard ML - Sprint Timeline
+    dateFormat  YYYY-MM-DD
+    section KAN-1 Data Pipeline
+        Sprint 1 - Foundation     :s1, 2026-01-27, 14d
+        Sprint 2 - Data Pipeline  :s2, after s1, 14d
+    section KAN-2 ML Model
+        Sprint 3 - Model Dev      :s3, after s2, 14d
+        Sprint 4 - Refinement     :s4, after s3, 14d
+    section KAN-3 &amp; KAN-4
+        Sprint 4 - API            :s4b, after s3, 14d
+        Sprint 5 - Dashboard      :s5, after s4, 14d
+    section KAN-5 Governance
+        Sprint 6 - Documentation  :s6, after s5, 14d
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="sprint-breakdown" class="level2">
+<h2 class="anchored" data-anchor-id="sprint-breakdown">Sprint Breakdown</h2>
+<section id="sprint-1-foundation-week-1-2" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-1-foundation-week-1-2">Sprint 1: Foundation (Week 1-2)</h3>
+<p><strong>Epic:</strong> KAN-1 (Data Pipeline &amp; Foundation)</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 31%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-1-001</td>
+<td>Set up Python environment (requirements.txt, venv)</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-002</td>
+<td>Initialize Git repo with branching strategy</td>
+<td>TBD</td>
+<td>1</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-003</td>
+<td>Download SECOM dataset + verify integrity</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-004</td>
+<td>Download WM811K wafer images + verify</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-005</td>
+<td>EDA notebook - SECOM sensor data</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-006</td>
+<td>EDA notebook - WM811K image analysis</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-007</td>
+<td>Data quality assessment report</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-008</td>
+<td>Set up Jira board with epics/stories</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-009</td>
+<td>Set up MLflow for experiment tracking</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 1 Goal:</strong> Development environment ready, datasets loaded, initial EDA complete</p>
+<hr>
+</section>
+<section id="sprint-2-data-pipeline-week-3-4" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-2-data-pipeline-week-3-4">Sprint 2: Data Pipeline (Week 3-4)</h3>
+<p><strong>Epic:</strong> KAN-1 (Data Pipeline &amp; Foundation)</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 31%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-1-010</td>
+<td>SECOM preprocessing pipeline (missing values, outliers)</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-011</td>
+<td>Feature engineering for sensor data</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-012</td>
+<td>WM811K image preprocessing (resize, normalize)</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-013</td>
+<td>Image augmentation strategy (rotation, flip)</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-014</td>
+<td>Train/validation/test split implementation</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-1-015</td>
+<td>Data loader classes (PyTorch/TensorFlow)</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-1-016</td>
+<td>Handle class imbalance (SMOTE/class weights)</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 2 Goal:</strong> Clean, processed datasets ready for model training</p>
+<hr>
+</section>
+<section id="sprint-3-ml-model-development-week-5-6" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-3-ml-model-development-week-5-6">Sprint 3: ML Model Development (Week 5-6)</h3>
+<p><strong>Epic:</strong> KAN-2 (Anomaly Detection Model)</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 31%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-2-001</td>
+<td>CNN architecture design for wafer classification</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-2-002</td>
+<td>Implement CNN model (PyTorch/TensorFlow)</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-2-003</td>
+<td>Autoencoder architecture for sensor anomaly</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-2-004</td>
+<td>Implement Autoencoder model</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-2-005</td>
+<td>Training pipeline with early stopping</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-2-006</td>
+<td>Hyperparameter tuning setup</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-2-007</td>
+<td>Baseline model benchmarking</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 3 Goal:</strong> Working CNN and Autoencoder models with baseline metrics</p>
+<hr>
+</section>
+<section id="sprint-4-model-refinement-api-week-7-8" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-4-model-refinement-api-week-7-8">Sprint 4: Model Refinement + API (Week 7-8)</h3>
+<p><strong>Epics:</strong> KAN-2 (Model), KAN-3 (MES Integration)</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 13%">
+<col style="width: 15%">
+<col style="width: 31%">
+<col style="width: 18%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-2-008</td>
+<td>Model validation and cross-validation</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-2-009</td>
+<td>Ensemble model (CNN + Autoencoder)</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-2-010</td>
+<td>GradCAM implementation for explainability</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-3-001</td>
+<td>FastAPI inference endpoint design</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-3-002</td>
+<td>Implement /predict endpoint</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-3-003</td>
+<td>Confidence scoring and threshold logic</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-3-004</td>
+<td>MES simulation mock data generator</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-3-005</td>
+<td>Alert generation logic</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 4 Goal:</strong> Optimized models, working inference API</p>
+<hr>
+</section>
+<section id="sprint-5-dashboard-development-week-9-10" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-5-dashboard-development-week-9-10">Sprint 5: Dashboard Development (Week 9-10)</h3>
+<p><strong>Epic:</strong> KAN-4 (Analytics + Dashboard)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-4-001</td>
+<td>Dashboard wireframes in Figma</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-4-002</td>
+<td>Streamlit app skeleton</td>
+<td>TBD</td>
+<td>2</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-4-003</td>
+<td>Real-time anomaly detection view</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-4-004</td>
+<td>Historical trend analysis charts</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-4-005</td>
+<td>Model confidence visualization</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-4-006</td>
+<td>GradCAM attention map display</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-4-007</td>
+<td>Production KPIs (OEE, defect rate)</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-4-008</td>
+<td>Alert notification panel</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-4-009</td>
+<td>Interactive filtering and drill-down</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 5 Goal:</strong> Functional dashboard with all visualizations</p>
+<hr>
+</section>
+<section id="sprint-6-evaluation-documentation-week-11-12" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-6-evaluation-documentation-week-11-12">Sprint 6: Evaluation &amp; Documentation (Week 11-12)</h3>
+<p><strong>Epic:</strong> KAN-5 (Governance &amp; Audit-ability)</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Task ID</th>
+<th>Task</th>
+<th>Owner</th>
+<th>Story Points</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>KAN-5-001</td>
+<td>Comprehensive model evaluation report</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-5-002</td>
+<td>Comparison vs baseline (SPC, manual)</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-5-003</td>
+<td>Model versioning documentation</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-5-004</td>
+<td>API documentation (OpenAPI/Swagger)</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-5-005</td>
+<td>User guide for dashboard</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-5-006</td>
+<td>Technical architecture documentation</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-5-007</td>
+<td>Final presentation slides</td>
+<td>TBD</td>
+<td>5</td>
+<td>TODO</td>
+</tr>
+<tr class="even">
+<td>KAN-5-008</td>
+<td>Live demo preparation</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+<tr class="odd">
+<td>KAN-5-009</td>
+<td>Code cleanup and refactoring</td>
+<td>TBD</td>
+<td>3</td>
+<td>TODO</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Sprint 6 Goal:</strong> Complete documentation, presentation ready</p>
+<hr>
+</section>
+</section>
+<section id="work-stream-assignments" class="level2">
+<h2 class="anchored" data-anchor-id="work-stream-assignments">Work Stream Assignments</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Work Stream</th>
+<th>Specialist</th>
+<th>Assistant</th>
+<th>Primary Epics</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Data Engineering &amp; ML Pipeline</td>
+<td>TBD</td>
+<td>TBD</td>
+<td>KAN-1</td>
+</tr>
+<tr class="even">
+<td>Model Development &amp; Training</td>
+<td>TBD</td>
+<td>TBD</td>
+<td>KAN-2</td>
+</tr>
+<tr class="odd">
+<td>Dashboard &amp; Integration</td>
+<td>TBD</td>
+<td>TBD</td>
+<td>KAN-3, KAN-4</td>
+</tr>
+<tr class="even">
+<td>Evaluation &amp; Documentation</td>
+<td>TBD</td>
+<td>TBD</td>
+<td>KAN-5</td>
+</tr>
+</tbody>
+</table>
+<section id="team-structure" class="level3">
+<h3 class="anchored" data-anchor-id="team-structure">Team Structure</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Team["WaferGuard ML Team"]
+        subgraph WS1["Data Engineering"]
+            DE1[Specialist: TBD]
+            DE2[Assistant: TBD]
+        end
+        subgraph WS2["Model Development"]
+            MD1[Specialist: TBD]
+            MD2[Assistant: TBD]
+        end
+        subgraph WS3["Dashboard &amp; Integration"]
+            DI1[Specialist: TBD]
+            DI2[Assistant: TBD]
+        end
+        subgraph WS4["Evaluation &amp; Docs"]
+            ED1[Specialist: TBD]
+            ED2[Assistant: TBD]
+        end
+    end
+
+    WS1 --&gt;|Data| WS2
+    WS2 --&gt;|Models| WS3
+    WS3 --&gt;|System| WS4
+
+    style WS1 fill:#bbdefb
+    style WS2 fill:#c8e6c9
+    style WS3 fill:#fff9c4
+    style WS4 fill:#e1bee7
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="ml-model-architecture" class="level2">
+<h2 class="anchored" data-anchor-id="ml-model-architecture">ML Model Architecture</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+    subgraph Input["Input Data"]
+        IMG[Wafer Images&lt;br/&gt;WM811K]
+        SEN[Sensor Data&lt;br/&gt;SECOM]
+    end
+
+    subgraph CNN["CNN Pipeline"]
+        C1[Conv2D + ReLU]
+        C2[MaxPool]
+        C3[Conv2D + ReLU]
+        C4[MaxPool]
+        C5[Flatten]
+        C6[Dense + Softmax]
+    end
+
+    subgraph AE["Autoencoder Pipeline"]
+        E1[Encoder]
+        E2[Latent Space]
+        E3[Decoder]
+        E4[Reconstruction Error]
+    end
+
+    subgraph Ensemble["Ensemble Decision"]
+        COMB[Score Combination]
+        THRESH[Threshold Logic]
+        OUT[Final Prediction]
+    end
+
+    IMG --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4 --&gt; C5 --&gt; C6
+    SEN --&gt; E1 --&gt; E2 --&gt; E3 --&gt; E4
+    C6 --&gt; COMB
+    E4 --&gt; COMB
+    COMB --&gt; THRESH --&gt; OUT
+
+    style CNN fill:#e3f2fd
+    style AE fill:#f3e5f5
+    style Ensemble fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="technology-stack-recommended" class="level2">
+<h2 class="anchored" data-anchor-id="technology-stack-recommended">Technology Stack (Recommended)</h2>
+<pre><code>Core:           Python 3.9+
+ML Framework:   PyTorch (recommended) or TensorFlow/Keras
+Data:           NumPy, Pandas, Scikit-learn, OpenCV
+Dashboard:      Streamlit (faster dev) or Plotly Dash
+API:            FastAPI
+Tracking:       MLflow
+Explainability: SHAP, GradCAM
+Version Control: Git + GitHub
+Project Mgmt:   Jira</code></pre>
+<section id="tech-stack-diagram" class="level3">
+<h3 class="anchored" data-anchor-id="tech-stack-diagram">Tech Stack Diagram</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph Frontend["Frontend"]
+        ST[Streamlit]
+        FIG[Figma]
+    end
+
+    subgraph Backend["Backend"]
+        FA[FastAPI]
+        ML[MLflow]
+    end
+
+    subgraph ML_Stack["ML Stack"]
+        PT[PyTorch]
+        SK[Scikit-learn]
+        CV[OpenCV]
+    end
+
+    subgraph Data_Stack["Data"]
+        PD[Pandas]
+        NP[NumPy]
+    end
+
+    subgraph DevOps["DevOps"]
+        GIT[Git/GitHub]
+        JIRA[Jira]
+    end
+
+    Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend
+    DevOps -.-&gt; Backend
+    DevOps -.-&gt; ML_Stack
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="key-datasets" class="level2">
+<h2 class="anchored" data-anchor-id="key-datasets">Key Datasets</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 36%">
+<col style="width: 16%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>Description</th>
+<th>Size</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SECOM</td>
+<td>Sensor data (590 features)</td>
+<td>~1,500 samples</td>
+<td>UCI ML Repository</td>
+</tr>
+<tr class="even">
+<td>WM811K</td>
+<td>Wafer map images</td>
+<td>~38,000 images</td>
+<td>Kaggle</td>
+</tr>
+</tbody>
+</table>
+<section id="data-pipeline-overview" class="level3">
+<h3 class="anchored" data-anchor-id="data-pipeline-overview">Data Pipeline Overview</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart LR
+    subgraph Sources["Data Sources"]
+        S1[(SECOM&lt;br/&gt;UCI Repository)]
+        S2[(WM811K&lt;br/&gt;Kaggle)]
+    end
+
+    subgraph Processing["Processing"]
+        P1[Missing Value&lt;br/&gt;Imputation]
+        P2[Outlier&lt;br/&gt;Detection]
+        P3[Normalization]
+        P4[Image Resize&lt;br/&gt;&amp; Augment]
+    end
+
+    subgraph Output["Processed Data"]
+        O1[Train Set&lt;br/&gt;70%]
+        O2[Val Set&lt;br/&gt;15%]
+        O3[Test Set&lt;br/&gt;15%]
+    end
+
+    S1 --&gt; P1 --&gt; P2 --&gt; P3 --&gt; O1 &amp; O2 &amp; O3
+    S2 --&gt; P4 --&gt; O1 &amp; O2 &amp; O3
+
+    style Sources fill:#e3f2fd
+    style Processing fill:#fff8e1
+    style Output fill:#e8f5e9
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="success-criteria" class="level2">
+<h2 class="anchored" data-anchor-id="success-criteria">Success Criteria</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Metric</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>CNN Accuracy</td>
+<td>&gt;90%</td>
+</tr>
+<tr class="even">
+<td>False Positive Rate</td>
+<td>&lt;5%</td>
+</tr>
+<tr class="odd">
+<td>Inference Latency</td>
+<td>&lt;500ms</td>
+</tr>
+<tr class="even">
+<td>Dashboard Refresh</td>
+<td>&lt;2s</td>
+</tr>
+</tbody>
+</table>
+<section id="story-points-by-epic" class="level3">
+<h3 class="anchored" data-anchor-id="story-points-by-epic">Story Points by Epic</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">pie showData
+    title Story Points Distribution
+    "KAN-1 Data Pipeline" : 47
+    "KAN-2 ML Model" : 42
+    "KAN-3 MES Integration" : 17
+    "KAN-4 Dashboard" : 34
+    "KAN-5 Governance" : 33
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="inference-flow" class="level2">
+<h2 class="anchored" data-anchor-id="inference-flow">Inference Flow</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">sequenceDiagram
+    participant MES as MES System
+    participant API as FastAPI
+    participant Model as ML Model
+    participant DB as MLflow
+    participant Dash as Dashboard
+    participant Eng as Process Engineer
+
+    MES-&gt;&gt;API: POST /predict (wafer data)
+    API-&gt;&gt;Model: Load model from registry
+    Model-&gt;&gt;DB: Get latest model version
+    DB--&gt;&gt;Model: Return model weights
+    Model-&gt;&gt;Model: Run inference
+    Model--&gt;&gt;API: Prediction + confidence
+    API-&gt;&gt;API: Apply threshold logic
+
+    alt Anomaly Detected
+        API-&gt;&gt;Dash: Send alert
+        Dash-&gt;&gt;Eng: Display notification
+        API--&gt;&gt;MES: Response (anomaly: true)
+    else Normal
+        API--&gt;&gt;MES: Response (anomaly: false)
+    end
+
+    API-&gt;&gt;Dash: Update real-time view
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="sprint-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="sprint-workflow">Sprint Workflow</h2>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">stateDiagram-v2
+    [*] --&gt; Planning: Sprint Start
+    Planning --&gt; InProgress: Tasks Assigned
+    InProgress --&gt; CodeReview: PR Created
+    CodeReview --&gt; Testing: Approved
+    Testing --&gt; Done: Tests Pass
+    CodeReview --&gt; InProgress: Changes Requested
+    Testing --&gt; InProgress: Tests Fail
+    Done --&gt; [*]: Sprint End
+
+    note right of Planning: 2 hour session
+    note right of InProgress: Daily standups
+    note right of Done: Sprint review
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="current-sprint-status" class="level2">
+<h2 class="anchored" data-anchor-id="current-sprint-status">Current Sprint Status</h2>
+<p><strong>Active Sprint:</strong> Sprint 1 - Foundation <strong>Sprint Start:</strong> TBD <strong>Sprint End:</strong> TBD</p>
+<section id="sprint-1-progress" class="level3">
+<h3 class="anchored" data-anchor-id="sprint-1-progress">Sprint 1 Progress</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Environment setup</label></li>
+<li><label><input type="checkbox">Data acquisition</label></li>
+<li><label><input type="checkbox">EDA complete</label></li>
+<li><label><input type="checkbox">Jira configured</label></li>
+</ul>
+<hr>
+</section>
+</section>
+<section id="meeting-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="meeting-schedule">Meeting Schedule</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Meeting</th>
+<th>Frequency</th>
+<th>Duration</th>
+<th>Day/Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sprint Planning</td>
+<td>Bi-weekly</td>
+<td>2 hours</td>
+<td>Sprint Day 1</td>
+</tr>
+<tr class="even">
+<td>Daily Standup</td>
+<td>Daily</td>
+<td>15 min</td>
+<td>TBD</td>
+</tr>
+<tr class="odd">
+<td>Sprint Review</td>
+<td>Bi-weekly</td>
+<td>1.5 hours</td>
+<td>Sprint Last Day</td>
+</tr>
+<tr class="even">
+<td>Sprint Retro</td>
+<td>Bi-weekly</td>
+<td>1 hour</td>
+<td>Sprint Last Day</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="quick-links" class="level2">
+<h2 class="anchored" data-anchor-id="quick-links">Quick Links</h2>
+<ul class="task-list">
+<li><label><input type="checkbox">Jira Board: TBD</label></li>
+<li><label><input type="checkbox">GitHub Repo: TBD</label></li>
+<li><label><input type="checkbox">Figma Designs: TBD</label></li>
+<li><label><input type="checkbox">MLflow Dashboard: TBD</label></li>
+<li><label><input type="checkbox">Google Drive: TBD</label></li>
+</ul>
+<hr>
+<p><em>Last Updated: 2026-01-23</em></p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
