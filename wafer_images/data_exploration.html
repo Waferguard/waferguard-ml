@@ -325,22 +325,23 @@ Example label rows:</code></pre>
 <span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="co"># Create DataFrame with label names</span></span>
 <span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>label_df <span class="op">=</span> (</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    pd.DataFrame([</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"OneHot"</span>: k, <span class="st">"Count"</span>: v, <span class="st">"LabelName"</span>: label_mapping.get(k, <span class="st">"Unknown"</span>)} <span class="cf">for</span> k, v <span class="kw">in</span> label_counts.items()</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    ])</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"OneHot"</span>)</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="co"># plot label distribution with seaborn</span></span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>label_df, x<span class="op">=</span><span class="st">"Count"</span>, y<span class="op">=</span><span class="st">"LabelName"</span>, order<span class="op">=</span>label_df.sort_values(<span class="st">"Count"</span>, ascending<span class="op">=</span><span class="va">False</span>)[<span class="st">"LabelName"</span>])</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Frequency"</span>)</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Defect Type"</span>)</span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution of Wafer Defect Types"</span>)</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    pd</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    .DataFrame([</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"OneHot"</span>: k, <span class="st">"Count"</span>: v, <span class="st">"LabelName"</span>: label_mapping.get(k, <span class="st">"Unknown"</span>)} <span class="cf">for</span> k, v <span class="kw">in</span> label_counts.items()</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    .sort_values(<span class="st">"OneHot"</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="co"># plot label distribution with seaborn</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>sns.set_theme(style<span class="op">=</span><span class="st">"whitegrid"</span>)</span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">7</span>))</span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>sns.barplot(data<span class="op">=</span>label_df, x<span class="op">=</span><span class="st">"Count"</span>, y<span class="op">=</span><span class="st">"LabelName"</span>, order<span class="op">=</span>label_df.sort_values(<span class="st">"Count"</span>, ascending<span class="op">=</span><span class="va">False</span>)[<span class="st">"LabelName"</span>])</span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Frequency"</span>)</span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Defect Type"</span>)</span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Distribution of Wafer Defect Types"</span>)</span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div>
 <figure class="figure">
