@@ -170,18 +170,20 @@ window.Quarto = {
 
 <div id="6464ebb5" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> <span class="st">"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz"</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> Model, layers</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.load(data_path)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> data[<span class="st">"arr_0"</span>]</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> data[<span class="st">"arr_1"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> <span class="st">"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.load(data_path)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> data[<span class="st">"arr_0"</span>]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> data[<span class="st">"arr_1"</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li><strong>[‘arr_0’]:</strong> Defect data of mixed-type wafer map, <strong>0 means blank spot</strong>, <strong>1 represents normal die that passed the electrical test</strong>, and <strong>2 represents broken die that failed the electrical test</strong>. The data shape is 52×52.</li>
@@ -589,35 +591,43 @@ Verification — channel sums for first image:
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># First split: 70% train, 30% temp</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>X_train, X_temp, y_train, y_temp, str_train, str_temp <span class="op">=</span> train_test_split(</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    images_onehot, labels, label_str_arr,</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.30</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>label_str_arr,</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Second split: 50/50 of temp -&gt; 15% val, 15% test</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>X_val, X_test, y_val, y_test, str_val, str_test <span class="op">=</span> train_test_split(</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    X_temp, y_temp, str_temp,</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.50</span>, random_state<span class="op">=</span><span class="dv">42</span>, stratify<span class="op">=</span>str_temp,</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Train: </span><span class="sc">{</span>X_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Val:   </span><span class="sc">{</span>X_val<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test:  </span><span class="sc">{</span>X_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify: check that all 38 patterns are present in each split</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, strs <span class="kw">in</span> [(<span class="st">"Train"</span>, str_train), (<span class="st">"Val"</span>, str_val), (<span class="st">"Test"</span>, str_test)]:</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    unique_patterns <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(strs))</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> — unique patterns: </span><span class="sc">{</span>unique_patterns<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Show per-label distribution across splits</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>base_labels <span class="op">=</span> [<span class="st">"Center"</span>, <span class="st">"Donut"</span>, <span class="st">"Edge_Loc"</span>, <span class="st">"Edge_Ring"</span>, <span class="st">"Loc"</span>, <span class="st">"Near_Full"</span>, <span class="st">"Scratch"</span>, <span class="st">"Random"</span>]</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Per-label sample counts:"</span>)</span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>header <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span><span class="st">'Label'</span><span class="sc">:&lt;12}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Train'</span><span class="sc">:&gt;6}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Val'</span><span class="sc">:&gt;6}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Test'</span><span class="sc">:&gt;6}</span><span class="ss">"</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(header)</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, name <span class="kw">in</span> <span class="bu">enumerate</span>(base_labels):</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    tr <span class="op">=</span> y_train[:, i].<span class="bu">sum</span>()</span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> y_val[:, i].<span class="bu">sum</span>()</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>    te <span class="op">=</span> y_test[:, i].<span class="bu">sum</span>()</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:&lt;12}</span><span class="ss"> </span><span class="sc">{</span>tr<span class="sc">:&gt;6.0f}</span><span class="ss"> </span><span class="sc">{</span>va<span class="sc">:&gt;6.0f}</span><span class="ss"> </span><span class="sc">{</span>te<span class="sc">:&gt;6.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    images_onehot,</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    labels,</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    label_str_arr,</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.30</span>,</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    stratify<span class="op">=</span>label_str_arr,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Second split: 50/50 of temp -&gt; 15% val, 15% test</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>X_val, X_test, y_val, y_test, str_val, str_test <span class="op">=</span> train_test_split(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    X_temp,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    y_temp,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    str_temp,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    test_size<span class="op">=</span><span class="fl">0.50</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    stratify<span class="op">=</span>str_temp,</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Train: </span><span class="sc">{</span>X_train<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Val:   </span><span class="sc">{</span>X_val<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Test:  </span><span class="sc">{</span>X_test<span class="sc">.</span>shape[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> samples"</span>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Verify: check that all 38 patterns are present in each split</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, strs <span class="kw">in</span> [(<span class="st">"Train"</span>, str_train), (<span class="st">"Val"</span>, str_val), (<span class="st">"Test"</span>, str_test)]:</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    unique_patterns <span class="op">=</span> <span class="bu">len</span>(<span class="bu">set</span>(strs))</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss"> — unique patterns: </span><span class="sc">{</span>unique_patterns<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Show per-label distribution across splits</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>base_labels <span class="op">=</span> [<span class="st">"Center"</span>, <span class="st">"Donut"</span>, <span class="st">"Edge_Loc"</span>, <span class="st">"Edge_Ring"</span>, <span class="st">"Loc"</span>, <span class="st">"Near_Full"</span>, <span class="st">"Scratch"</span>, <span class="st">"Random"</span>]</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Per-label sample counts:"</span>)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>header <span class="op">=</span> <span class="ss">f"</span><span class="sc">{</span><span class="st">'Label'</span><span class="sc">:&lt;12}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Train'</span><span class="sc">:&gt;6}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Val'</span><span class="sc">:&gt;6}</span><span class="ss"> </span><span class="sc">{</span><span class="st">'Test'</span><span class="sc">:&gt;6}</span><span class="ss">"</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(header)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, name <span class="kw">in</span> <span class="bu">enumerate</span>(base_labels):</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>    tr <span class="op">=</span> y_train[:, i].<span class="bu">sum</span>()</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    va <span class="op">=</span> y_val[:, i].<span class="bu">sum</span>()</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    te <span class="op">=</span> y_test[:, i].<span class="bu">sum</span>()</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>name<span class="sc">:&lt;12}</span><span class="ss"> </span><span class="sc">{</span>tr<span class="sc">:&gt;6.0f}</span><span class="ss"> </span><span class="sc">{</span>va<span class="sc">:&gt;6.0f}</span><span class="ss"> </span><span class="sc">{</span>te<span class="sc">:&gt;6.0f}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Train: 26610 samples
 Val:   5702 samples
@@ -643,7 +653,7 @@ Random          606    130    130</code></pre>
 <h2 class="anchored" data-anchor-id="step-3-data-augmentation">Step 3 — Data Augmentation</h2>
 <p>Apply geometrically valid augmentations (rotations, flips, shifts) since wafer maps are rotationally symmetric. We create a <code>tf.data</code> pipeline with augmentation applied <strong>only during training</strong>.</p>
 <p>We avoid elastic deformations and color jitter — the pixel values are discrete categorical states, not continuous intensities.</p>
-<div id="e6172f1e" class="cell" data-execution_count="21">
+<div id="e6172f1e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>BATCH_SIZE <span class="op">=</span> <span class="dv">32</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>AUTOTUNE <span class="op">=</span> tf.data.AUTOTUNE</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -666,11 +676,11 @@ Random          606    130    130</code></pre>
 <span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> image, label</span>
 <span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_dataset(X, y, <span class="op">*</span>, shuffle<span class="op">=</span><span class="va">False</span>, augment_fn<span class="op">=</span><span class="va">None</span>, batch_size<span class="op">=</span>BATCH_SIZE):</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_dataset(x, y, <span class="op">*</span>, shuffle<span class="op">=</span><span class="va">False</span>, augment_fn<span class="op">=</span><span class="va">None</span>, batch_size<span class="op">=</span>BATCH_SIZE):</span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Create a tf.data.Dataset with optional shuffling and augmentation."""</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> tf.data.Dataset.from_tensor_slices((X, y))</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> tf.data.Dataset.from_tensor_slices((x, y))</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> shuffle:</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> ds.shuffle(buffer_size<span class="op">=</span><span class="bu">len</span>(X), seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> ds.shuffle(buffer_size<span class="op">=</span><span class="bu">len</span>(x), seed<span class="op">=</span><span class="dv">42</span>)</span>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> augment_fn <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
 <span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>        ds <span class="op">=</span> ds.<span class="bu">map</span>(augment_fn, num_parallel_calls<span class="op">=</span>AUTOTUNE)</span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> ds.batch(batch_size).prefetch(AUTOTUNE)</span>
@@ -705,7 +715,7 @@ Image value range: 0.0 to 1.0</code></pre>
 <li><span class="math inline">\(\alpha_t\)</span>: per-label weight (higher for rare classes)</li>
 <li><span class="math inline">\(\gamma\)</span>: focusing parameter (typically 2.0)</li>
 </ul>
-<div id="80755e85" class="cell" data-execution_count="22">
+<div id="80755e85" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute per-label positive weights for the 8 base defect types</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Weight = (total_neg / total_pos) for each label column</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> y_train.shape[<span class="dv">0</span>]</span>
@@ -747,17 +757,14 @@ Image value range: 0.0 to 1.0</code></pre>
 <span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>        focal_weight <span class="op">=</span> tf.<span class="bu">pow</span>(<span class="fl">1.0</span> <span class="op">-</span> p_t, <span class="va">self</span>.gamma)</span>
 <span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Apply per-label positive weights</span></span>
-<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.pos_weight <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>:</span>
-<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>            alpha <span class="op">=</span> y_true <span class="op">*</span> <span class="va">self</span>.pos_weight <span class="op">+</span> (<span class="fl">1.0</span> <span class="op">-</span> y_true) <span class="op">*</span> <span class="fl">1.0</span></span>
-<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
-<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>            alpha <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> y_true <span class="op">*</span> <span class="va">self</span>.pos_weight <span class="op">+</span> (<span class="fl">1.0</span> <span class="op">-</span> y_true) <span class="op">*</span> <span class="fl">1.0</span> <span class="cf">if</span> <span class="va">self</span>.pos_weight <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">else</span> <span class="fl">1.0</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> focal_weight <span class="op">*</span> alpha <span class="op">*</span> (bce_pos <span class="op">+</span> bce_neg)</span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> tf.reduce_mean(loss, axis<span class="op">=-</span><span class="dv">1</span>)</span>
 <span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>        loss <span class="op">=</span> focal_weight <span class="op">*</span> alpha <span class="op">*</span> (bce_pos <span class="op">+</span> bce_neg)</span>
-<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> tf.reduce_mean(loss, axis<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>focal_loss <span class="op">=</span> BinaryFocalLoss(gamma<span class="op">=</span><span class="fl">2.0</span>, pos_weight<span class="op">=</span>pos_weights_tensor)</span>
-<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Focal Loss initialized with gamma=2.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>focal_loss <span class="op">=</span> BinaryFocalLoss(gamma<span class="op">=</span><span class="fl">2.0</span>, pos_weight<span class="op">=</span>pos_weights_tensor)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Focal Loss initialized with gamma=2.0"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Per-label positive weights:
   Center        weight=  1.92  (pos_count=9100)
@@ -777,36 +784,33 @@ Focal Loss initialized with gamma=2.0</code></pre>
 <h2 class="anchored" data-anchor-id="step-5-model-1a-custom-cnn">Step 5 — Model 1A: Custom CNN</h2>
 <p>A lightweight CNN designed for the <code>(52, 52, 3)</code> input size: - 4 Conv2D blocks (32 → 64 → 128 → 256 filters), each with BatchNormalization + ReLU + MaxPooling - GlobalAveragePooling2D (reduces overfitting vs Flatten) - Dense(128) → Dropout(0.5) → Dense(8, sigmoid)</p>
 <p>Output: 8 independent sigmoid activations for multi-label classification.</p>
-<div id="fd966058" class="cell" data-execution_count="29">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tensorflow.keras <span class="im">import</span> layers, Model</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<div id="fd966058" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_custom_cnn(input_shape<span class="op">=</span>(<span class="dv">52</span>, <span class="dv">52</span>, <span class="dv">3</span>), num_labels<span class="op">=</span><span class="dv">8</span>):</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Build a lightweight CNN for multi-label wafer defect classification.</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_custom_cnn(input_shape<span class="op">=</span>(<span class="dv">52</span>, <span class="dv">52</span>, <span class="dv">3</span>), num_labels<span class="op">=</span><span class="dv">8</span>):</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Build a lightweight CNN for multi-label wafer defect classification.</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Architecture:</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">        4 Conv blocks (32→64→128→256) with BatchNorm + ReLU + MaxPool</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">        GlobalAveragePooling → Dense(128) → Dropout → Dense(num_labels, sigmoid)</span></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    inputs <span class="op">=</span> layers.Input(shape<span class="op">=</span>input_shape, name<span class="op">=</span><span class="st">"input_image"</span>)</span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> inputs</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filters <span class="kw">in</span> [<span class="dv">32</span>, <span class="dv">64</span>, <span class="dv">128</span>, <span class="dv">256</span>]:</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.Conv2D(filters, (<span class="dv">3</span>, <span class="dv">3</span>), padding<span class="op">=</span><span class="st">"same"</span>)(x)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.BatchNormalization()(x)</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.Activation(<span class="st">"relu"</span>)(x)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.MaxPooling2D((<span class="dv">2</span>, <span class="dv">2</span>))(x)</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.GlobalAveragePooling2D()(x)</span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">"relu"</span>)(x)</span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.Dropout(<span class="fl">0.5</span>)(x)</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> layers.Dense(num_labels, activation<span class="op">=</span><span class="st">"sigmoid"</span>, name<span class="op">=</span><span class="st">"output"</span>)(x)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Architecture:</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">        4 Conv blocks (32→64→128→256) with BatchNorm + ReLU + MaxPool</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">        GlobalAveragePooling → Dense(128) → Dropout → Dense(num_labels, sigmoid)</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    inputs <span class="op">=</span> layers.Input(shape<span class="op">=</span>input_shape, name<span class="op">=</span><span class="st">"input_image"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> inputs</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> filters <span class="kw">in</span> [<span class="dv">32</span>, <span class="dv">64</span>, <span class="dv">128</span>, <span class="dv">256</span>]:</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.Conv2D(filters, (<span class="dv">3</span>, <span class="dv">3</span>), padding<span class="op">=</span><span class="st">"same"</span>)(x)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.BatchNormalization()(x)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.Activation(<span class="st">"relu"</span>)(x)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> layers.MaxPooling2D((<span class="dv">2</span>, <span class="dv">2</span>))(x)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.GlobalAveragePooling2D()(x)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.Dense(<span class="dv">128</span>, activation<span class="op">=</span><span class="st">"relu"</span>)(x)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> layers.Dropout(<span class="fl">0.5</span>)(x)</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> layers.Dense(num_labels, activation<span class="op">=</span><span class="st">"sigmoid"</span>, name<span class="op">=</span><span class="st">"output"</span>)(x)</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Model(inputs, outputs, name<span class="op">=</span><span class="st">"custom_cnn"</span>)</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Model(inputs, outputs, name<span class="op">=</span><span class="st">"custom_cnn"</span>)</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>model_cnn <span class="op">=</span> build_custom_cnn()</span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>model_cnn.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>model_cnn <span class="op">=</span> build_custom_cnn()</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>model_cnn.summary()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace"><span style="font-weight: bold">Model: "custom_cnn"</span>
 </pre>
@@ -979,17 +983,24 @@ MobileNetV2 base: 0/154 trainable layers (should be 0/154)</code></pre>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>callbacks <span class="op">=</span> [</span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.ReduceLROnPlateau(</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-6</span>, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.EarlyStopping(</span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> [</span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    tf.keras.metrics.AUC(name<span class="op">=</span><span class="st">"auc"</span>, multi_label<span class="op">=</span><span class="va">True</span>),</span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    tf.keras.metrics.BinaryAccuracy(name<span class="op">=</span><span class="st">"binary_acc"</span>),</span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        factor<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        patience<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        min_lr<span class="op">=</span><span class="fl">1e-6</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.EarlyStopping(</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>,</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        patience<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>        restore_best_weights<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>metrics <span class="op">=</span> [</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>    tf.keras.metrics.AUC(name<span class="op">=</span><span class="st">"auc"</span>, multi_label<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    tf.keras.metrics.BinaryAccuracy(name<span class="op">=</span><span class="st">"binary_acc"</span>),</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="train-model-1a-custom-cnn" class="level3">
 <h3 class="anchored" data-anchor-id="train-model-1a-custom-cnn">Train Model 1A — Custom CNN</h3>
@@ -1271,20 +1282,27 @@ Restoring model weights from the end of the best epoch: 44.
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Fresh callbacks (they carry state from previous training)</span></span>
 <span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>callbacks_tl <span class="op">=</span> [</span>
 <span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.ReduceLROnPlateau(</span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-6</span>, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.EarlyStopping(</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>history_tl <span class="op">=</span> model_tl.fit(</span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>    train_ds,</span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>    validation_data<span class="op">=</span>val_ds,</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span>EPOCHS,</span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>callbacks_tl,</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>,</span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        factor<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>        patience<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>        min_lr<span class="op">=</span><span class="fl">1e-6</span>,</span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>    tf.keras.callbacks.EarlyStopping(</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>        monitor<span class="op">=</span><span class="st">"val_loss"</span>,</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>        patience<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>        restore_best_weights<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>history_tl <span class="op">=</span> model_tl.fit(</span>
+<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>    train_ds,</span>
+<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>    validation_data<span class="op">=</span>val_ds,</span>
+<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span>EPOCHS,</span>
+<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a>    callbacks<span class="op">=</span>callbacks_tl,</span>
+<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>    verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>Epoch 1/100
@@ -1669,22 +1687,31 @@ Restoring model weights from the end of the best epoch: 61.
 <span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
 <span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a>    report <span class="op">=</span> classification_report(</span>
-<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        y_true, y_pred, target_names<span class="op">=</span>base_labels_all, zero_division<span class="op">=</span><span class="dv">0</span>, output_dict<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(classification_report(</span>
-<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        y_true, y_pred, target_names<span class="op">=</span>base_labels_all, zero_division<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    macro_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"macro"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>    weighted_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"weighted"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Macro F1:    </span><span class="sc">{</span>macro_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weighted F1: </span><span class="sc">{</span>weighted_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred, y_pred_prob, report</span>
-<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a>y_pred_cnn, y_prob_cnn, report_cnn <span class="op">=</span> evaluate_multilabel(model_cnn, test_ds, y_test, <span class="st">"Custom CNN"</span>)</span>
-<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>y_pred_tl, y_prob_tl, report_tl <span class="op">=</span> evaluate_multilabel(model_tl, test_ds, y_test, <span class="st">"MobileNetV2 Transfer"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a>        y_true,</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>        y_pred,</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a>        target_names<span class="op">=</span>base_labels_all,</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a>        zero_division<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true" tabindex="-1"></a>        output_dict<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-24"><a href="#cb26-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb26-25"><a href="#cb26-25" aria-hidden="true" tabindex="-1"></a>        classification_report(</span>
+<span id="cb26-26"><a href="#cb26-26" aria-hidden="true" tabindex="-1"></a>            y_true,</span>
+<span id="cb26-27"><a href="#cb26-27" aria-hidden="true" tabindex="-1"></a>            y_pred,</span>
+<span id="cb26-28"><a href="#cb26-28" aria-hidden="true" tabindex="-1"></a>            target_names<span class="op">=</span>base_labels_all,</span>
+<span id="cb26-29"><a href="#cb26-29" aria-hidden="true" tabindex="-1"></a>            zero_division<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb26-30"><a href="#cb26-30" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb26-31"><a href="#cb26-31" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb26-32"><a href="#cb26-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-33"><a href="#cb26-33" aria-hidden="true" tabindex="-1"></a>    macro_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"macro"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb26-34"><a href="#cb26-34" aria-hidden="true" tabindex="-1"></a>    weighted_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"weighted"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb26-35"><a href="#cb26-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Macro F1:    </span><span class="sc">{</span>macro_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb26-36"><a href="#cb26-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weighted F1: </span><span class="sc">{</span>weighted_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb26-37"><a href="#cb26-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-38"><a href="#cb26-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred, y_pred_prob, report</span>
+<span id="cb26-39"><a href="#cb26-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-40"><a href="#cb26-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-41"><a href="#cb26-41" aria-hidden="true" tabindex="-1"></a>y_pred_cnn, y_prob_cnn, report_cnn <span class="op">=</span> evaluate_multilabel(model_cnn, test_ds, y_test, <span class="st">"Custom CNN"</span>)</span>
+<span id="cb26-42"><a href="#cb26-42" aria-hidden="true" tabindex="-1"></a>y_pred_tl, y_prob_tl, report_tl <span class="op">=</span> evaluate_multilabel(model_tl, test_ds, y_test, <span class="st">"MobileNetV2 Transfer"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -1745,34 +1772,47 @@ Weighted F1: 0.8972</code></pre>
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>comparison_df <span class="op">=</span> pd.DataFrame(comparison_data)</span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Add macro averages</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>comparison_df <span class="op">=</span> pd.concat([</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    comparison_df,</span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>    pd.DataFrame([{</span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Defect Type"</span>: <span class="st">"MACRO AVG"</span>,</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Custom CNN F1"</span>: report_cnn[<span class="st">"macro avg"</span>][<span class="st">"f1-score"</span>],</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"MobileNetV2 F1"</span>: report_tl[<span class="st">"macro avg"</span>][<span class="st">"f1-score"</span>],</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    }]),</span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>display(comparison_df.style.<span class="bu">format</span>({<span class="st">"Custom CNN F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>, <span class="st">"MobileNetV2 F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>}).highlight_max(</span>
-<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    subset<span class="op">=</span>[<span class="st">"Custom CNN F1"</span>, <span class="st">"MobileNetV2 F1"</span>], axis<span class="op">=</span><span class="dv">1</span>, color<span class="op">=</span><span class="st">"lightgreen"</span>,</span>
-<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar chart comparison</span></span>
-<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>_fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
-<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="bu">len</span>(base_labels_all))</span>
-<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="fl">0.35</span></span>
-<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>ax.bar(x <span class="op">-</span> width <span class="op">/</span> <span class="dv">2</span>, [report_cnn[lbl][<span class="st">"f1-score"</span>] <span class="cf">for</span> lbl <span class="kw">in</span> base_labels_all], width, label<span class="op">=</span><span class="st">"Custom CNN"</span>, color<span class="op">=</span><span class="st">"#4C78A8"</span>)</span>
-<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>ax.bar(x <span class="op">+</span> width <span class="op">/</span> <span class="dv">2</span>, [report_tl[lbl][<span class="st">"f1-score"</span>] <span class="cf">for</span> lbl <span class="kw">in</span> base_labels_all], width, label<span class="op">=</span><span class="st">"MobileNetV2"</span>, color<span class="op">=</span><span class="st">"#F58518"</span>)</span>
-<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Defect Type"</span>)</span>
-<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"F1 Score"</span>)</span>
-<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Phase 1 — Per-Label F1 Score Comparison"</span>)</span>
-<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x)</span>
-<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(base_labels_all, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
-<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
-<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, axis<span class="op">=</span><span class="st">"y"</span>)</span>
-<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>comparison_df <span class="op">=</span> pd.concat(</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    [</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        comparison_df,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        pd.DataFrame([</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Defect Type"</span>: <span class="st">"MACRO AVG"</span>,</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Custom CNN F1"</span>: report_cnn[<span class="st">"macro avg"</span>][<span class="st">"f1-score"</span>],</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>                <span class="st">"MobileNetV2 F1"</span>: report_tl[<span class="st">"macro avg"</span>][<span class="st">"f1-score"</span>],</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        ]),</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>    ],</span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>    ignore_index<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>display(</span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>    comparison_df.style.<span class="bu">format</span>({<span class="st">"Custom CNN F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>, <span class="st">"MobileNetV2 F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>}).highlight_max(</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>        subset<span class="op">=</span>[<span class="st">"Custom CNN F1"</span>, <span class="st">"MobileNetV2 F1"</span>],</span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>        axis<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>        color<span class="op">=</span><span class="st">"lightgreen"</span>,</span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar chart comparison</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>_fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.arange(<span class="bu">len</span>(base_labels_all))</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> <span class="fl">0.35</span></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>ax.bar(</span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>    x <span class="op">-</span> width <span class="op">/</span> <span class="dv">2</span>, [report_cnn[lbl][<span class="st">"f1-score"</span>] <span class="cf">for</span> lbl <span class="kw">in</span> base_labels_all], width, label<span class="op">=</span><span class="st">"Custom CNN"</span>, color<span class="op">=</span><span class="st">"#4C78A8"</span></span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>ax.bar(</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>    x <span class="op">+</span> width <span class="op">/</span> <span class="dv">2</span>, [report_tl[lbl][<span class="st">"f1-score"</span>] <span class="cf">for</span> lbl <span class="kw">in</span> base_labels_all], width, label<span class="op">=</span><span class="st">"MobileNetV2"</span>, color<span class="op">=</span><span class="st">"#F58518"</span></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Defect Type"</span>)</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"F1 Score"</span>)</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">"Phase 1 — Per-Label F1 Score Comparison"</span>)</span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a>ax.set_xticks(x)</span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>ax.set_xticklabels(base_labels_all, rotation<span class="op">=</span><span class="dv">45</span>, ha<span class="op">=</span><span class="st">"right"</span>)</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>ax.grid(<span class="va">True</span>, alpha<span class="op">=</span><span class="fl">0.3</span>, axis<span class="op">=</span><span class="st">"y"</span>)</span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
 #T_162b7_row0_col1, #T_162b7_row1_col1, #T_162b7_row2_col1, #T_162b7_row3_col1, #T_162b7_row4_col1, #T_162b7_row5_col1, #T_162b7_row6_col1, #T_162b7_row7_col2, #T_162b7_row8_col1 {
@@ -1855,8 +1895,8 @@ Weighted F1: 0.8972</code></pre>
 </div>
 </div>
 </div>
-<div id="d838dd3f" class="cell" data-execution_count="38">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save models </span></span>
+<div id="d838dd3f" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># save models</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>model_cnn.save(<span class="st">"wafer_defect_cnn.keras"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>model_tl.save(<span class="st">"wafer_defect_mobilenet_transfer.keras"</span>)</span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Models saved: wafer_defect_cnn.keras, wafer_defect_mobilenet_transfer.keras"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2133,80 +2173,89 @@ MobileNet backbone: 0/5 trainable layers</code></pre>
 <h2 class="anchored" data-anchor-id="step-11-phase-2-training-two-stage">Step 11 — Phase 2 Training (Two-Stage)</h2>
 <p><strong>Stage A:</strong> Train only the new head (backbone frozen), lr=1e-3, ~30 epochs <strong>Stage B:</strong> Unfreeze last 1-2 conv blocks, fine-tune end-to-end, lr=1e-5, ~30 epochs</p>
 <p>Loss: <code>sparse_categorical_crossentropy</code> with class weights.</p>
-<div id="dc958124" class="cell" data-execution_count="41">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_phase2_two_stage(model, backbone, train_ds, val_ds, class_weights,</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                          stage_a_epochs<span class="op">=</span><span class="dv">30</span>, stage_b_epochs<span class="op">=</span><span class="dv">30</span>, model_name<span class="op">=</span><span class="st">"Phase2"</span>):</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Two-stage Phase 2 training: head-only then fine-tune.</span></span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Stage A: Backbone frozen, train only the new head (lr=1e-3).</span></span>
-<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Stage B: Unfreeze last 2 conv blocks in backbone, fine-tune (lr=1e-5).</span></span>
-<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
-<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ── Stage A: Head-only training ──</span></span>
-<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    separator <span class="op">=</span> <span class="st">"="</span> <span class="op">*</span> <span class="dv">60</span></span>
-<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span>separator<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss"> — Stage A: Head-only training"</span>)</span>
-<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
-<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>tf.keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">1e-3</span>),</span>
-<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">"sparse_categorical_crossentropy"</span>,</span>
-<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">"accuracy"</span>],</span>
-<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    callbacks_a <span class="op">=</span> [</span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.ReduceLROnPlateau(monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-6</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.EarlyStopping(monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>    history_a <span class="op">=</span> model.fit(</span>
-<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>        train_ds, validation_data<span class="op">=</span>val_ds,</span>
-<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span>stage_a_epochs, callbacks<span class="op">=</span>callbacks_a,</span>
-<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span>class_weights, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span>separator<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
-<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'='</span><span class="op">*</span><span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Unfreeze last ~25% of backbone layers</span></span>
-<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>    backbone_layers <span class="op">=</span> backbone.layers</span>
-<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>    unfreeze_from <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(backbone_layers) <span class="op">*</span> <span class="fl">0.75</span>)</span>
-<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> layer <span class="kw">in</span> backbone_layers[unfreeze_from:]:</span>
-<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">isinstance</span>(layer, layers.BatchNormalization):</span>
-<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>            layer.trainable <span class="op">=</span> <span class="va">True</span></span>
-<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>    trainable_count <span class="op">=</span> <span class="bu">sum</span>(<span class="dv">1</span> <span class="cf">for</span> layer <span class="kw">in</span> backbone_layers <span class="cf">if</span> layer.trainable)</span>
-<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Unfroze layers from index </span><span class="sc">{</span>unfreeze_from<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>trainable_count<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="bu">len</span>(backbone_layers)<span class="sc">}</span><span class="ss"> trainable"</span>)</span>
-<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
-<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>tf.keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">1e-5</span>),</span>
-<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">"sparse_categorical_crossentropy"</span>,</span>
-<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">"accuracy"</span>],</span>
-<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>    callbacks_b <span class="op">=</span> [</span>
-<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.ReduceLROnPlateau(monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-7</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.EarlyStopping(monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
-<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>    history_b <span class="op">=</span> model.fit(</span>
-<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>        train_ds, validation_data<span class="op">=</span>val_ds,</span>
-<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span>stage_b_epochs, callbacks<span class="op">=</span>callbacks_b,</span>
-<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span>class_weights, verbose<span class="op">=</span><span class="dv">1</span>,</span>
-<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> history_a, history_b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="dc958124" class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_phase2_two_stage(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    model, backbone, train_ds, val_ds, class_weights, stage_a_epochs<span class="op">=</span><span class="dv">30</span>, stage_b_epochs<span class="op">=</span><span class="dv">30</span>, model_name<span class="op">=</span><span class="st">"Phase2"</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>):</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Two-stage Phase 2 training: head-only then fine-tune.</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Stage A: Backbone frozen, train only the new head (lr=1e-3).</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Stage B: Unfreeze last 2 conv blocks in backbone, fine-tune (lr=1e-5).</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ── Stage A: Head-only training ──</span></span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    separator <span class="op">=</span> <span class="st">"="</span> <span class="op">*</span> <span class="dv">60</span></span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span>separator<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>model_name<span class="sc">}</span><span class="ss"> — Stage A: Head-only training"</span>)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>tf.keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">1e-3</span>),</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">"sparse_categorical_crossentropy"</span>,</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">"accuracy"</span>],</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>    callbacks_a <span class="op">=</span> [</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.ReduceLROnPlateau(monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-6</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.EarlyStopping(monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    history_a <span class="op">=</span> model.fit(</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>        train_ds,</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>        validation_data<span class="op">=</span>val_ds,</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span>stage_a_epochs,</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>        callbacks<span class="op">=</span>callbacks_a,</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span>class_weights,</span>
+<span id="cb39-32"><a href="#cb39-32" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb39-33"><a href="#cb39-33" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-34"><a href="#cb39-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-35"><a href="#cb39-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span>separator<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-36"><a href="#cb39-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="sc">{</span><span class="st">'='</span> <span class="op">*</span> <span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-37"><a href="#cb39-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
+<span id="cb39-38"><a href="#cb39-38" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="st">'='</span> <span class="op">*</span> <span class="dv">60</span><span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb39-39"><a href="#cb39-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-40"><a href="#cb39-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Unfreeze last ~25% of backbone layers</span></span>
+<span id="cb39-41"><a href="#cb39-41" aria-hidden="true" tabindex="-1"></a>    backbone_layers <span class="op">=</span> backbone.layers</span>
+<span id="cb39-42"><a href="#cb39-42" aria-hidden="true" tabindex="-1"></a>    unfreeze_from <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(backbone_layers) <span class="op">*</span> <span class="fl">0.75</span>)</span>
+<span id="cb39-43"><a href="#cb39-43" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> layer <span class="kw">in</span> backbone_layers[unfreeze_from:]:</span>
+<span id="cb39-44"><a href="#cb39-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> <span class="bu">isinstance</span>(layer, layers.BatchNormalization):</span>
+<span id="cb39-45"><a href="#cb39-45" aria-hidden="true" tabindex="-1"></a>            layer.trainable <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb39-46"><a href="#cb39-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-47"><a href="#cb39-47" aria-hidden="true" tabindex="-1"></a>    trainable_count <span class="op">=</span> <span class="bu">sum</span>(<span class="dv">1</span> <span class="cf">for</span> layer <span class="kw">in</span> backbone_layers <span class="cf">if</span> layer.trainable)</span>
+<span id="cb39-48"><a href="#cb39-48" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  Unfroze layers from index </span><span class="sc">{</span>unfreeze_from<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>trainable_count<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span><span class="bu">len</span>(backbone_layers)<span class="sc">}</span><span class="ss"> trainable"</span>)</span>
+<span id="cb39-49"><a href="#cb39-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-50"><a href="#cb39-50" aria-hidden="true" tabindex="-1"></a>    model.<span class="bu">compile</span>(</span>
+<span id="cb39-51"><a href="#cb39-51" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>tf.keras.optimizers.Adam(learning_rate<span class="op">=</span><span class="fl">1e-5</span>),</span>
+<span id="cb39-52"><a href="#cb39-52" aria-hidden="true" tabindex="-1"></a>        loss<span class="op">=</span><span class="st">"sparse_categorical_crossentropy"</span>,</span>
+<span id="cb39-53"><a href="#cb39-53" aria-hidden="true" tabindex="-1"></a>        metrics<span class="op">=</span>[<span class="st">"accuracy"</span>],</span>
+<span id="cb39-54"><a href="#cb39-54" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-55"><a href="#cb39-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-56"><a href="#cb39-56" aria-hidden="true" tabindex="-1"></a>    callbacks_b <span class="op">=</span> [</span>
+<span id="cb39-57"><a href="#cb39-57" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.ReduceLROnPlateau(monitor<span class="op">=</span><span class="st">"val_loss"</span>, factor<span class="op">=</span><span class="fl">0.5</span>, patience<span class="op">=</span><span class="dv">5</span>, min_lr<span class="op">=</span><span class="fl">1e-7</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb39-58"><a href="#cb39-58" aria-hidden="true" tabindex="-1"></a>        tf.keras.callbacks.EarlyStopping(monitor<span class="op">=</span><span class="st">"val_loss"</span>, patience<span class="op">=</span><span class="dv">10</span>, restore_best_weights<span class="op">=</span><span class="va">True</span>, verbose<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb39-59"><a href="#cb39-59" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb39-60"><a href="#cb39-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-61"><a href="#cb39-61" aria-hidden="true" tabindex="-1"></a>    history_b <span class="op">=</span> model.fit(</span>
+<span id="cb39-62"><a href="#cb39-62" aria-hidden="true" tabindex="-1"></a>        train_ds,</span>
+<span id="cb39-63"><a href="#cb39-63" aria-hidden="true" tabindex="-1"></a>        validation_data<span class="op">=</span>val_ds,</span>
+<span id="cb39-64"><a href="#cb39-64" aria-hidden="true" tabindex="-1"></a>        epochs<span class="op">=</span>stage_b_epochs,</span>
+<span id="cb39-65"><a href="#cb39-65" aria-hidden="true" tabindex="-1"></a>        callbacks<span class="op">=</span>callbacks_b,</span>
+<span id="cb39-66"><a href="#cb39-66" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span>class_weights,</span>
+<span id="cb39-67"><a href="#cb39-67" aria-hidden="true" tabindex="-1"></a>        verbose<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb39-68"><a href="#cb39-68" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-69"><a href="#cb39-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-70"><a href="#cb39-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> history_a, history_b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="train-phase-2a-custom-cnn-backbone" class="level3">
 <h3 class="anchored" data-anchor-id="train-phase-2a-custom-cnn-backbone">Train Phase 2A — Custom CNN Backbone</h3>
 <div id="eea95aa6" class="cell" data-execution_count="42">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>hist_p2_cnn_a, hist_p2_cnn_b <span class="op">=</span> train_phase2_two_stage(</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    model_p2_cnn, backbone_cnn,</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    train_ds_p2, val_ds_p2,</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    class_weights_dict,</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    model_name<span class="op">=</span><span class="st">"Phase2 Custom CNN"</span>,</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    model_p2_cnn,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>    backbone_cnn,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>    train_ds_p2,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    val_ds_p2,</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    class_weights_dict,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    model_name<span class="op">=</span><span class="st">"Phase2 Custom CNN"</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>============================================================
@@ -2437,11 +2486,13 @@ Restoring model weights from the end of the best epoch: 13.
 <h3 class="anchored" data-anchor-id="train-phase-2b-mobilenetv2-backbone">Train Phase 2B — MobileNetV2 Backbone</h3>
 <div id="3f2cd551" class="cell" data-execution_count="43">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>hist_p2_tl_a, hist_p2_tl_b <span class="op">=</span> train_phase2_two_stage(</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    model_p2_tl, backbone_tl,</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    train_ds_p2, val_ds_p2,</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    class_weights_dict,</span>
-<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    model_name<span class="op">=</span><span class="st">"Phase2 MobileNetV2"</span>,</span>
-<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    model_p2_tl,</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    backbone_tl,</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>    train_ds_p2,</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    val_ds_p2,</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>    class_weights_dict,</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>    model_name<span class="op">=</span><span class="st">"Phase2 MobileNetV2"</span>,</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <div class="ansi-escaped-output">
 <pre>============================================================
@@ -2733,7 +2784,7 @@ Phase 2 models saved: wafer_defect_phase2_cnn.keras, wafer_defect_phase2_mobilen
 <section id="step-12-phase-2-evaluation-final-comparison" class="level2">
 <h2 class="anchored" data-anchor-id="step-12-phase-2-evaluation-final-comparison">Step 12 — Phase 2 Evaluation &amp; Final Comparison</h2>
 <p>Evaluate both Phase 2 models on the test set with per-class F1 scores, grouped by defect count (single, double, triple, quadruple). Then produce a final summary table comparing all 4 models.</p>
-<div id="e02b25f0" class="cell" data-execution_count="45">
+<div id="e02b25f0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> confusion_matrix</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="co"># All 38 pattern names in class ID order</span></span>
@@ -2750,37 +2801,51 @@ Phase 2 models saved: wafer_defect_phase2_cnn.keras, wafer_defect_phase2_mobilen
 <span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(separator)</span>
 <span id="cb44-15"><a href="#cb44-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-16"><a href="#cb44-16" aria-hidden="true" tabindex="-1"></a>    report <span class="op">=</span> classification_report(</span>
-<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>        y_true, y_pred, target_names<span class="op">=</span>all_pattern_names, zero_division<span class="op">=</span><span class="dv">0</span>, output_dict<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(classification_report(</span>
-<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>        y_true, y_pred, target_names<span class="op">=</span>all_pattern_names, zero_division<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    macro_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"macro"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>    weighted_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"weighted"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> np.mean(y_pred <span class="op">==</span> y_true)</span>
-<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Accuracy:    </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Macro F1:    </span><span class="sc">{</span>macro_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weighted F1: </span><span class="sc">{</span>weighted_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
-<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">F1 by defect combination count:"</span>)</span>
-<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">F1 by defect combination count:"</span>)</span>
-<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n_plus <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
-<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>        group_labels <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> all_pattern_names <span class="cf">if</span> name.count(<span class="st">"+"</span>) <span class="op">==</span> n_plus]</span>
-<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>        group_f1s <span class="op">=</span> [report[name][<span class="st">"f1-score"</span>] <span class="cf">for</span> name <span class="kw">in</span> group_labels <span class="cf">if</span> name <span class="kw">in</span> report]</span>
-<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> group_f1s:</span>
-<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>            group_name <span class="op">=</span> [<span class="st">"Single/Normal"</span>, <span class="st">"Double"</span>, <span class="st">"Triple"</span>, <span class="st">"Quadruple"</span>][n_plus]</span>
-<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>group_name<span class="sc">:&lt;12}</span><span class="ss"> avg F1=</span><span class="sc">{</span>np<span class="sc">.</span>mean(group_f1s)<span class="sc">:.4f}</span><span class="ss">  (n=</span><span class="sc">{</span><span class="bu">len</span>(group_f1s)<span class="sc">}</span><span class="ss"> classes)"</span>)</span>
+<span id="cb44-17"><a href="#cb44-17" aria-hidden="true" tabindex="-1"></a>        y_true,</span>
+<span id="cb44-18"><a href="#cb44-18" aria-hidden="true" tabindex="-1"></a>        y_pred,</span>
+<span id="cb44-19"><a href="#cb44-19" aria-hidden="true" tabindex="-1"></a>        target_names<span class="op">=</span>all_pattern_names,</span>
+<span id="cb44-20"><a href="#cb44-20" aria-hidden="true" tabindex="-1"></a>        zero_division<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb44-21"><a href="#cb44-21" aria-hidden="true" tabindex="-1"></a>        output_dict<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb44-22"><a href="#cb44-22" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-23"><a href="#cb44-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(</span>
+<span id="cb44-24"><a href="#cb44-24" aria-hidden="true" tabindex="-1"></a>        classification_report(</span>
+<span id="cb44-25"><a href="#cb44-25" aria-hidden="true" tabindex="-1"></a>            y_true,</span>
+<span id="cb44-26"><a href="#cb44-26" aria-hidden="true" tabindex="-1"></a>            y_pred,</span>
+<span id="cb44-27"><a href="#cb44-27" aria-hidden="true" tabindex="-1"></a>            target_names<span class="op">=</span>all_pattern_names,</span>
+<span id="cb44-28"><a href="#cb44-28" aria-hidden="true" tabindex="-1"></a>            zero_division<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb44-29"><a href="#cb44-29" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb44-30"><a href="#cb44-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb44-31"><a href="#cb44-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-32"><a href="#cb44-32" aria-hidden="true" tabindex="-1"></a>    macro_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"macro"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb44-33"><a href="#cb44-33" aria-hidden="true" tabindex="-1"></a>    weighted_f1 <span class="op">=</span> f1_score(y_true, y_pred, average<span class="op">=</span><span class="st">"weighted"</span>, zero_division<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb44-34"><a href="#cb44-34" aria-hidden="true" tabindex="-1"></a>    accuracy <span class="op">=</span> np.mean(y_pred <span class="op">==</span> y_true)</span>
+<span id="cb44-35"><a href="#cb44-35" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Accuracy:    </span><span class="sc">{</span>accuracy<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-36"><a href="#cb44-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Macro F1:    </span><span class="sc">{</span>macro_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-37"><a href="#cb44-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Weighted F1: </span><span class="sc">{</span>weighted_f1<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
 <span id="cb44-38"><a href="#cb44-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred, report, macro_f1, weighted_f1</span>
-<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>y_pred_p2_cnn, report_p2_cnn, mf1_p2_cnn, wf1_p2_cnn <span class="op">=</span> evaluate_phase2(</span>
-<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>    model_p2_cnn, test_ds_p2, y_class_test, <span class="st">"Phase2 Custom CNN"</span>,</span>
-<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a>y_pred_p2_tl, report_p2_tl, mf1_p2_tl, wf1_p2_tl <span class="op">=</span> evaluate_phase2(</span>
-<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a>    model_p2_tl, test_ds_p2, y_class_test, <span class="st">"Phase2 MobileNetV2"</span>,</span>
-<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb44-39"><a href="#cb44-39" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">F1 by defect combination count:"</span>)</span>
+<span id="cb44-40"><a href="#cb44-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> n_plus <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb44-41"><a href="#cb44-41" aria-hidden="true" tabindex="-1"></a>        group_labels <span class="op">=</span> [name <span class="cf">for</span> name <span class="kw">in</span> all_pattern_names <span class="cf">if</span> name.count(<span class="st">"+"</span>) <span class="op">==</span> n_plus]</span>
+<span id="cb44-42"><a href="#cb44-42" aria-hidden="true" tabindex="-1"></a>        group_f1s <span class="op">=</span> [report[name][<span class="st">"f1-score"</span>] <span class="cf">for</span> name <span class="kw">in</span> group_labels <span class="cf">if</span> name <span class="kw">in</span> report]</span>
+<span id="cb44-43"><a href="#cb44-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> group_f1s:</span>
+<span id="cb44-44"><a href="#cb44-44" aria-hidden="true" tabindex="-1"></a>            group_name <span class="op">=</span> [<span class="st">"Single/Normal"</span>, <span class="st">"Double"</span>, <span class="st">"Triple"</span>, <span class="st">"Quadruple"</span>][n_plus]</span>
+<span id="cb44-45"><a href="#cb44-45" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>group_name<span class="sc">:&lt;12}</span><span class="ss"> avg F1=</span><span class="sc">{</span>np<span class="sc">.</span>mean(group_f1s)<span class="sc">:.4f}</span><span class="ss">  (n=</span><span class="sc">{</span><span class="bu">len</span>(group_f1s)<span class="sc">}</span><span class="ss"> classes)"</span>)</span>
+<span id="cb44-46"><a href="#cb44-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-47"><a href="#cb44-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y_pred, report, macro_f1, weighted_f1</span>
+<span id="cb44-48"><a href="#cb44-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-49"><a href="#cb44-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-50"><a href="#cb44-50" aria-hidden="true" tabindex="-1"></a>y_pred_p2_cnn, report_p2_cnn, mf1_p2_cnn, wf1_p2_cnn <span class="op">=</span> evaluate_phase2(</span>
+<span id="cb44-51"><a href="#cb44-51" aria-hidden="true" tabindex="-1"></a>    model_p2_cnn,</span>
+<span id="cb44-52"><a href="#cb44-52" aria-hidden="true" tabindex="-1"></a>    test_ds_p2,</span>
+<span id="cb44-53"><a href="#cb44-53" aria-hidden="true" tabindex="-1"></a>    y_class_test,</span>
+<span id="cb44-54"><a href="#cb44-54" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Phase2 Custom CNN"</span>,</span>
+<span id="cb44-55"><a href="#cb44-55" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb44-56"><a href="#cb44-56" aria-hidden="true" tabindex="-1"></a>y_pred_p2_tl, report_p2_tl, mf1_p2_tl, wf1_p2_tl <span class="op">=</span> evaluate_phase2(</span>
+<span id="cb44-57"><a href="#cb44-57" aria-hidden="true" tabindex="-1"></a>    model_p2_tl,</span>
+<span id="cb44-58"><a href="#cb44-58" aria-hidden="true" tabindex="-1"></a>    test_ds_p2,</span>
+<span id="cb44-59"><a href="#cb44-59" aria-hidden="true" tabindex="-1"></a>    y_class_test,</span>
+<span id="cb44-60"><a href="#cb44-60" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Phase2 MobileNetV2"</span>,</span>
+<span id="cb44-61"><a href="#cb44-61" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 ============================================================
@@ -2914,17 +2979,22 @@ F1 by defect combination count:
 <span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">20</span>, <span class="dv">18</span>))</span>
 <span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>sns.heatmap(</span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    cm, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">"d"</span>, cmap<span class="op">=</span><span class="st">"Blues"</span>,</span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    xticklabels<span class="op">=</span>all_pattern_names, yticklabels<span class="op">=</span>all_pattern_names,</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax, linewidths<span class="op">=</span><span class="fl">0.5</span>,</span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Predicted"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"True"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
-<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"Phase 2 — </span><span class="sc">{</span>best_p2_name<span class="sc">}</span><span class="ss"> Confusion Matrix (38 classes)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
-<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
-<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>plt.yticks(rotation<span class="op">=</span><span class="dv">0</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
-<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>    cm,</span>
+<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>    annot<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>    fmt<span class="op">=</span><span class="st">"d"</span>,</span>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    cmap<span class="op">=</span><span class="st">"Blues"</span>,</span>
+<span id="cb46-14"><a href="#cb46-14" aria-hidden="true" tabindex="-1"></a>    xticklabels<span class="op">=</span>all_pattern_names,</span>
+<span id="cb46-15"><a href="#cb46-15" aria-hidden="true" tabindex="-1"></a>    yticklabels<span class="op">=</span>all_pattern_names,</span>
+<span id="cb46-16"><a href="#cb46-16" aria-hidden="true" tabindex="-1"></a>    ax<span class="op">=</span>ax,</span>
+<span id="cb46-17"><a href="#cb46-17" aria-hidden="true" tabindex="-1"></a>    linewidths<span class="op">=</span><span class="fl">0.5</span>,</span>
+<span id="cb46-18"><a href="#cb46-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-19"><a href="#cb46-19" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">"Predicted"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb46-20"><a href="#cb46-20" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">"True"</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb46-21"><a href="#cb46-21" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="ss">f"Phase 2 — </span><span class="sc">{</span>best_p2_name<span class="sc">}</span><span class="ss"> Confusion Matrix (38 classes)"</span>, fontsize<span class="op">=</span><span class="dv">14</span>)</span>
+<span id="cb46-22"><a href="#cb46-22" aria-hidden="true" tabindex="-1"></a>plt.xticks(rotation<span class="op">=</span><span class="dv">90</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb46-23"><a href="#cb46-23" aria-hidden="true" tabindex="-1"></a>plt.yticks(rotation<span class="op">=</span><span class="dv">0</span>, fontsize<span class="op">=</span><span class="dv">7</span>)</span>
+<span id="cb46-24"><a href="#cb46-24" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb46-25"><a href="#cb46-25" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Plotting confusion matrix for best Phase 2 model: Custom CNN</code></pre>
 </div>
@@ -2961,12 +3031,11 @@ F1 by defect combination count:
 <span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a>summary_df <span class="op">=</span> pd.DataFrame(summary_data)</span>
 <span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>display(</span>
-<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>    summary_df</span>
-<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    .style</span>
-<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>({<span class="st">"Macro F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>, <span class="st">"Weighted F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>})</span>
-<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>    .highlight_max(subset<span class="op">=</span>[<span class="st">"Macro F1"</span>, <span class="st">"Weighted F1"</span>], color<span class="op">=</span><span class="st">"lightgreen"</span>)</span>
-<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>    .set_caption(<span class="st">"Final Model Comparison — All Phases"</span>)</span>
-<span id="cb48-30"><a href="#cb48-30" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a>    summary_df.style</span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>    .<span class="bu">format</span>({<span class="st">"Macro F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>, <span class="st">"Weighted F1"</span>: <span class="st">"</span><span class="sc">{:.4f}</span><span class="st">"</span>})</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>    .highlight_max(subset<span class="op">=</span>[<span class="st">"Macro F1"</span>, <span class="st">"Weighted F1"</span>], color<span class="op">=</span><span class="st">"lightgreen"</span>)</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>    .set_caption(<span class="st">"Final Model Comparison — All Phases"</span>)</span>
+<span id="cb48-29"><a href="#cb48-29" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <style type="text/css">
 #T_a406a_row0_col1, #T_a406a_row0_col2 {
