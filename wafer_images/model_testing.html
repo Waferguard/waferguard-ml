@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="load-data-and-models" class="level2">
 <h2 class="anchored" data-anchor-id="load-data-and-models">Load data and Models</h2>
-<div id="d6528938" class="cell" data-execution_count="3">
+<div id="d6528938" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> tf</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="data-cleansing" class="level2">
 <h2 class="anchored" data-anchor-id="data-cleansing">Data Cleansing</h2>
-<div id="220ab6ac" class="cell" data-execution_count="4">
+<div id="220ab6ac" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Default pixels with 3 to 0</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>images[images <span class="op">==</span> <span class="dv">3</span>] <span class="op">=</span> <span class="dv">0</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># String Label Mapping</span></span>
@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="predict-wafer-defect" class="level2">
 <h2 class="anchored" data-anchor-id="predict-wafer-defect">Predict Wafer Defect</h2>
-<div id="1a772ec3" class="cell">
+<div id="1a772ec3" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a random wafer map from test set</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>random_idx <span class="op">=</span> np.random.randint(<span class="dv">0</span>, <span class="bu">len</span>(X_test))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>random_wafer <span class="op">=</span> X_test[random_idx : random_idx <span class="op">+</span> <span class="dv">1</span>]</span>
@@ -250,6 +250,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  MobileNetV2:  </span><span class="sc">{</span>pred_pattern_tl<span class="sc">}</span><span class="ss"> (confidence: </span><span class="sc">{</span>conf_tl<span class="sc">:.2%}</span><span class="ss">)"</span>)</span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Match: </span><span class="sc">{</span><span class="st">'✓'</span> <span class="cf">if</span> pred_class_cnn <span class="op">==</span> true_class_id <span class="cf">else</span> <span class="st">'✗'</span><span class="sc">}</span><span class="ss"> (Custom CNN)"</span>)</span>
 <span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Match: </span><span class="sc">{</span><span class="st">'✓'</span> <span class="cf">if</span> pred_class_tl <span class="op">==</span> true_class_id <span class="cf">else</span> <span class="st">'✗'</span><span class="sc">}</span><span class="ss"> (MobileNetV2)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random wafer shape: (1, 52, 52, 3)
+True defect pattern: Loc+Scratch
+
+Predictions:
+  Custom CNN:   Loc+Scratch (confidence: 99.89%)
+  MobileNetV2:  Loc+Scratch (confidence: 98.48%)
+  Match: ✓ (Custom CNN)
+  Match: ✓ (MobileNetV2)</code></pre>
+</div>
 </div>
 
 
