@@ -40,7 +40,6 @@ data/external/*
 *.h5
 *.pkl
 *.pickle
-*.keras
 
 # Models (too large for git)
 models/checkpoints/*
@@ -84,3 +83,4 @@ data/secom
 **/*.quarto_ipynb
 docs/
 **/slides_files/
+**/training_artifacts/
