@@ -2,34 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/blueprint.html</loc>
-    <lastmod>2026-02-26T02:18:51.707Z</lastmod>
+    <lastmod>2026-02-26T17:23:58.409Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/slides/wm811k/slides.html</loc>
-    <lastmod>2026-02-26T02:18:51.722Z</lastmod>
+    <lastmod>2026-02-26T17:23:58.425Z</lastmod>
   </url>
   <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/data_exploration.html</loc>
-    <lastmod>2026-02-26T02:18:51.724Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/secom_notebook/secom_eda.html</loc>
-    <lastmod>2026-02-26T02:18:51.712Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/index.html</loc>
-    <lastmod>2026-02-26T02:18:51.708Z</lastmod>
+    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/model_testing.html</loc>
+    <lastmod>2026-02-26T17:23:58.434Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/model.html</loc>
-    <lastmod>2026-02-26T02:18:51.729Z</lastmod>
+    <lastmod>2026-02-26T17:23:58.434Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/index.html</loc>
+    <lastmod>2026-02-26T17:23:58.410Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/secom_notebook/secom_eda.html</loc>
+    <lastmod>2026-02-26T17:23:58.415Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/data_exploration.html</loc>
+    <lastmod>2026-02-26T17:23:58.427Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/slides/wafer-map-pixel/KAN_46.html</loc>
-    <lastmod>2026-02-26T02:18:51.716Z</lastmod>
+    <lastmod>2026-02-26T17:23:58.419Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/slides/SecomData/slides.html</loc>
-    <lastmod>2026-02-26T02:18:51.716Z</lastmod>
+    <lastmod>2026-02-26T17:23:58.418Z</lastmod>
   </url>
 </urlset>
