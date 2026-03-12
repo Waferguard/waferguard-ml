@@ -4,11 +4,7 @@
 
 ## Wafer Images (WM811k)
 - [Wafer Images EDA](slides/wm811k/slides.html)
-<<<<<<< HEAD
-  
-=======
 
->>>>>>> 351682578ae1db100a0dd1064abf534d95e3c23e
 ## SECOM Sensor Data
 - [SECOM EDA](slides/SecomData/slides.html)
   
