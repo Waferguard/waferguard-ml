@@ -83,3 +83,6 @@ data/secom
 **/*.quarto_ipynb
 docs
 .Rhistory
+docs/
+**/slides_files/
+**/training_artifacts/

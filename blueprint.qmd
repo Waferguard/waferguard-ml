@@ -165,19 +165,20 @@ gantt
 ## Sprint Breakdown
 
 ### Sprint 1: Foundation (Week 1-2)
-**Epic:** KAN-1 (Data Pipeline & Foundation)
+**Epic:** KAN-1 (Data Pipeline & Foundation) - **80% Done**
 
-| Task ID | Task | Owner | Story Points | Status |
-|---------|------|-------|--------------|--------|
-| KAN-1-001 | Set up Python environment (requirements.txt, venv) | TBD | 2 | TODO |
-| KAN-1-002 | Initialize Git repo with branching strategy | TBD | 1 | TODO |
-| KAN-1-003 | Download SECOM dataset + verify integrity | TBD | 2 | TODO |
-| KAN-1-004 | Download WM811K wafer images + verify | TBD | 2 | TODO |
-| KAN-1-005 | EDA notebook - SECOM sensor data | TBD | 3 | TODO |
-| KAN-1-006 | EDA notebook - WM811K image analysis | TBD | 3 | TODO |
-| KAN-1-007 | Data quality assessment report | TBD | 3 | TODO |
-| KAN-1-008 | Set up Jira board with epics/stories | TBD | 2 | TODO |
-| KAN-1-009 | Set up MLflow for experiment tracking | TBD | 3 | TODO |
+| Task ID | Task | Owner | Status |
+|---------|------|-------|--------|
+| KAN-8 | Set up Python Environment | Oliver | DONE ✅ |
+| KAN-9 | Initialize Git Repo With Branching Strategy + Rules | Oliver | DONE ✅ |
+| KAN-10 | Download Secom Dataset + Verify Integrity | Oliver | DONE ✅ |
+| KAN-11 | Download WM811 Image Analysis + Verify | Oliver | DONE ✅ |
+| KAN-12 | Run EDA on Secom Sensor Data | Rolando | IN REVIEW 🔄 |
+| KAN-13 | Run EDA on WM811K Image analysis | Oliver | DONE ✅ |
+| KAN-14 | Data Quality Assessment Report | Unassigned | TO DO 📋 |
+| KAN-15 | Set Up Jira Board with epics/stories | Rolando | DONE ✅ |
+| KAN-46 | Research about how the pixels are generated from and actual image | Milos | DONE ✅ |
+| KAN-47 | Create slides for initial images EDA findings | Oliver | DONE ✅ |
 
 **Sprint 1 Goal:** Development environment ready, datasets loaded, initial EDA complete
 
