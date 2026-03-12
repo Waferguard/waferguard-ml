@@ -196,32 +196,235 @@
     "text": "Data Quality: Excellent\n\nNo missing values\nComplete Coverage of Defect Types\nMostly Balanced Classes\nReady for Modeling"
   },
   {
-    "objectID": "wafer_images/model_testing.html",
-    "href": "wafer_images/model_testing.html",
-    "title": "Wafer Defect Prediction",
+    "objectID": "slides/wafer-map-pixel/KAN_46.html",
+    "href": "slides/wafer-map-pixel/KAN_46.html",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
     "section": "",
-    "text": "import numpy as np\nimport tensorflow as tf\n\n# Load Data\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]\nprint(\"✓ Data loaded\")\n\n# Load the Phase 2 models\nMODELS_DIR = \"phase2_models\"\nmodel_p2_cnn = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_cnn.keras\")\nmodel_p2_tl = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_tl.keras\")\nprint(\"✓ Models loaded\")\n\n✓ Data loaded\n✓ Models loaded"
+    "text": "Wafer\n\nA thin, round slice of silicon\nUsed as the base to build computer chips\nOne wafer holds many chips\n\nDie (plural: dies)\n\nA single chip on a wafer\nEach die becomes one usable chip if it passes testing\n\nDie-Level Testing (Wafer Probe Test)\n\nElectrical testing done before chips are separated\nChecks if each die works correctly\n\nYield\n\nThe percentage of dies that work correctly\nHigher yield means lower manufacturing cost\n\nWafer Map\n\nA 2D picture of a wafer\nShows which dies passed or failed testing\n\nPixel (in Wafer Maps)\n\nRepresents one die\nStores test results, not colors or brightness\n\nDefect Pattern\n\nA visible shape formed by failing dies\nOften points to a manufacturing problem\nExamples: center failures, edge rings, scratches\n\nProcess Sensors\n\nDevices inside manufacturing machines\nMeasure conditions like temperature, pressure, and power\n\nProcess Run / Production Instance\n\nA single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions."
   },
   {
-    "objectID": "wafer_images/model_testing.html#load-data-and-models",
-    "href": "wafer_images/model_testing.html#load-data-and-models",
-    "title": "Wafer Defect Prediction",
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#key-terminology-foundational-concepts",
+    "href": "slides/wafer-map-pixel/KAN_46.html#key-terminology-foundational-concepts",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
     "section": "",
-    "text": "import numpy as np\nimport tensorflow as tf\n\n# Load Data\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]\nprint(\"✓ Data loaded\")\n\n# Load the Phase 2 models\nMODELS_DIR = \"phase2_models\"\nmodel_p2_cnn = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_cnn.keras\")\nmodel_p2_tl = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_tl.keras\")\nprint(\"✓ Models loaded\")\n\n✓ Data loaded\n✓ Models loaded"
+    "text": "Wafer\n\nA thin, round slice of silicon\nUsed as the base to build computer chips\nOne wafer holds many chips\n\nDie (plural: dies)\n\nA single chip on a wafer\nEach die becomes one usable chip if it passes testing\n\nDie-Level Testing (Wafer Probe Test)\n\nElectrical testing done before chips are separated\nChecks if each die works correctly\n\nYield\n\nThe percentage of dies that work correctly\nHigher yield means lower manufacturing cost\n\nWafer Map\n\nA 2D picture of a wafer\nShows which dies passed or failed testing\n\nPixel (in Wafer Maps)\n\nRepresents one die\nStores test results, not colors or brightness\n\nDefect Pattern\n\nA visible shape formed by failing dies\nOften points to a manufacturing problem\nExamples: center failures, edge rings, scratches\n\nProcess Sensors\n\nDevices inside manufacturing machines\nMeasure conditions like temperature, pressure, and power\n\nProcess Run / Production Instance\n\nA single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions."
   },
   {
-    "objectID": "wafer_images/model_testing.html#data-cleansing",
-    "href": "wafer_images/model_testing.html#data-cleansing",
-    "title": "Wafer Defect Prediction",
-    "section": "Data Cleansing",
-    "text": "Data Cleansing\n\n# Default pixels with 3 to 0\nimages[images == 3] = 0\n# String Label Mapping\nlabel_mapping = {\n    \"00000000\": \"Normal\",\n    \"10000000\": \"Center\",\n    \"01000000\": \"Donut\",\n    \"00100000\": \"Edge_Loc\",\n    \"00010000\": \"Edge_Ring\",\n    \"00001000\": \"Loc\",\n    \"00000100\": \"Near_Full\",\n    \"00000010\": \"Scratch\",\n    \"00000001\": \"Random\",\n    \"10100000\": \"Center+Edge_Loc\",\n    \"10010000\": \"Center+Edge_Ring\",\n    \"10001000\": \"Center+Loc\",\n    \"10000010\": \"Center+Scratch\",\n    \"01100000\": \"Donut+Edge_Loc\",\n    \"01010000\": \"Donut+Edge_Ring\",\n    \"01001000\": \"Donut+Loc\",\n    \"01000010\": \"Donut+Scratch\",\n    \"00101000\": \"Edge_Loc+Loc\",\n    \"00100010\": \"Edge_Loc+Scratch\",\n    \"00011000\": \"Edge_Ring+Loc\",\n    \"00010010\": \"Edge_Ring+Scratch\",\n    \"00001010\": \"Loc+Scratch\",\n    \"10101000\": \"Center+Edge_Loc+Loc\",\n    \"10100010\": \"Center+Edge_Loc+Scratch\",\n    \"10011000\": \"Center+Edge_Ring+Loc\",\n    \"10010010\": \"Center+Edge_Ring+Scratch\",\n    \"10001010\": \"Center+Loc+Scratch\",\n    \"01101000\": \"Donut+Edge_Loc+Loc\",\n    \"01100010\": \"Donut+Edge_Loc+Scratch\",\n    \"01011000\": \"Donut+Edge_Ring+Loc\",\n    \"01010010\": \"Donut+Edge_Ring+Scratch\",\n    \"01001010\": \"Donut+Loc+Scratch\",\n    \"00101010\": \"Edge_Loc+Loc+Scratch\",\n    \"00011010\": \"Edge_Ring+Loc+Scratch\",\n    \"10101010\": \"Center+Edge_Loc+Loc+Scratch\",\n    \"10011010\": \"Center+Edge_Ring+Loc+Scratch\",\n    \"01101010\": \"Donut+Edge_Loc+Loc+Scratch\",\n    \"01011010\": \"Donut+Edge_Ring+Loc+Scratch\",\n}\n\n\nunique_patterns = sorted(label_mapping.keys())\npattern_to_id = {pattern: idx for idx, pattern in enumerate(unique_patterns)}\nid_to_pattern = {idx: label_mapping[pattern] for pattern, idx in pattern_to_id.items()}\nlabel_str_arr = np.array([\"\".join(map(str, map(int, row))) for row in labels])\n\nX_test = np.eye(3, dtype=np.float32)[images.astype(int)]  # Shape: (52, 52, 3)\ny_class_test = np.array([pattern_to_id[s] for s in label_str_arr])"
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#introduction",
+    "href": "slides/wafer-map-pixel/KAN_46.html#introduction",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Introduction",
+    "text": "Introduction\nSemiconductor manufacturing is a highly complex, multi-stage process involving hundreds of tightly controlled fabrication steps. Even minor deviations in process conditions can introduce microscopic defects that significantly reduce product yield and reliability.\nTo monitor, diagnose, and prevent such defects, manufacturers rely on multiple sources of data collected at different stages of production. Two of the most important and complementary data sources are:\n\nWafer map data, which provides a spatial view of defects across a wafer after fabrication and testing\n\nProcess sensor data, which captures physical and electrical conditions during wafer fabrication\n\nWhile both data sources relate to the same manufacturing process, they capture fundamentally different aspects of it. Wafer maps describe where defects occur, whereas sensor data helps explain why those defects may have occurred.\nThis presentation explains how wafer map pixels are generated from physical wafers, how process sensors operate in semiconductor manufacturing, and how these two data modalities complement each other in manufacturing analytics."
   },
   {
-    "objectID": "wafer_images/model_testing.html#predict-wafer-defect",
-    "href": "wafer_images/model_testing.html#predict-wafer-defect",
-    "title": "Wafer Defect Prediction",
-    "section": "Predict Wafer Defect",
-    "text": "Predict Wafer Defect\n\n# Pick a random wafer map from test set\nrandom_idx = np.random.randint(0, len(X_test))\nrandom_wafer = X_test[random_idx : random_idx + 1]\ntrue_class_id = y_class_test[random_idx]\ntrue_pattern_name = id_to_pattern[true_class_id]\n\nprint(f\"Random wafer shape: {random_wafer.shape}\")\nprint(f\"True defect pattern: {true_pattern_name}\")\n\n# Make predictions\npred_cnn = model_p2_cnn.predict(random_wafer, verbose=0)  # Shape: (1, 38)\npred_tl = model_p2_tl.predict(random_wafer, verbose=0)  # Shape: (1, 38)\n\n# Get predicted class IDs (argmax)\npred_class_cnn = pred_cnn[0].argmax()\npred_class_tl = pred_tl[0].argmax()\n\n# Get predicted pattern names\npred_pattern_cnn = id_to_pattern[pred_class_cnn]\npred_pattern_tl = id_to_pattern[pred_class_tl]\n\n# Get confidence scores\nconf_cnn = pred_cnn[0, pred_class_cnn]\nconf_tl = pred_tl[0, pred_class_tl]\n\nprint(\"\\nPredictions:\")\nprint(f\"  Custom CNN:   {pred_pattern_cnn} (confidence: {conf_cnn:.2%})\")\nprint(f\"  MobileNetV2:  {pred_pattern_tl} (confidence: {conf_tl:.2%})\")\nprint(f\"  Match: {'✓' if pred_class_cnn == true_class_id else '✗'} (Custom CNN)\")\nprint(f\"  Match: {'✓' if pred_class_tl == true_class_id else '✗'} (MobileNetV2)\")\n\nRandom wafer shape: (1, 52, 52, 3)\nTrue defect pattern: Loc+Scratch\n\nPredictions:\n  Custom CNN:   Loc+Scratch (confidence: 99.89%)\n  MobileNetV2:  Loc+Scratch (confidence: 98.48%)\n  Match: ✓ (Custom CNN)\n  Match: ✓ (MobileNetV2)"
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#die-level-electrical-testing",
+    "href": "slides/wafer-map-pixel/KAN_46.html#die-level-electrical-testing",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Die-Level Electrical Testing",
+    "text": "Die-Level Electrical Testing\nBefore a wafer is cut into individual chips, it undergoes die-level electrical testing, commonly referred to as wafer probe testing.\nDuring this stage: - A probe card makes physical contact with each die on the wafer - Electrical characteristics such as continuity, leakage current, and voltage thresholds are measured - Each die is classified as passing, failing, or untested\nThe results of this testing stage provide the raw information used to construct wafer maps."
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#what-is-a-wafer-map",
+    "href": "slides/wafer-map-pixel/KAN_46.html#what-is-a-wafer-map",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "What Is a Wafer Map?",
+    "text": "What Is a Wafer Map?\nA wafer map is a two-dimensional grid representation that preserves the physical layout of dies on a wafer.\n\nEach grid cell corresponds to a single die\nThe spatial arrangement reflects the physical location of dies on the wafer\nThe circular shape of the wafer naturally emerges from the grid structure\n\nWafer maps allow engineers to visually inspect defect distributions and identify spatial patterns that are difficult to detect using tabular data alone."
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#how-wafer-map-pixels-are-generated",
+    "href": "slides/wafer-map-pixel/KAN_46.html#how-wafer-map-pixels-are-generated",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "How Wafer Map Pixels Are Generated",
+    "text": "How Wafer Map Pixels Are Generated\nIn wafer maps, a pixel does not represent light intensity, as in conventional digital images.\nInstead: - Each pixel encodes the electrical test outcome of a single die - Pixel values are discrete and symbolic\nTypical encoding: - 0 → No die or untested location\n- 1 → Die passed electrical test\n- 2 → Die failed electrical test\nThus, each pixel corresponds directly to a physical die on the wafer."
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#spatial-defect-patterns",
+    "href": "slides/wafer-map-pixel/KAN_46.html#spatial-defect-patterns",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Spatial Defect Patterns",
+    "text": "Spatial Defect Patterns\nBecause dies are arranged spatially across the wafer surface, defects often form recognizable geometric patterns:\n\nCenter defects — commonly associated with lithography focus or exposure issues\n\nEdge-ring defects — linked to temperature gradients or etching non-uniformity\n\nScratch defects — caused by mechanical handling or tool contact\n\nRandom defects — typically resulting from particle contamination\n\nThese spatial regularities make wafer maps well suited for image-based machine learning models such as convolutional neural networks (CNNs)."
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#process-sensors-in-semiconductor-manufacturing",
+    "href": "slides/wafer-map-pixel/KAN_46.html#process-sensors-in-semiconductor-manufacturing",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Process Sensors in Semiconductor Manufacturing",
+    "text": "Process Sensors in Semiconductor Manufacturing\nUnlike wafer maps, which are generated after fabrication, process sensors operate during fabrication.\nSensors are embedded within manufacturing tools such as etchers, deposition chambers, and lithography systems, and they monitor: - Temperature - Pressure and vacuum levels - Gas flow rates - Plasma density - Radio-frequency (RF) power - Chemical concentrations - Tool health and calibration indicators\nThese sensors provide continuous insight into the conditions under which wafers are manufactured."
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#characteristics-of-sensor-data",
+    "href": "slides/wafer-map-pixel/KAN_46.html#characteristics-of-sensor-data",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Characteristics of Sensor Data",
+    "text": "Characteristics of Sensor Data\nProcess sensor data differs fundamentally from wafer map data:\n\nTabular structure (rows × columns)\nContinuous numeric values\nTime-dependent measurements\nNo spatial information\n\nIn datasets such as SECOM: - Each row represents a production instance (e.g., a wafer or manufacturing run) - Each column represents an anonymized sensor measurement - Sensor names are generic (e.g., sensor_0, sensor_1, etc.)"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#wafer-maps-vs-process-sensors",
+    "href": "slides/wafer-map-pixel/KAN_46.html#wafer-maps-vs-process-sensors",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Wafer Maps vs Process Sensors",
+    "text": "Wafer Maps vs Process Sensors\n\n\n\nAspect\nWafer Maps\nProcess Sensors\n\n\n\n\nData structure\nImage (2D grid)\nTabular\n\n\nResolution\nDie-level (spatial)\nTool-level (global)\n\n\nTiming\nPost-fabrication\nDuring fabrication\n\n\nPrimary insight\nDefect location\nProcess conditions\n\n\nKey question answered\nWhere defects occur\nWhy defects may occur"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#why-both-data-sources-matter",
+    "href": "slides/wafer-map-pixel/KAN_46.html#why-both-data-sources-matter",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Why Both Data Sources Matter",
+    "text": "Why Both Data Sources Matter\nIn real semiconductor manufacturing environments:\n\nSensors detect abnormal process behavior during fabrication\nWafer maps reveal how those abnormalities manifest spatially across the wafer\nEngineers combine both perspectives to identify root causes and improve yield\n\nThis combined view enables: - More accurate defect detection - Faster root-cause analysis - Data-driven process optimization"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#example-wafer-map-insight-where-defects-occur",
+    "href": "slides/wafer-map-pixel/KAN_46.html#example-wafer-map-insight-where-defects-occur",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Example: Wafer Map Insight (Where Defects Occur)",
+    "text": "Example: Wafer Map Insight (Where Defects Occur)\nWhat we observe\n\nMany failed dies form a ring near the wafer edge\nThe pattern is consistent across multiple wafers\n\nWhat this tells us\n\nThe problem is spatial, not random\nDefects are linked to wafer position\n\nConclusion - The issue likely comes from a process that affects wafer edges - Examples: uneven heating or etching near the boundary"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#example-sensor-data-insight-why-defects-occur",
+    "href": "slides/wafer-map-pixel/KAN_46.html#example-sensor-data-insight-why-defects-occur",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Example: Sensor Data Insight (Why Defects Occur)",
+    "text": "Example: Sensor Data Insight (Why Defects Occur)\nWhat we observe\n\nTemperature sensors show higher values near the end of the process\nGas flow readings fluctuate outside normal ranges\n\nWhat this tells us\n\nThe manufacturing process was unstable\nTool conditions drifted during production\n\nConclusion\n\nAbnormal process conditions caused the defects\nThese sensor signals explain why the wafer map shows failures"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#key-takeaways",
+    "href": "slides/wafer-map-pixel/KAN_46.html#key-takeaways",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\nWafer map pixels represent die-level electrical test outcomes, not optical images\nEach pixel corresponds to a physical die on the wafer\nProcess sensors capture fabrication conditions in real time\nWafer maps show where defects occur\nSensor data helps explain why defects occur\nTogether, they provide a comprehensive view of semiconductor manufacturing quality"
+  },
+  {
+    "objectID": "slides/wafer-map-pixel/KAN_46.html#references",
+    "href": "slides/wafer-map-pixel/KAN_46.html#references",
+    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
+    "section": "References",
+    "text": "References\n\nKyeong, S., Kim, H., & Kim, S. (2020). Classification of wafer map defects based on deep learning methods with a small amount of data. IEEE Access, 8, 21796–21806. https://www.researchgate.net/publication/339903705\nLi, Y., Zhang, X., & Wang, J. (2024). Deep learning approaches for wafer defect pattern recognition. arXiv Preprint. https://arxiv.org/html/2411.11029v1\nJMP Community. (2021). How to make a wafer map in JMP in under 30 seconds. https://community.jmp.com/t5/JMPer-Cable/How-to-make-a-wafer-map-in-JMP-in-under-30-seconds/ba-p/348607\nMathWorks. (n.d.). Classify defects on wafer maps using deep learning. https://www.mathworks.com/help/vision/ug/classify-defects-on-wafer-maps-using-deep-learning.html\nPDF.com. (n.d.). Understanding semiconductor data visualization with wafer maps: An introduction. https://www.pdf.com/understanding-semiconductor-data-visualization-with-wafer-maps-an-introduction/\nWikipedia contributors. (n.d.). Substrate mapping. https://en.wikipedia.org/wiki/Substrate_mapping"
+  },
+  {
+    "objectID": "wafer_images/data_exploration.html",
+    "href": "wafer_images/data_exploration.html",
+    "title": "Mixed-type Wafer Map Defect Dataset",
+    "section": "",
+    "text": "from collections import Counter\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\n\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\n\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]"
+  },
+  {
+    "objectID": "wafer_images/data_exploration.html#labels",
+    "href": "wafer_images/data_exploration.html#labels",
+    "title": "Mixed-type Wafer Map Defect Dataset",
+    "section": "Labels",
+    "text": "Labels\n\n# Basic summary of labels\nprint(\"Labels shape:\", labels.shape)\nprint(\"Total entries:\", labels.shape[0])\n\n# Unique values across entire labels array\nunique_vals = np.unique(labels)\nprint(\"Unique values:\", unique_vals)\nprint(\"Number of unique values:\", unique_vals.size)\n\n# Missing data check\nmissing_count = np.isnan(labels).sum()\nprint(\"Missing values (NaN) count:\", missing_count)\n\n# Show a few example label rows\nexamples_df = pd.DataFrame(labels[:5])\nprint(\"Example label rows:\")\ndisplay(examples_df)\n\n# Unique row patterns count\nunique_rows = np.unique(labels, axis=0)\nprint(\"Number of unique label patterns:\", unique_rows.shape[0])\n\nLabels shape: (38015, 8)\nTotal entries: 38015\nUnique values: [0 1]\nNumber of unique values: 2\nMissing values (NaN) count: 0\nExample label rows:\n\n\n\n\n\n\n\n\n\n0\n1\n2\n3\n4\n5\n6\n7\n\n\n\n\n0\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n1\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n2\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n3\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n4\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n\n\n\n\n\nNumber of unique label patterns: 38\n\n\n\nlabel_mapping = {\n    \"00000000\": \"Normal\",\n    \"10000000\": \"Center\",\n    \"01000000\": \"Donut\",\n    \"00100000\": \"Edge_Loc\",\n    \"00010000\": \"Edge_Ring\",\n    \"00001000\": \"Loc\",\n    \"00000100\": \"Near_Full\",\n    \"00000010\": \"Scratch\",\n    \"00000001\": \"Random\",\n    \"10100000\": \"Center+Edge_Loc\",\n    \"10010000\": \"Center+Edge_Ring\",\n    \"10001000\": \"Center+Loc\",\n    \"10000010\": \"Center+Scratch\",\n    \"01100000\": \"Donut+Edge_Loc\",\n    \"01010000\": \"Donut+Edge_Ring\",\n    \"01001000\": \"Donut+Loc\",\n    \"01000010\": \"Donut+Scratch\",\n    \"00101000\": \"Edge_Loc+Loc\",\n    \"00100010\": \"Edge_Loc+Scratch\",\n    \"00011000\": \"Edge_Ring+Loc\",\n    \"00010010\": \"Edge_Ring+Scratch\",\n    \"00001010\": \"Loc+Scratch\",\n    \"10101000\": \"Center+Edge_Loc+Loc\",\n    \"10100010\": \"Center+Edge_Loc+Scratch\",\n    \"10011000\": \"Center+Edge_Ring+Loc\",\n    \"10010010\": \"Center+Edge_Ring+Scratch\",\n    \"10001010\": \"Center+Loc+Scratch\",\n    \"01101000\": \"Donut+Edge_Loc+Loc\",\n    \"01100010\": \"Donut+Edge_Loc+Scratch\",\n    \"01011000\": \"Donut+Edge_Ring+Loc\",\n    \"01010010\": \"Donut+Edge_Ring+Scratch\",\n    \"01001010\": \"Donut+Loc+Scratch\",\n    \"00101010\": \"Edge_Loc+Loc+Scratch\",\n    \"00011010\": \"Edge_Ring+Loc+Scratch\",\n    \"10101010\": \"Center+Edge_Loc+Loc+Scratch\",\n    \"10011010\": \"Center+Edge_Ring+Loc+Scratch\",\n    \"01101010\": \"Donut+Edge_Loc+Loc+Scratch\",\n    \"01011010\": \"Donut+Edge_Ring+Loc+Scratch\",\n}\n\n# Convert one-hot vectors to string keys\nlabel_str = [\"\".join(map(str, map(int, row))) for row in labels]\nlabel_names = [label_mapping.get(key, \"Unknown\") for key in label_str]\n\n# Count frequency\nlabel_counts = Counter(label_str)\n\n# Create DataFrame with label names\nlabel_df = (\n    pd\n    .DataFrame([\n        {\"OneHot\": k, \"Count\": v, \"LabelName\": label_mapping.get(k, \"Unknown\")} for k, v in label_counts.items()\n    ])\n    .sort_values(\"OneHot\")\n    .reset_index(drop=True)\n)\n\n# plot label distribution with seaborn\nsns.set_theme(style=\"whitegrid\")\nplt.figure(figsize=(12, 7))\nsns.barplot(data=label_df, x=\"Count\", y=\"LabelName\", order=label_df.sort_values(\"Count\", ascending=False)[\"LabelName\"])\nplt.xlabel(\"Frequency\")\nplt.ylabel(\"Defect Type\")\nplt.title(\"Distribution of Wafer Defect Types\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n\n\n\nFrom the plot above, we can see that for most of the defect labels we have 1,000 images including the normal wafers. But for Center+Edge_loc+Scratch we have 2,000 images, for Random around 800 and for Near_Full an under representation of ~200 images."
+  },
+  {
+    "objectID": "wafer_images/data_exploration.html#images",
+    "href": "wafer_images/data_exploration.html#images",
+    "title": "Mixed-type Wafer Map Defect Dataset",
+    "section": "Images",
+    "text": "Images\n\n# Basic summary of images array\nprint(\"Images shape:\", images.shape)\nprint(\"Total entries:\", images.shape[0])\nprint(\"Single image shape:\", images[0].shape)\nprint(\"Dtype:\", images.dtype)\n\n# Missing data check\nmissing_count_images = np.isnan(images).sum()\nprint(\"Missing values (NaN) count:\", missing_count_images)\n\n# Unique values across entire images array\nunique_vals_images = np.unique(images)\nprint(\"Unique values:\", unique_vals_images)\nprint(\"Number of unique values:\", unique_vals_images.size)\n\n# Count images with at least one pixel value of 3\nimages_with_3 = np.sum(np.any(images == 3, axis=(1, 2)))\nprint(f\"Images with at least one pixel value of 3: {images_with_3}\")\n\n# in the images that have at least one pixel value of 3, tell me the average of many pixels have the value 3\nimages_with_3_pixels = images[np.any(images == 3, axis=(1, 2))]\ncount_3_pixels = np.sum(images_with_3_pixels == 3)\naverage_3_pixels = count_3_pixels / images_with_3\nprint(f\"Average number of pixels with value 3 in those images: {average_3_pixels}\")\n\n# Show a few example images (as arrays)\nsample_images = images[:3]\nprint(\"Sample image arrays:\")\nfor i, img in enumerate(sample_images, start=1):\n    print(f\"Image {i} shape: {img.shape}\")\n    print(img)\n\nImages shape: (38015, 52, 52)\nTotal entries: 38015\nSingle image shape: (52, 52)\nDtype: int32\nMissing values (NaN) count: 0\nUnique values: [0 1 2 3]\nNumber of unique values: 4\nImages with at least one pixel value of 3: 105\nAverage number of pixels with value 3 in those images: 2.038095238095238\nSample image arrays:\nImage 1 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 2 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 3 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\n\n\n\ndef convert_to_rgb(image):\n    height, width = image.shape\n    rgb_image = np.zeros((height, width, 3), dtype=np.uint8)\n    rgb_image[image == 0] = [0, 63, 92]\n    rgb_image[image == 1] = [255, 166, 0]\n    rgb_image[image == 2] = [188, 80, 144]\n    return rgb_image\n\n\n# Separate labels by number of defects (number of '+' in label name)\nunique_labels = label_df[\"LabelName\"].tolist()\n\nlabels_by_defect_count = {0: [], 1: [], 2: [], 3: []}\n\nfor label_name in unique_labels:\n    plus_count = label_name.count(\"+\")\n    labels_by_defect_count[plus_count].append(label_name)\n\n# Plot each group separately\nsns.set_theme(style=\"white\")\n\nfor defect_count, labels_group in labels_by_defect_count.items():\n    if not labels_group:\n        continue\n\n    n_labels = len(labels_group)\n    n_cols = min(5, n_labels)\n    n_rows = (n_labels + n_cols - 1) // n_cols\n\n    fig, axes = plt.subplots(n_rows, n_cols, figsize=(16, n_rows * 3))\n    axes = [axes] if n_labels == 1 else axes.flatten() if n_rows &gt; 1 else axes\n\n    for idx, label_name in enumerate(labels_group):\n        label_idx = label_names.index(label_name)\n        rgb_image = convert_to_rgb(images[label_idx])\n\n        axes[idx].imshow(rgb_image)\n        axes[idx].set_title(label_name, fontsize=10, fontweight=\"bold\", color=\"#333333\")\n        axes[idx].axis(\"off\")\n        axes[idx].spines[\"top\"].set_visible(False)\n        axes[idx].spines[\"right\"].set_visible(False)\n        axes[idx].spines[\"bottom\"].set_visible(False)\n        axes[idx].spines[\"left\"].set_visible(False)\n\n    # Hide unused subplots\n    for idx in range(n_labels, len(axes)):\n        axes[idx].axis(\"off\")\n\n    fig.patch.set_facecolor(\"white\")\n    plt.axis(\"off\")\n    plt.tight_layout()\n\n    # Add a suptitle for the group\n    if defect_count == 0:\n        fig.suptitle(\"Single Defect Types\", fontsize=16, fontweight=\"bold\", y=1.02)\n    else:\n        fig.suptitle(f\"Defect Types with {defect_count} Combined Defects\", fontsize=16, fontweight=\"bold\", y=1.02)\n\n    plt.show()"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html",
+    "href": "secom_notebook/secom_eda.html",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "",
+    "text": "The SECOM dataset originates from a semiconductor fabrication facility where products undergo hundreds of sensor measurements during production. Each sample represents one production entity (e.g., a wafer or chip), and the binary label indicates whether the product passed or failed quality control.\n\n\n\nAttribute\nValue\n\n\n\n\nSamples\n1,567 production entities\n\n\nFeatures\n590 sensor measurements\n\n\nLabels\nPass (-1) / Fail (1)"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#environment-setup-and-data-loading",
+    "href": "secom_notebook/secom_eda.html#environment-setup-and-data-loading",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "1. Environment Setup and Data Loading",
+    "text": "1. Environment Setup and Data Loading\nWe begin by importing the necessary Python libraries and loading the dataset files. The SECOM data consists of two files: - secom.data: Contains 590 sensor measurements per sample (space-separated, NaN for missing) - secom_labels.data: Contains the pass/fail label and timestamp for each sample\n\n# Load libraries\nimport warnings\nfrom pathlib import Path\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\n\n# Suppress warnings\nwarnings.filterwarnings(\"ignore\")\n\n# Set visualization style for consistent, publication-quality plots\nplt.style.use(\"seaborn-v0_8-whitegrid\")\n\n\nprint(\"Libraries loaded successfully\")\n\nLibraries loaded successfully"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#data-overview",
+    "href": "secom_notebook/secom_eda.html#data-overview",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "2. Data Overview",
+    "text": "2. Data Overview\nBefore diving into detailed analysis, let’s get a high-level view of the data structure, including data types, memory usage, and the time period over which the data was collected.\n\ndf.head()\n\n\n\n\n\n\n\n\nsensor_0\nsensor_1\nsensor_2\nsensor_3\nsensor_4\nsensor_5\nsensor_6\nsensor_7\nsensor_8\nsensor_9\n...\nsensor_582\nsensor_583\nsensor_584\nsensor_585\nsensor_586\nsensor_587\nsensor_588\nsensor_589\nlabel\ntimestamp\n\n\n\n\n0\n3030.93\n2564.00\n2187.7333\n1411.1265\n1.3602\n100.0\n97.6133\n0.1242\n1.5005\n0.0162\n...\n0.5005\n0.0118\n0.0035\n2.3630\nNaN\nNaN\nNaN\nNaN\n-1\n2008-07-19 11:55:00\n\n\n1\n3095.78\n2465.14\n2230.4222\n1463.6606\n0.8294\n100.0\n102.3433\n0.1247\n1.4966\n-0.0005\n...\n0.5019\n0.0223\n0.0055\n4.4447\n0.0096\n0.0201\n0.0060\n208.2045\n-1\n2008-07-19 12:32:00\n\n\n2\n2932.61\n2559.94\n2186.4111\n1698.0172\n1.5102\n100.0\n95.4878\n0.1241\n1.4436\n0.0041\n...\n0.4958\n0.0157\n0.0039\n3.1745\n0.0584\n0.0484\n0.0148\n82.8602\n1\n2008-07-19 13:17:00\n\n\n3\n2988.72\n2479.90\n2199.0333\n909.7926\n1.3204\n100.0\n104.2367\n0.1217\n1.4882\n-0.0124\n...\n0.4990\n0.0103\n0.0025\n2.0544\n0.0202\n0.0149\n0.0044\n73.8432\n-1\n2008-07-19 14:43:00\n\n\n4\n3032.24\n2502.87\n2233.3667\n1326.5200\n1.5334\n100.0\n100.3967\n0.1235\n1.5031\n-0.0031\n...\n0.4800\n0.4766\n0.1045\n99.3032\n0.0202\n0.0149\n0.0044\n73.8432\n-1\n2008-07-19 15:22:00\n\n\n\n\n5 rows × 592 columns\n\n\n\n\nprint(\"Data Types Summary\")\nprint(df.dtypes.value_counts())\n\nData Types Summary\nfloat64           590\nint64               1\ndatetime64[ns]      1\nName: count, dtype: int64"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#missing-value-analysis",
+    "href": "secom_notebook/secom_eda.html#missing-value-analysis",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "3. Missing Value Analysis",
+    "text": "3. Missing Value Analysis\nMissing values are common in manufacturing sensor data due to: - Sensor malfunctions or calibration issues - Data transmission errors - Certain sensors not being applicable for all product types\n\n# Calculate both absolute counts and percentages to understand:\n# Which features have the most missing data\n# How severe the missing data problem is overall\n\nfeature_cols = [col for col in df.columns if col.startswith(\"sensor_\")]\n\n# Count missing values for each feature\nmissing_counts = df[feature_cols].isnull().sum()\n\n# Calculate missing percentage\nmissing_pct = (missing_counts / len(df)) * 100\n\n# Summary dataframe sorted by missing percentage\nmissing_df = pd.DataFrame({\n    \"missing_count\": missing_counts,\n    \"missing_pct\": missing_pct,\n}).sort_values(\"missing_pct\", ascending=False)\n\n# Print summary statistics\nprint(\"Missing Value Summary\")\nprint(f\"Total sensor features:           {len(feature_cols)}\")\nprint(f\"Features with ANY missing:       {(missing_counts &gt; 0).sum()}\")\nprint(f\"Features with &gt;50% missing:      {(missing_pct &gt; 50).sum()}\")\nprint(f\"Features 100% missing (useless): {(missing_pct == 100).sum()}\")\n\nMissing Value Summary\nTotal sensor features:           590\nFeatures with ANY missing:       538\nFeatures with &gt;50% missing:      28\nFeatures 100% missing (useless): 0"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#descriptive-statistics",
+    "href": "secom_notebook/secom_eda.html#descriptive-statistics",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "4. Descriptive Statistics",
+    "text": "4. Descriptive Statistics\nSummary statistics for each feature helps identify: - Constant features: Zero variance (useless for prediction) - Scale differences: Features with vastly different ranges - Outliers: Extreme values that may need special handling\n\n# Get pandas describe output and transpose for easier viewing\nstats = df[feature_cols].describe().T\n\n# Add missing percentage for reference\nstats[\"missing_pct\"] = missing_pct\n\n# Add range (max - min)\nstats[\"range\"] = stats[\"max\"] - stats[\"min\"]\n\n# Add coefficient of variation (measures relative variability)\n# CV = std / |mean| - useful for comparing variability across different scales\nstats[\"cv\"] = stats[\"std\"] / stats[\"mean\"].abs()\n\nprint(\"Sample of Descriptive Statistics (first 10 features):\")\nstats.head(25)\n\nSample of Descriptive Statistics (first 10 features):\n\n\n\n\n\n\n\n\n\ncount\nmean\nstd\nmin\n25%\n50%\n75%\nmax\nmissing_pct\nrange\ncv\n\n\n\n\nsensor_0\n1561.0\n3014.452896\n73.621787\n2743.2400\n2966.260000\n3011.49000\n3056.650000\n3356.3500\n0.382897\n613.1100\n0.024423\n\n\nsensor_1\n1560.0\n2495.850231\n80.407705\n2158.7500\n2452.247500\n2499.40500\n2538.822500\n2846.4400\n0.446713\n687.6900\n0.032217\n\n\nsensor_2\n1553.0\n2200.547318\n29.513152\n2060.6600\n2181.044400\n2201.06670\n2218.055500\n2315.2667\n0.893427\n254.6067\n0.013412\n\n\nsensor_3\n1553.0\n1396.376627\n441.691640\n0.0000\n1081.875800\n1285.21440\n1591.223500\n3715.0417\n0.893427\n3715.0417\n0.316313\n\n\nsensor_4\n1553.0\n4.197013\n56.355540\n0.6815\n1.017700\n1.31680\n1.525700\n1114.5366\n0.893427\n1113.8551\n13.427535\n\n\nsensor_5\n1553.0\n100.000000\n0.000000\n100.0000\n100.000000\n100.00000\n100.000000\n100.0000\n0.893427\n0.0000\n0.000000\n\n\nsensor_6\n1553.0\n101.112908\n6.237214\n82.1311\n97.920000\n101.51220\n104.586700\n129.2522\n0.893427\n47.1211\n0.061686\n\n\nsensor_7\n1558.0\n0.121822\n0.008961\n0.0000\n0.121100\n0.12240\n0.123800\n0.1286\n0.574346\n0.1286\n0.073561\n\n\nsensor_8\n1565.0\n1.462862\n0.073897\n1.1910\n1.411200\n1.46160\n1.516900\n1.6564\n0.127632\n0.4654\n0.050515\n\n\nsensor_9\n1565.0\n-0.000841\n0.015116\n-0.0534\n-0.010800\n-0.00130\n0.008400\n0.0749\n0.127632\n0.1283\n17.973588\n\n\nsensor_10\n1565.0\n0.000146\n0.009302\n-0.0349\n-0.005600\n0.00040\n0.005900\n0.0530\n0.127632\n0.0879\n63.821983\n\n\nsensor_11\n1565.0\n0.964353\n0.012452\n0.6554\n0.958100\n0.96580\n0.971300\n0.9848\n0.127632\n0.3294\n0.012912\n\n\nsensor_12\n1565.0\n199.956809\n3.257276\n182.0940\n198.130700\n199.53560\n202.007100\n272.0451\n0.127632\n89.9511\n0.016290\n\n\nsensor_13\n1564.0\n0.000000\n0.000000\n0.0000\n0.000000\n0.00000\n0.000000\n0.0000\n0.191449\n0.0000\nNaN\n\n\nsensor_14\n1564.0\n9.005371\n2.796596\n2.2493\n7.094875\n8.96700\n10.861875\n19.5465\n0.191449\n17.2972\n0.310548\n\n\nsensor_15\n1564.0\n413.086035\n17.221095\n333.4486\n406.127400\n412.21910\n419.089275\n824.9271\n0.191449\n491.4785\n0.041689\n\n\nsensor_16\n1564.0\n9.907603\n2.403867\n4.4696\n9.567625\n9.85175\n10.128175\n102.8677\n0.191449\n98.3981\n0.242628\n\n\nsensor_17\n1564.0\n0.971444\n0.012062\n0.5794\n0.968200\n0.97260\n0.976800\n0.9848\n0.191449\n0.4054\n0.012417\n\n\nsensor_18\n1564.0\n190.047354\n2.781041\n169.1774\n188.299825\n189.66420\n192.189375\n215.5977\n0.191449\n46.4203\n0.014633\n\n\nsensor_19\n1557.0\n12.481034\n0.217965\n9.8773\n12.460000\n12.49960\n12.547100\n12.9898\n0.638162\n3.1125\n0.017464\n\n\nsensor_20\n1567.0\n1.405054\n0.016737\n1.1797\n1.396500\n1.40600\n1.415000\n1.4534\n0.000000\n0.2737\n0.011912\n\n\nsensor_21\n1565.0\n-5618.393610\n626.822178\n-7150.2500\n-5933.250000\n-5523.25000\n-5356.250000\n0.0000\n0.127632\n7150.2500\n0.111566\n\n\nsensor_22\n1565.0\n2699.378435\n295.498535\n0.0000\n2578.000000\n2664.00000\n2841.750000\n3656.2500\n0.127632\n3656.2500\n0.109469\n\n\nsensor_23\n1565.0\n-3806.299734\n1380.162148\n-9986.7500\n-4371.750000\n-3820.75000\n-3352.750000\n2363.0000\n0.127632\n12349.7500\n0.362599\n\n\nsensor_24\n1565.0\n-298.598136\n2902.690117\n-14804.5000\n-1476.000000\n-78.75000\n1377.250000\n14106.0000\n0.127632\n28910.5000\n9.721059"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#class-imbalance-analysis",
+    "href": "secom_notebook/secom_eda.html#class-imbalance-analysis",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "5. Class Imbalance Analysis",
+    "text": "5. Class Imbalance Analysis\nIn manufacturing quality control, defect rates are typically low (most products pass). This creates a class imbalance problem where the minority class (failures) is underrepresented. If not addressed, machine learning models may: - Predict “pass” for everything and achieve high accuracy - Fail to detect actual defects (which is the whole point!)\n-1 = Pass (product passed quality control) 1 = Fail (product failed quality control - DEFECT)\n\n# Count samples in each class\nlabel_counts = df[\"label\"].value_counts()\n\n# Calculate percentages\nlabel_pct = df[\"label\"].value_counts(normalize=True) * 100\n\nprint(\"Class Distribution\")\nprint(f\"Pass (-1): {label_counts[-1]:,} samples ({label_pct[-1]:.1f}%)\")\nprint(f\"Fail (1):  {label_counts[1]:,} samples ({label_pct[1]:.1f}%)\")\nprint(f\"Imbalance ratio: {label_counts[-1] / label_counts[1]:.1f}:1\")\n\nClass Distribution\nPass (-1): 1,463 samples (93.4%)\nFail (1):  104 samples (6.6%)\nImbalance ratio: 14.1:1"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#feature-distribution-analysis",
+    "href": "secom_notebook/secom_eda.html#feature-distribution-analysis",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "6. Feature Distribution Analysis",
+    "text": "6. Feature Distribution Analysis\nComparing feature distributions between pass and fail samples helps identify: - Discriminative features: Features that differ between classes - Distribution shapes: Normal, skewed, bimodal, etc. - Overlap: How separable the classes are in feature space\nWe focus on features with low missing values (&lt;5%) to get reliable distribution estimates.\n\n# Get features with less than 5% missing data\nlow_missing_features = missing_df[missing_df[\"missing_pct\"] &lt; 5].index.tolist()[:20]\n\nprint(f\"Analyzing {len(low_missing_features)} features with &lt;5% missing values\")\n\nAnalyzing 20 features with &lt;5% missing values\n\n\n\n# plot features with low missing values\nfig, axes = plt.subplots(4, 5, figsize=(16, 12))\naxes = axes.flatten()\n\nfor i, feature in enumerate(low_missing_features):\n    ax = axes[i]\n\n    # Plot overlapping histograms for each class\n    for label_val, color, label_name in [(-1, \"#2ecc71\", \"Pass\"), (1, \"#e74c3c\", \"Fail\")]:\n        data = df[df[\"label\"] == label_val][feature].dropna()\n        ax.hist(data, bins=30, alpha=0.5, color=color, label=label_name, density=True)\n\n    # Use shortened names for readability\n    ax.set_title(feature.replace(\"sensor_\", \"S\"), fontsize=9)\n    ax.tick_params(labelsize=7)\n\n# Add legend to first subplot only\naxes[0].legend(fontsize=8)\n\nplt.suptitle(\"Feature Distributions by Class (Pass vs Fail)\", fontsize=14, y=1.02)\nplt.tight_layout()\nplt.show()\n\nprint(\n    \"Look for features where the red and green distributions differ significantly - these are potentially predictive features.\"\n)\n\n\n\n\n\n\n\n\nLook for features where the red and green distributions differ significantly - these are potentially predictive features."
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#correlation-analysis",
+    "href": "secom_notebook/secom_eda.html#correlation-analysis",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "7. Correlation Analysis",
+    "text": "7. Correlation Analysis\nCorrelation analysis serves two purposes: 1. Feature-to-feature correlation: Identify redundant features that measure the same thing 2. Feature-to-label correlation: Find features most associated with the outcome\nWe use features with &lt;10% missing to ensure reliable correlations. Limiting to 50 features keeps the heatmap readable.\n\n# Select features for correlation analysis\nanalysis_features = missing_df[missing_df[\"missing_pct\"] &lt; 10].index.tolist()[:50]\n\n# Compute Pearson correlation matrix\ncorr_matrix = df[analysis_features].corr()\n\nprint(f\"Computing correlations for {len(analysis_features)} features\")\nprint(f\"Correlation matrix shape: {corr_matrix.shape}\")\n\nComputing correlations for 50 features\nCorrelation matrix shape: (50, 50)"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#outlier-detection",
+    "href": "secom_notebook/secom_eda.html#outlier-detection",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "8. Outlier Detection",
+    "text": "8. Outlier Detection\nOutliers in sensor data may represent: - Genuine anomalies: Unusual but valid measurements - Sensor errors: Malfunctions or calibration issues\n- Data entry errors: Mistakes during data collection\nWe use the Interquartile Range (IQR) method to identify outliers.\nIQR Method: Q1 = 25th percentile, Q3 = 75th percentile IQR = Q3 - Q1 (middle 50% of data) Outliers: values &lt; Q1 - 1.5IQR or &gt; Q3 + 1.5IQR\n\n# Function to count outliers using IQR method\ndef count_outliers_iqr(series):\n    \"\"\"Count the number of outliers in a pandas Series using IQR method.\n\n    Parameters\n    ----------\n        series: pandas Series of numeric values\n\n    Returns\n    -------\n        int: Number of outlier values\n\n    \"\"\"\n    q1 = series.quantile(0.25)\n    q3 = series.quantile(0.75)\n    iqr = q3 - q1\n    lower_bound = q1 - 1.5 * iqr\n    upper_bound = q3 + 1.5 * iqr\n    return ((series &lt; lower_bound) | (series &gt; upper_bound)).sum()\n\n\n# Count outliers for each feature with low missing values\noutlier_counts = {}\nfor col in low_missing_features:\n    outlier_counts[col] = count_outliers_iqr(df[col].dropna())\n\n# Create summary dataframe\noutlier_df = pd.DataFrame(\n    {\n        \"outlier_count\": outlier_counts.values(),\n        \"outlier_pct\": [c / len(df) * 100 for c in outlier_counts.values()],\n    },\n    index=outlier_counts.keys(),\n).sort_values(\"outlier_pct\", ascending=False)\n\nprint(\"Outlier Analysis Summary\")\nprint(f\"Average outlier percentage: {outlier_df['outlier_pct'].mean():.1f}%\")\nprint(f\"Max outlier percentage:     {outlier_df['outlier_pct'].max():.1f}%\")\nprint(\"\\nFeatures with most outliers:\")\noutlier_df.head(10)\n\nOutlier Analysis Summary\nAverage outlier percentage: 4.4%\nMax outlier percentage:     10.5%\n\nFeatures with most outliers:\n\n\n\n\n\n\n\n\n\noutlier_count\noutlier_pct\n\n\n\n\nsensor_362\n165\n10.529675\n\n\nsensor_224\n153\n9.763880\n\n\nsensor_496\n149\n9.508615\n\n\nsensor_483\n122\n7.785578\n\n\nsensor_485\n104\n6.636886\n\n\nsensor_348\n100\n6.381621\n\n\nsensor_211\n77\n4.913848\n\n\nsensor_349\n72\n4.594767\n\n\nsensor_355\n72\n4.594767\n\n\nsensor_350\n67\n4.275686"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#key-findings-summary",
+    "href": "secom_notebook/secom_eda.html#key-findings-summary",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "9. Key Findings Summary",
+    "text": "9. Key Findings Summary"
+  },
+  {
+    "objectID": "secom_notebook/secom_eda.html#preprocessing-recommendations",
+    "href": "secom_notebook/secom_eda.html#preprocessing-recommendations",
+    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "section": "10. Preprocessing Recommendations",
+    "text": "10. Preprocessing Recommendations\nBased on this exploratory analysis, the following preprocessing pipeline is recommended before building predictive models:\n\nStep 1: Handle Missing Values\n\n\n\n\n\n\n\n\nAction\nCriteria\nRationale\n\n\n\n\nRemove features\n&gt;50% missing\nToo much missing data to impute reliably\n\n\nImpute remaining\n&lt;50% missing\nUse median imputation (robust to outliers)\n\n\n\n\n\nStep 2: Feature Selection\n\nRemove constant features (zero variance) - provide no information\nAddress multicollinearity - remove one of each highly correlated pair (|r| &gt; 0.95)\nConsider PCA for dimensionality reduction\n\n\n\nStep 3: Handle Class Imbalance\nChoose one or more approaches: - SMOTE (Synthetic Minority Over-sampling Technique) - Class weights in model training (e.g., class_weight='balanced') - Stratified sampling for train/test splits\n\n\nStep 4: Outlier Treatment\n\nUse RobustScaler instead of StandardScaler (less sensitive to outliers)\nInvestigate outliers that appear only in failure samples (potential predictive signals)\n\n\n\nStep 5: Feature Scaling\n\nStandardize all features before modeling (sensors have different scales)\nThis is essential for distance-based algorithms (KNN, SVM) and neural networks"
+  },
+  {
+    "objectID": "index.html#wafer-images-wm811k",
+    "href": "index.html#wafer-images-wm811k",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images (WM811k)",
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
+  },
+  {
+    "objectID": "index.html#secom-sensor-data",
+    "href": "index.html#secom-sensor-data",
+    "title": "WaferGuard ML",
+    "section": "SECOM Sensor Data",
+    "text": "SECOM Sensor Data\n\nSECOM EDA"
+  },
+  {
+    "objectID": "index.html#wafer-images-wm811k-1",
+    "href": "index.html#wafer-images-wm811k-1",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images (WM811k)",
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA Notebook\nWafer Images Modeling Notebook\nWafer Images Model testing"
+  },
+  {
+    "objectID": "index.html#secom-sensor-data-1",
+    "href": "index.html#secom-sensor-data-1",
+    "title": "WaferGuard ML",
+    "section": "SECOM Sensor Data",
+    "text": "SECOM Sensor Data\n\nSECOM EDA Notebook"
   },
   {
     "objectID": "wafer_images/model.html",
@@ -329,235 +532,221 @@
     "text": "Step 12 — Phase 2 Evaluation & Final Comparison\nEvaluate both Phase 2 models on the test set with per-class F1 scores, grouped by defect count (single, double, triple, quadruple). Then produce a final summary table comparing all 4 models.\n\nfrom sklearn.metrics import confusion_matrix\n\n# All 38 pattern names in class ID order\nall_pattern_names = [id_to_pattern[i] for i in range(NUM_CLASSES)]\n\n\ndef evaluate_phase2(model, dataset, y_true, model_name):\n    \"\"\"Evaluate a 38-class Phase 2 model with per-class and grouped metrics.\"\"\"\n    y_pred = model.predict(dataset, verbose=0).argmax(axis=1)\n\n    separator = \"=\" * 60\n    print(f\"\\n{separator}\")\n    print(f\"  {model_name} — Test Set Results (38 classes)\")\n    print(separator)\n\n    report = classification_report(\n        y_true,\n        y_pred,\n        target_names=all_pattern_names,\n        zero_division=0,\n        output_dict=True,\n    )\n    print(\n        classification_report(\n            y_true,\n            y_pred,\n            target_names=all_pattern_names,\n            zero_division=0,\n        )\n    )\n\n    macro_f1 = f1_score(y_true, y_pred, average=\"macro\", zero_division=0)\n    weighted_f1 = f1_score(y_true, y_pred, average=\"weighted\", zero_division=0)\n    accuracy = np.mean(y_pred == y_true)\n    print(f\"Accuracy:    {accuracy:.4f}\")\n    print(f\"Macro F1:    {macro_f1:.4f}\")\n    print(f\"Weighted F1: {weighted_f1:.4f}\")\n\n    print(\"\\nF1 by defect combination count:\")\n    for n_plus in range(4):\n        group_labels = [name for name in all_pattern_names if name.count(\"+\") == n_plus]\n        group_f1s = [report[name][\"f1-score\"] for name in group_labels if name in report]\n        if group_f1s:\n            group_name = [\"Single/Normal\", \"Double\", \"Triple\", \"Quadruple\"][n_plus]\n            print(f\"  {group_name:&lt;12} avg F1={np.mean(group_f1s):.4f}  (n={len(group_f1s)} classes)\")\n\n    return y_pred, report, macro_f1, weighted_f1\n\n\ny_pred_p2_cnn, report_p2_cnn, mf1_p2_cnn, wf1_p2_cnn = evaluate_phase2(\n    model_p2_cnn,\n    test_ds_p2,\n    y_class_test,\n    \"Phase2 Custom CNN\",\n)\ny_pred_p2_tl, report_p2_tl, mf1_p2_tl, wf1_p2_tl = evaluate_phase2(\n    model_p2_tl,\n    test_ds_p2,\n    y_class_test,\n    \"Phase2 MobileNetV2\",\n)\n\n\n============================================================\n  Phase2 Custom CNN — Test Set Results (38 classes)\n============================================================\n                              precision    recall  f1-score   support\n\n                      Normal       1.00      1.00      1.00       150\n                      Random       1.00      0.99      1.00       130\n                     Scratch       0.99      1.00      0.99       150\n                   Near_Full       0.96      1.00      0.98        23\n                         Loc       0.96      1.00      0.98       150\n                 Loc+Scratch       1.00      0.95      0.98       150\n                   Edge_Ring       0.98      0.99      0.98       150\n           Edge_Ring+Scratch       0.99      0.97      0.98       150\n               Edge_Ring+Loc       0.92      0.97      0.94       150\n       Edge_Ring+Loc+Scratch       0.97      0.91      0.94       150\n                    Edge_Loc       0.99      0.98      0.98       150\n            Edge_Loc+Scratch       0.97      0.99      0.98       150\n                Edge_Loc+Loc       0.96      0.99      0.97       150\n        Edge_Loc+Loc+Scratch       0.99      0.95      0.97       150\n                       Donut       0.95      0.99      0.97       150\n               Donut+Scratch       0.97      0.98      0.98       150\n                   Donut+Loc       0.94      0.95      0.95       150\n           Donut+Loc+Scratch       0.97      0.94      0.96       150\n             Donut+Edge_Ring       0.97      0.98      0.98       150\n     Donut+Edge_Ring+Scratch       0.95      0.97      0.96       150\n         Donut+Edge_Ring+Loc       0.98      0.99      0.99       150\n Donut+Edge_Ring+Loc+Scratch       0.99      0.97      0.98       150\n              Donut+Edge_Loc       0.98      0.93      0.96       150\n      Donut+Edge_Loc+Scratch       0.94      0.95      0.95       150\n          Donut+Edge_Loc+Loc       1.00      0.96      0.98       150\n  Donut+Edge_Loc+Loc+Scratch       0.97      0.99      0.98       150\n                      Center       1.00      0.99      1.00       150\n              Center+Scratch       0.96      1.00      0.98       150\n                  Center+Loc       0.97      0.99      0.98       150\n          Center+Loc+Scratch       0.99      0.97      0.98       150\n            Center+Edge_Ring       0.98      0.99      0.99       150\n    Center+Edge_Ring+Scratch       0.97      0.97      0.97       150\n        Center+Edge_Ring+Loc       0.94      0.98      0.96       150\nCenter+Edge_Ring+Loc+Scratch       0.97      0.95      0.96       150\n             Center+Edge_Loc       0.99      0.99      0.99       150\n     Center+Edge_Loc+Scratch       1.00      0.96      0.98       300\n         Center+Edge_Loc+Loc       0.95      0.98      0.96       150\n Center+Edge_Loc+Loc+Scratch       0.99      0.95      0.97       150\n\n                    accuracy                           0.97      5703\n                   macro avg       0.97      0.97      0.97      5703\n                weighted avg       0.97      0.97      0.97      5703\n\nAccuracy:    0.9735\nMacro F1:    0.9736\nWeighted F1: 0.9735\n\nF1 by defect combination count:\n  Single/Normal avg F1=0.9866  (n=9 classes)\n  Double       avg F1=0.9725  (n=13 classes)\n  Triple       avg F1=0.9655  (n=12 classes)\n  Quadruple    avg F1=0.9722  (n=4 classes)\n\n============================================================\n  Phase2 MobileNetV2 — Test Set Results (38 classes)\n============================================================\n                              precision    recall  f1-score   support\n\n                      Normal       1.00      1.00      1.00       150\n                      Random       1.00      0.99      1.00       130\n                     Scratch       0.95      1.00      0.97       150\n                   Near_Full       0.96      1.00      0.98        23\n                         Loc       0.96      0.99      0.97       150\n                 Loc+Scratch       0.97      0.95      0.96       150\n                   Edge_Ring       0.96      1.00      0.98       150\n           Edge_Ring+Scratch       0.94      1.00      0.97       150\n               Edge_Ring+Loc       0.92      0.97      0.95       150\n       Edge_Ring+Loc+Scratch       0.94      0.90      0.92       150\n                    Edge_Loc       0.99      0.97      0.98       150\n            Edge_Loc+Scratch       1.00      0.92      0.96       150\n                Edge_Loc+Loc       0.97      0.99      0.98       150\n        Edge_Loc+Loc+Scratch       1.00      0.89      0.94       150\n                       Donut       0.96      1.00      0.98       150\n               Donut+Scratch       0.96      0.99      0.98       150\n                   Donut+Loc       0.97      0.98      0.97       150\n           Donut+Loc+Scratch       0.95      0.97      0.96       150\n             Donut+Edge_Ring       0.96      1.00      0.98       150\n     Donut+Edge_Ring+Scratch       0.91      0.99      0.95       150\n         Donut+Edge_Ring+Loc       0.96      1.00      0.98       150\n Donut+Edge_Ring+Loc+Scratch       0.97      0.96      0.96       150\n              Donut+Edge_Loc       0.97      0.95      0.96       150\n      Donut+Edge_Loc+Scratch       0.99      0.87      0.93       150\n          Donut+Edge_Loc+Loc       1.00      0.96      0.98       150\n  Donut+Edge_Loc+Loc+Scratch       0.99      0.91      0.95       150\n                      Center       1.00      0.99      1.00       150\n              Center+Scratch       0.93      1.00      0.96       150\n                  Center+Loc       0.96      1.00      0.98       150\n          Center+Loc+Scratch       0.98      0.97      0.98       150\n            Center+Edge_Ring       0.96      1.00      0.98       150\n    Center+Edge_Ring+Scratch       0.89      0.99      0.94       150\n        Center+Edge_Ring+Loc       0.93      0.99      0.96       150\nCenter+Edge_Ring+Loc+Scratch       0.98      0.97      0.98       150\n             Center+Edge_Loc       0.99      0.96      0.97       150\n     Center+Edge_Loc+Scratch       0.99      0.91      0.95       300\n         Center+Edge_Loc+Loc       0.97      0.92      0.95       150\n Center+Edge_Loc+Loc+Scratch       1.00      0.92      0.96       150\n\n                    accuracy                           0.97      5703\n                   macro avg       0.97      0.97      0.97      5703\n                weighted avg       0.97      0.97      0.97      5703\n\nAccuracy:    0.9660\nMacro F1:    0.9667\nWeighted F1: 0.9658\n\nF1 by defect combination count:\n  Single/Normal avg F1=0.9841  (n=9 classes)\n  Double       avg F1=0.9690  (n=13 classes)\n  Triple       avg F1=0.9527  (n=12 classes)\n  Quadruple    avg F1=0.9624  (n=4 classes)\n\n\n\n# Confusion matrix for the best Phase 2 model\nbest_p2_name = \"Custom CNN\" if mf1_p2_cnn &gt;= mf1_p2_tl else \"MobileNetV2\"\nbest_p2_pred = y_pred_p2_cnn if mf1_p2_cnn &gt;= mf1_p2_tl else y_pred_p2_tl\nprint(f\"Plotting confusion matrix for best Phase 2 model: {best_p2_name}\")\n\ncm = confusion_matrix(y_class_test, best_p2_pred, labels=np.arange(NUM_CLASSES))\n\n# Convert to percentages (normalize by row)\ncm_percent = cm.astype(\"float\") / cm.sum(axis=1)[:, np.newaxis] * 100\n\nfig, ax = plt.subplots(figsize=(20, 18))\nsns.heatmap(\n    cm_percent,\n    annot=True,\n    fmt=\".1f\",\n    cmap=\"Blues\",\n    xticklabels=all_pattern_names,\n    yticklabels=all_pattern_names,\n    ax=ax,\n    linewidths=0.5,\n    cbar_kws={\"label\": \"Percentage (%)\"},\n)\nax.set_xlabel(\"Predicted\", fontsize=12)\nax.set_ylabel(\"True\", fontsize=12)\nax.set_title(f\"Phase 2 — {best_p2_name} Confusion Matrix (38 classes, %)\", fontsize=14)\nplt.xticks(rotation=90, fontsize=7)\nplt.yticks(rotation=0, fontsize=7)\nplt.tight_layout()\nplt.show()\n\n# Confusion matrices split by defect-combination count for the best Phase 2 model\nbest_p2_name = \"Custom CNN\" if mf1_p2_cnn &gt;= mf1_p2_tl else \"MobileNetV2\"\nbest_p2_pred = y_pred_p2_cnn if mf1_p2_cnn &gt;= mf1_p2_tl else y_pred_p2_tl\nprint(f\"Plotting split confusion matrices for best Phase 2 model: {best_p2_name}\")\n\ngroup_defect_counts = {\n    \"Base patterns (single/normal)\": 0,\n    \"Two-defect combinations\": 1,\n    \"Three-defect combinations\": 2,\n    \"Four-defect combinations\": 3,\n}\n\n\ndef plot_group_confusion_matrix(group_name, plus_count):\n    \"\"\"Plot confusion matrix for classes with a specific '+' count in the label name.\"\"\"\n    group_ids = [cid for cid, name in id_to_pattern.items() if name.count(\"+\") == plus_count]\n    group_names = [id_to_pattern[cid] for cid in group_ids]\n\n    # Use only samples whose true class is in this group\n    mask = np.isin(y_class_test, group_ids)\n    y_true_group = y_class_test[mask]\n    y_pred_group = best_p2_pred[mask]\n\n    cm = confusion_matrix(y_true_group, y_pred_group, labels=group_ids)\n    row_sums = cm.sum(axis=1, keepdims=True)\n    cm_percent = np.divide(cm, row_sums, out=np.zeros_like(cm, dtype=float), where=row_sums != 0) * 100\n\n    fig_w = max(8, 0.6 * len(group_names))\n    fig_h = max(6, 0.6 * len(group_names))\n    fig, ax = plt.subplots(figsize=(fig_w, fig_h))  # noqa: RUF059\n    sns.heatmap(\n        cm_percent,\n        annot=True,\n        fmt=\".1f\",\n        cmap=\"Blues\",\n        xticklabels=group_names,\n        yticklabels=group_names,\n        ax=ax,\n        linewidths=0.5,\n        cbar_kws={\"label\": \"Percentage (%)\"},\n    )\n    ax.set_xlabel(\"Predicted\", fontsize=11)\n    ax.set_ylabel(\"True\", fontsize=11)\n    ax.set_title(f\"Phase 2 — {best_p2_name} Confusion Matrix ({group_name}, %)\", fontsize=13)\n    plt.xticks(rotation=90, fontsize=7)\n    plt.yticks(rotation=0, fontsize=7)\n    plt.tight_layout()\n    plt.show()\n\n\nfor group_name, plus_count in group_defect_counts.items():\n    plot_group_confusion_matrix(group_name, plus_count)\n\nPlotting confusion matrix for best Phase 2 model: Custom CNN\n\n\n\n\n\n\n\n\n\nPlotting split confusion matrices for best Phase 2 model: Custom CNN\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n# ── Final Summary Table: All 4 Models ──\nsummary_data = {\n    \"Model\": [\n        \"Phase 1 — Custom CNN (8-label)\",\n        \"Phase 1 — MobileNetV2 (8-label)\",\n        \"Phase 2 — Custom CNN (38-class)\",\n        \"Phase 2 — MobileNetV2 (38-class)\",\n    ],\n    \"Macro F1\": [\n        report_cnn[\"macro avg\"][\"f1-score\"],\n        report_tl[\"macro avg\"][\"f1-score\"],\n        mf1_p2_cnn,\n        mf1_p2_tl,\n    ],\n    \"Weighted F1\": [\n        report_cnn[\"weighted avg\"][\"f1-score\"],\n        report_tl[\"weighted avg\"][\"f1-score\"],\n        wf1_p2_cnn,\n        wf1_p2_tl,\n    ],\n}\n\nsummary_df = pd.DataFrame(summary_data)\ndisplay(\n    summary_df.style\n    .format({\"Macro F1\": \"{:.4f}\", \"Weighted F1\": \"{:.4f}\"})\n    .highlight_max(subset=[\"Macro F1\", \"Weighted F1\"], color=\"lightgreen\")\n    .set_caption(\"Final Model Comparison — All Phases\")\n)\n\n\n\n\n\n\nTable 1: Final Model Comparison — All Phases\n\n\n\n\n\n \nModel\nMacro F1\nWeighted F1\n\n\n\n\n0\nPhase 1 — Custom CNN (8-label)\n0.9779\n0.9905\n\n\n1\nPhase 1 — MobileNetV2 (8-label)\n0.8998\n0.8847\n\n\n2\nPhase 2 — Custom CNN (38-class)\n0.9736\n0.9735\n\n\n3\nPhase 2 — MobileNetV2 (38-class)\n0.9667\n0.9658"
   },
   {
-    "objectID": "index.html#wafer-images-wm811k",
-    "href": "index.html#wafer-images-wm811k",
-    "title": "WaferGuard ML",
-    "section": "Wafer Images (WM811k)",
-    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
-  },
-  {
-    "objectID": "index.html#secom-sensor-data",
-    "href": "index.html#secom-sensor-data",
-    "title": "WaferGuard ML",
-    "section": "SECOM Sensor Data",
-    "text": "SECOM Sensor Data\n\nSECOM EDA"
-  },
-  {
-    "objectID": "index.html#wafer-images-wm811k-1",
-    "href": "index.html#wafer-images-wm811k-1",
-    "title": "WaferGuard ML",
-    "section": "Wafer Images (WM811k)",
-    "text": "Wafer Images (WM811k)\n\nWafer Images EDA Notebook\nWafer Images Modeling Notebook\nWafer Images Model testing"
-  },
-  {
-    "objectID": "index.html#secom-sensor-data-1",
-    "href": "index.html#secom-sensor-data-1",
-    "title": "WaferGuard ML",
-    "section": "SECOM Sensor Data",
-    "text": "SECOM Sensor Data\n\nSECOM EDA Notebook"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html",
-    "href": "secom_notebook/secom_eda.html",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
+    "objectID": "wafer_images/model_testing.html",
+    "href": "wafer_images/model_testing.html",
+    "title": "Wafer Defect Prediction",
     "section": "",
-    "text": "The SECOM dataset originates from a semiconductor fabrication facility where products undergo hundreds of sensor measurements during production. Each sample represents one production entity (e.g., a wafer or chip), and the binary label indicates whether the product passed or failed quality control.\n\n\n\nAttribute\nValue\n\n\n\n\nSamples\n1,567 production entities\n\n\nFeatures\n590 sensor measurements\n\n\nLabels\nPass (-1) / Fail (1)"
+    "text": "import numpy as np\nimport tensorflow as tf\n\n# Load Data\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]\nprint(\"✓ Data loaded\")\n\n# Load the Phase 2 models\nMODELS_DIR = \"phase2_models\"\nmodel_p2_cnn = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_cnn.keras\")\nmodel_p2_tl = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_tl.keras\")\nprint(\"✓ Models loaded\")\n\n✓ Data loaded\n✓ Models loaded"
   },
   {
-    "objectID": "secom_notebook/secom_eda.html#environment-setup-and-data-loading",
-    "href": "secom_notebook/secom_eda.html#environment-setup-and-data-loading",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "1. Environment Setup and Data Loading",
-    "text": "1. Environment Setup and Data Loading\nWe begin by importing the necessary Python libraries and loading the dataset files. The SECOM data consists of two files: - secom.data: Contains 590 sensor measurements per sample (space-separated, NaN for missing) - secom_labels.data: Contains the pass/fail label and timestamp for each sample\n\n# Load libraries\nimport warnings\nfrom pathlib import Path\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\n\n# Suppress warnings\nwarnings.filterwarnings(\"ignore\")\n\n# Set visualization style for consistent, publication-quality plots\nplt.style.use(\"seaborn-v0_8-whitegrid\")\n\n\nprint(\"Libraries loaded successfully\")\n\nLibraries loaded successfully"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#data-overview",
-    "href": "secom_notebook/secom_eda.html#data-overview",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "2. Data Overview",
-    "text": "2. Data Overview\nBefore diving into detailed analysis, let’s get a high-level view of the data structure, including data types, memory usage, and the time period over which the data was collected.\n\ndf.head()\n\n\n\n\n\n\n\n\nsensor_0\nsensor_1\nsensor_2\nsensor_3\nsensor_4\nsensor_5\nsensor_6\nsensor_7\nsensor_8\nsensor_9\n...\nsensor_582\nsensor_583\nsensor_584\nsensor_585\nsensor_586\nsensor_587\nsensor_588\nsensor_589\nlabel\ntimestamp\n\n\n\n\n0\n3030.93\n2564.00\n2187.7333\n1411.1265\n1.3602\n100.0\n97.6133\n0.1242\n1.5005\n0.0162\n...\n0.5005\n0.0118\n0.0035\n2.3630\nNaN\nNaN\nNaN\nNaN\n-1\n2008-07-19 11:55:00\n\n\n1\n3095.78\n2465.14\n2230.4222\n1463.6606\n0.8294\n100.0\n102.3433\n0.1247\n1.4966\n-0.0005\n...\n0.5019\n0.0223\n0.0055\n4.4447\n0.0096\n0.0201\n0.0060\n208.2045\n-1\n2008-07-19 12:32:00\n\n\n2\n2932.61\n2559.94\n2186.4111\n1698.0172\n1.5102\n100.0\n95.4878\n0.1241\n1.4436\n0.0041\n...\n0.4958\n0.0157\n0.0039\n3.1745\n0.0584\n0.0484\n0.0148\n82.8602\n1\n2008-07-19 13:17:00\n\n\n3\n2988.72\n2479.90\n2199.0333\n909.7926\n1.3204\n100.0\n104.2367\n0.1217\n1.4882\n-0.0124\n...\n0.4990\n0.0103\n0.0025\n2.0544\n0.0202\n0.0149\n0.0044\n73.8432\n-1\n2008-07-19 14:43:00\n\n\n4\n3032.24\n2502.87\n2233.3667\n1326.5200\n1.5334\n100.0\n100.3967\n0.1235\n1.5031\n-0.0031\n...\n0.4800\n0.4766\n0.1045\n99.3032\n0.0202\n0.0149\n0.0044\n73.8432\n-1\n2008-07-19 15:22:00\n\n\n\n\n5 rows × 592 columns\n\n\n\n\nprint(\"Data Types Summary\")\nprint(df.dtypes.value_counts())\n\nData Types Summary\nfloat64           590\nint64               1\ndatetime64[ns]      1\nName: count, dtype: int64"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#missing-value-analysis",
-    "href": "secom_notebook/secom_eda.html#missing-value-analysis",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "3. Missing Value Analysis",
-    "text": "3. Missing Value Analysis\nMissing values are common in manufacturing sensor data due to: - Sensor malfunctions or calibration issues - Data transmission errors - Certain sensors not being applicable for all product types\n\n# Calculate both absolute counts and percentages to understand:\n# Which features have the most missing data\n# How severe the missing data problem is overall\n\nfeature_cols = [col for col in df.columns if col.startswith(\"sensor_\")]\n\n# Count missing values for each feature\nmissing_counts = df[feature_cols].isnull().sum()\n\n# Calculate missing percentage\nmissing_pct = (missing_counts / len(df)) * 100\n\n# Summary dataframe sorted by missing percentage\nmissing_df = pd.DataFrame({\n    \"missing_count\": missing_counts,\n    \"missing_pct\": missing_pct,\n}).sort_values(\"missing_pct\", ascending=False)\n\n# Print summary statistics\nprint(\"Missing Value Summary\")\nprint(f\"Total sensor features:           {len(feature_cols)}\")\nprint(f\"Features with ANY missing:       {(missing_counts &gt; 0).sum()}\")\nprint(f\"Features with &gt;50% missing:      {(missing_pct &gt; 50).sum()}\")\nprint(f\"Features 100% missing (useless): {(missing_pct == 100).sum()}\")\n\nMissing Value Summary\nTotal sensor features:           590\nFeatures with ANY missing:       538\nFeatures with &gt;50% missing:      28\nFeatures 100% missing (useless): 0"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#descriptive-statistics",
-    "href": "secom_notebook/secom_eda.html#descriptive-statistics",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "4. Descriptive Statistics",
-    "text": "4. Descriptive Statistics\nSummary statistics for each feature helps identify: - Constant features: Zero variance (useless for prediction) - Scale differences: Features with vastly different ranges - Outliers: Extreme values that may need special handling\n\n# Get pandas describe output and transpose for easier viewing\nstats = df[feature_cols].describe().T\n\n# Add missing percentage for reference\nstats[\"missing_pct\"] = missing_pct\n\n# Add range (max - min)\nstats[\"range\"] = stats[\"max\"] - stats[\"min\"]\n\n# Add coefficient of variation (measures relative variability)\n# CV = std / |mean| - useful for comparing variability across different scales\nstats[\"cv\"] = stats[\"std\"] / stats[\"mean\"].abs()\n\nprint(\"Sample of Descriptive Statistics (first 10 features):\")\nstats.head(25)\n\nSample of Descriptive Statistics (first 10 features):\n\n\n\n\n\n\n\n\n\ncount\nmean\nstd\nmin\n25%\n50%\n75%\nmax\nmissing_pct\nrange\ncv\n\n\n\n\nsensor_0\n1561.0\n3014.452896\n73.621787\n2743.2400\n2966.260000\n3011.49000\n3056.650000\n3356.3500\n0.382897\n613.1100\n0.024423\n\n\nsensor_1\n1560.0\n2495.850231\n80.407705\n2158.7500\n2452.247500\n2499.40500\n2538.822500\n2846.4400\n0.446713\n687.6900\n0.032217\n\n\nsensor_2\n1553.0\n2200.547318\n29.513152\n2060.6600\n2181.044400\n2201.06670\n2218.055500\n2315.2667\n0.893427\n254.6067\n0.013412\n\n\nsensor_3\n1553.0\n1396.376627\n441.691640\n0.0000\n1081.875800\n1285.21440\n1591.223500\n3715.0417\n0.893427\n3715.0417\n0.316313\n\n\nsensor_4\n1553.0\n4.197013\n56.355540\n0.6815\n1.017700\n1.31680\n1.525700\n1114.5366\n0.893427\n1113.8551\n13.427535\n\n\nsensor_5\n1553.0\n100.000000\n0.000000\n100.0000\n100.000000\n100.00000\n100.000000\n100.0000\n0.893427\n0.0000\n0.000000\n\n\nsensor_6\n1553.0\n101.112908\n6.237214\n82.1311\n97.920000\n101.51220\n104.586700\n129.2522\n0.893427\n47.1211\n0.061686\n\n\nsensor_7\n1558.0\n0.121822\n0.008961\n0.0000\n0.121100\n0.12240\n0.123800\n0.1286\n0.574346\n0.1286\n0.073561\n\n\nsensor_8\n1565.0\n1.462862\n0.073897\n1.1910\n1.411200\n1.46160\n1.516900\n1.6564\n0.127632\n0.4654\n0.050515\n\n\nsensor_9\n1565.0\n-0.000841\n0.015116\n-0.0534\n-0.010800\n-0.00130\n0.008400\n0.0749\n0.127632\n0.1283\n17.973588\n\n\nsensor_10\n1565.0\n0.000146\n0.009302\n-0.0349\n-0.005600\n0.00040\n0.005900\n0.0530\n0.127632\n0.0879\n63.821983\n\n\nsensor_11\n1565.0\n0.964353\n0.012452\n0.6554\n0.958100\n0.96580\n0.971300\n0.9848\n0.127632\n0.3294\n0.012912\n\n\nsensor_12\n1565.0\n199.956809\n3.257276\n182.0940\n198.130700\n199.53560\n202.007100\n272.0451\n0.127632\n89.9511\n0.016290\n\n\nsensor_13\n1564.0\n0.000000\n0.000000\n0.0000\n0.000000\n0.00000\n0.000000\n0.0000\n0.191449\n0.0000\nNaN\n\n\nsensor_14\n1564.0\n9.005371\n2.796596\n2.2493\n7.094875\n8.96700\n10.861875\n19.5465\n0.191449\n17.2972\n0.310548\n\n\nsensor_15\n1564.0\n413.086035\n17.221095\n333.4486\n406.127400\n412.21910\n419.089275\n824.9271\n0.191449\n491.4785\n0.041689\n\n\nsensor_16\n1564.0\n9.907603\n2.403867\n4.4696\n9.567625\n9.85175\n10.128175\n102.8677\n0.191449\n98.3981\n0.242628\n\n\nsensor_17\n1564.0\n0.971444\n0.012062\n0.5794\n0.968200\n0.97260\n0.976800\n0.9848\n0.191449\n0.4054\n0.012417\n\n\nsensor_18\n1564.0\n190.047354\n2.781041\n169.1774\n188.299825\n189.66420\n192.189375\n215.5977\n0.191449\n46.4203\n0.014633\n\n\nsensor_19\n1557.0\n12.481034\n0.217965\n9.8773\n12.460000\n12.49960\n12.547100\n12.9898\n0.638162\n3.1125\n0.017464\n\n\nsensor_20\n1567.0\n1.405054\n0.016737\n1.1797\n1.396500\n1.40600\n1.415000\n1.4534\n0.000000\n0.2737\n0.011912\n\n\nsensor_21\n1565.0\n-5618.393610\n626.822178\n-7150.2500\n-5933.250000\n-5523.25000\n-5356.250000\n0.0000\n0.127632\n7150.2500\n0.111566\n\n\nsensor_22\n1565.0\n2699.378435\n295.498535\n0.0000\n2578.000000\n2664.00000\n2841.750000\n3656.2500\n0.127632\n3656.2500\n0.109469\n\n\nsensor_23\n1565.0\n-3806.299734\n1380.162148\n-9986.7500\n-4371.750000\n-3820.75000\n-3352.750000\n2363.0000\n0.127632\n12349.7500\n0.362599\n\n\nsensor_24\n1565.0\n-298.598136\n2902.690117\n-14804.5000\n-1476.000000\n-78.75000\n1377.250000\n14106.0000\n0.127632\n28910.5000\n9.721059"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#class-imbalance-analysis",
-    "href": "secom_notebook/secom_eda.html#class-imbalance-analysis",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "5. Class Imbalance Analysis",
-    "text": "5. Class Imbalance Analysis\nIn manufacturing quality control, defect rates are typically low (most products pass). This creates a class imbalance problem where the minority class (failures) is underrepresented. If not addressed, machine learning models may: - Predict “pass” for everything and achieve high accuracy - Fail to detect actual defects (which is the whole point!)\n-1 = Pass (product passed quality control) 1 = Fail (product failed quality control - DEFECT)\n\n# Count samples in each class\nlabel_counts = df[\"label\"].value_counts()\n\n# Calculate percentages\nlabel_pct = df[\"label\"].value_counts(normalize=True) * 100\n\nprint(\"Class Distribution\")\nprint(f\"Pass (-1): {label_counts[-1]:,} samples ({label_pct[-1]:.1f}%)\")\nprint(f\"Fail (1):  {label_counts[1]:,} samples ({label_pct[1]:.1f}%)\")\nprint(f\"Imbalance ratio: {label_counts[-1] / label_counts[1]:.1f}:1\")\n\nClass Distribution\nPass (-1): 1,463 samples (93.4%)\nFail (1):  104 samples (6.6%)\nImbalance ratio: 14.1:1"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#feature-distribution-analysis",
-    "href": "secom_notebook/secom_eda.html#feature-distribution-analysis",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "6. Feature Distribution Analysis",
-    "text": "6. Feature Distribution Analysis\nComparing feature distributions between pass and fail samples helps identify: - Discriminative features: Features that differ between classes - Distribution shapes: Normal, skewed, bimodal, etc. - Overlap: How separable the classes are in feature space\nWe focus on features with low missing values (&lt;5%) to get reliable distribution estimates.\n\n# Get features with less than 5% missing data\nlow_missing_features = missing_df[missing_df[\"missing_pct\"] &lt; 5].index.tolist()[:20]\n\nprint(f\"Analyzing {len(low_missing_features)} features with &lt;5% missing values\")\n\nAnalyzing 20 features with &lt;5% missing values\n\n\n\n# plot features with low missing values\nfig, axes = plt.subplots(4, 5, figsize=(16, 12))\naxes = axes.flatten()\n\nfor i, feature in enumerate(low_missing_features):\n    ax = axes[i]\n\n    # Plot overlapping histograms for each class\n    for label_val, color, label_name in [(-1, \"#2ecc71\", \"Pass\"), (1, \"#e74c3c\", \"Fail\")]:\n        data = df[df[\"label\"] == label_val][feature].dropna()\n        ax.hist(data, bins=30, alpha=0.5, color=color, label=label_name, density=True)\n\n    # Use shortened names for readability\n    ax.set_title(feature.replace(\"sensor_\", \"S\"), fontsize=9)\n    ax.tick_params(labelsize=7)\n\n# Add legend to first subplot only\naxes[0].legend(fontsize=8)\n\nplt.suptitle(\"Feature Distributions by Class (Pass vs Fail)\", fontsize=14, y=1.02)\nplt.tight_layout()\nplt.show()\n\nprint(\n    \"Look for features where the red and green distributions differ significantly - these are potentially predictive features.\"\n)\n\n\n\n\n\n\n\n\nLook for features where the red and green distributions differ significantly - these are potentially predictive features."
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#correlation-analysis",
-    "href": "secom_notebook/secom_eda.html#correlation-analysis",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "7. Correlation Analysis",
-    "text": "7. Correlation Analysis\nCorrelation analysis serves two purposes: 1. Feature-to-feature correlation: Identify redundant features that measure the same thing 2. Feature-to-label correlation: Find features most associated with the outcome\nWe use features with &lt;10% missing to ensure reliable correlations. Limiting to 50 features keeps the heatmap readable.\n\n# Select features for correlation analysis\nanalysis_features = missing_df[missing_df[\"missing_pct\"] &lt; 10].index.tolist()[:50]\n\n# Compute Pearson correlation matrix\ncorr_matrix = df[analysis_features].corr()\n\nprint(f\"Computing correlations for {len(analysis_features)} features\")\nprint(f\"Correlation matrix shape: {corr_matrix.shape}\")\n\nComputing correlations for 50 features\nCorrelation matrix shape: (50, 50)"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#outlier-detection",
-    "href": "secom_notebook/secom_eda.html#outlier-detection",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "8. Outlier Detection",
-    "text": "8. Outlier Detection\nOutliers in sensor data may represent: - Genuine anomalies: Unusual but valid measurements - Sensor errors: Malfunctions or calibration issues\n- Data entry errors: Mistakes during data collection\nWe use the Interquartile Range (IQR) method to identify outliers.\nIQR Method: Q1 = 25th percentile, Q3 = 75th percentile IQR = Q3 - Q1 (middle 50% of data) Outliers: values &lt; Q1 - 1.5IQR or &gt; Q3 + 1.5IQR\n\n# Function to count outliers using IQR method\ndef count_outliers_iqr(series):\n    \"\"\"Count the number of outliers in a pandas Series using IQR method.\n\n    Parameters\n    ----------\n        series: pandas Series of numeric values\n\n    Returns\n    -------\n        int: Number of outlier values\n\n    \"\"\"\n    q1 = series.quantile(0.25)\n    q3 = series.quantile(0.75)\n    iqr = q3 - q1\n    lower_bound = q1 - 1.5 * iqr\n    upper_bound = q3 + 1.5 * iqr\n    return ((series &lt; lower_bound) | (series &gt; upper_bound)).sum()\n\n\n# Count outliers for each feature with low missing values\noutlier_counts = {}\nfor col in low_missing_features:\n    outlier_counts[col] = count_outliers_iqr(df[col].dropna())\n\n# Create summary dataframe\noutlier_df = pd.DataFrame(\n    {\n        \"outlier_count\": outlier_counts.values(),\n        \"outlier_pct\": [c / len(df) * 100 for c in outlier_counts.values()],\n    },\n    index=outlier_counts.keys(),\n).sort_values(\"outlier_pct\", ascending=False)\n\nprint(\"Outlier Analysis Summary\")\nprint(f\"Average outlier percentage: {outlier_df['outlier_pct'].mean():.1f}%\")\nprint(f\"Max outlier percentage:     {outlier_df['outlier_pct'].max():.1f}%\")\nprint(\"\\nFeatures with most outliers:\")\noutlier_df.head(10)\n\nOutlier Analysis Summary\nAverage outlier percentage: 4.4%\nMax outlier percentage:     10.5%\n\nFeatures with most outliers:\n\n\n\n\n\n\n\n\n\noutlier_count\noutlier_pct\n\n\n\n\nsensor_362\n165\n10.529675\n\n\nsensor_224\n153\n9.763880\n\n\nsensor_496\n149\n9.508615\n\n\nsensor_483\n122\n7.785578\n\n\nsensor_485\n104\n6.636886\n\n\nsensor_348\n100\n6.381621\n\n\nsensor_211\n77\n4.913848\n\n\nsensor_349\n72\n4.594767\n\n\nsensor_355\n72\n4.594767\n\n\nsensor_350\n67\n4.275686"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#key-findings-summary",
-    "href": "secom_notebook/secom_eda.html#key-findings-summary",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "9. Key Findings Summary",
-    "text": "9. Key Findings Summary"
-  },
-  {
-    "objectID": "secom_notebook/secom_eda.html#preprocessing-recommendations",
-    "href": "secom_notebook/secom_eda.html#preprocessing-recommendations",
-    "title": "SECOM Semiconductor Manufacturing Data - Exploratory Data Analysis",
-    "section": "10. Preprocessing Recommendations",
-    "text": "10. Preprocessing Recommendations\nBased on this exploratory analysis, the following preprocessing pipeline is recommended before building predictive models:\n\nStep 1: Handle Missing Values\n\n\n\n\n\n\n\n\nAction\nCriteria\nRationale\n\n\n\n\nRemove features\n&gt;50% missing\nToo much missing data to impute reliably\n\n\nImpute remaining\n&lt;50% missing\nUse median imputation (robust to outliers)\n\n\n\n\n\nStep 2: Feature Selection\n\nRemove constant features (zero variance) - provide no information\nAddress multicollinearity - remove one of each highly correlated pair (|r| &gt; 0.95)\nConsider PCA for dimensionality reduction\n\n\n\nStep 3: Handle Class Imbalance\nChoose one or more approaches: - SMOTE (Synthetic Minority Over-sampling Technique) - Class weights in model training (e.g., class_weight='balanced') - Stratified sampling for train/test splits\n\n\nStep 4: Outlier Treatment\n\nUse RobustScaler instead of StandardScaler (less sensitive to outliers)\nInvestigate outliers that appear only in failure samples (potential predictive signals)\n\n\n\nStep 5: Feature Scaling\n\nStandardize all features before modeling (sensors have different scales)\nThis is essential for distance-based algorithms (KNN, SVM) and neural networks"
-  },
-  {
-    "objectID": "wafer_images/data_exploration.html",
-    "href": "wafer_images/data_exploration.html",
-    "title": "Mixed-type Wafer Map Defect Dataset",
+    "objectID": "wafer_images/model_testing.html#load-data-and-models",
+    "href": "wafer_images/model_testing.html#load-data-and-models",
+    "title": "Wafer Defect Prediction",
     "section": "",
-    "text": "from collections import Counter\n\nimport matplotlib.pyplot as plt\nimport numpy as np\nimport pandas as pd\nimport seaborn as sns\n\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\n\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]"
+    "text": "import numpy as np\nimport tensorflow as tf\n\n# Load Data\ndata_path = \"../data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz\"\ndata = np.load(data_path)\nimages = data[\"arr_0\"]\nlabels = data[\"arr_1\"]\nprint(\"✓ Data loaded\")\n\n# Load the Phase 2 models\nMODELS_DIR = \"phase2_models\"\nmodel_p2_cnn = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_cnn.keras\")\nmodel_p2_tl = tf.keras.models.load_model(f\"{MODELS_DIR}/model_p2_tl.keras\")\nprint(\"✓ Models loaded\")\n\n✓ Data loaded\n✓ Models loaded"
   },
   {
-    "objectID": "wafer_images/data_exploration.html#labels",
-    "href": "wafer_images/data_exploration.html#labels",
-    "title": "Mixed-type Wafer Map Defect Dataset",
-    "section": "Labels",
-    "text": "Labels\n\n# Basic summary of labels\nprint(\"Labels shape:\", labels.shape)\nprint(\"Total entries:\", labels.shape[0])\n\n# Unique values across entire labels array\nunique_vals = np.unique(labels)\nprint(\"Unique values:\", unique_vals)\nprint(\"Number of unique values:\", unique_vals.size)\n\n# Missing data check\nmissing_count = np.isnan(labels).sum()\nprint(\"Missing values (NaN) count:\", missing_count)\n\n# Show a few example label rows\nexamples_df = pd.DataFrame(labels[:5])\nprint(\"Example label rows:\")\ndisplay(examples_df)\n\n# Unique row patterns count\nunique_rows = np.unique(labels, axis=0)\nprint(\"Number of unique label patterns:\", unique_rows.shape[0])\n\nLabels shape: (38015, 8)\nTotal entries: 38015\nUnique values: [0 1]\nNumber of unique values: 2\nMissing values (NaN) count: 0\nExample label rows:\n\n\n\n\n\n\n\n\n\n0\n1\n2\n3\n4\n5\n6\n7\n\n\n\n\n0\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n1\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n2\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n3\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n4\n1\n0\n1\n0\n0\n0\n1\n0\n\n\n\n\n\n\n\nNumber of unique label patterns: 38\n\n\n\nlabel_mapping = {\n    \"00000000\": \"Normal\",\n    \"10000000\": \"Center\",\n    \"01000000\": \"Donut\",\n    \"00100000\": \"Edge_Loc\",\n    \"00010000\": \"Edge_Ring\",\n    \"00001000\": \"Loc\",\n    \"00000100\": \"Near_Full\",\n    \"00000010\": \"Scratch\",\n    \"00000001\": \"Random\",\n    \"10100000\": \"Center+Edge_Loc\",\n    \"10010000\": \"Center+Edge_Ring\",\n    \"10001000\": \"Center+Loc\",\n    \"10000010\": \"Center+Scratch\",\n    \"01100000\": \"Donut+Edge_Loc\",\n    \"01010000\": \"Donut+Edge_Ring\",\n    \"01001000\": \"Donut+Loc\",\n    \"01000010\": \"Donut+Scratch\",\n    \"00101000\": \"Edge_Loc+Loc\",\n    \"00100010\": \"Edge_Loc+Scratch\",\n    \"00011000\": \"Edge_Ring+Loc\",\n    \"00010010\": \"Edge_Ring+Scratch\",\n    \"00001010\": \"Loc+Scratch\",\n    \"10101000\": \"Center+Edge_Loc+Loc\",\n    \"10100010\": \"Center+Edge_Loc+Scratch\",\n    \"10011000\": \"Center+Edge_Ring+Loc\",\n    \"10010010\": \"Center+Edge_Ring+Scratch\",\n    \"10001010\": \"Center+Loc+Scratch\",\n    \"01101000\": \"Donut+Edge_Loc+Loc\",\n    \"01100010\": \"Donut+Edge_Loc+Scratch\",\n    \"01011000\": \"Donut+Edge_Ring+Loc\",\n    \"01010010\": \"Donut+Edge_Ring+Scratch\",\n    \"01001010\": \"Donut+Loc+Scratch\",\n    \"00101010\": \"Edge_Loc+Loc+Scratch\",\n    \"00011010\": \"Edge_Ring+Loc+Scratch\",\n    \"10101010\": \"Center+Edge_Loc+Loc+Scratch\",\n    \"10011010\": \"Center+Edge_Ring+Loc+Scratch\",\n    \"01101010\": \"Donut+Edge_Loc+Loc+Scratch\",\n    \"01011010\": \"Donut+Edge_Ring+Loc+Scratch\",\n}\n\n# Convert one-hot vectors to string keys\nlabel_str = [\"\".join(map(str, map(int, row))) for row in labels]\nlabel_names = [label_mapping.get(key, \"Unknown\") for key in label_str]\n\n# Count frequency\nlabel_counts = Counter(label_str)\n\n# Create DataFrame with label names\nlabel_df = (\n    pd\n    .DataFrame([\n        {\"OneHot\": k, \"Count\": v, \"LabelName\": label_mapping.get(k, \"Unknown\")} for k, v in label_counts.items()\n    ])\n    .sort_values(\"OneHot\")\n    .reset_index(drop=True)\n)\n\n# plot label distribution with seaborn\nsns.set_theme(style=\"whitegrid\")\nplt.figure(figsize=(12, 7))\nsns.barplot(data=label_df, x=\"Count\", y=\"LabelName\", order=label_df.sort_values(\"Count\", ascending=False)[\"LabelName\"])\nplt.xlabel(\"Frequency\")\nplt.ylabel(\"Defect Type\")\nplt.title(\"Distribution of Wafer Defect Types\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n\n\n\nFrom the plot above, we can see that for most of the defect labels we have 1,000 images including the normal wafers. But for Center+Edge_loc+Scratch we have 2,000 images, for Random around 800 and for Near_Full an under representation of ~200 images."
+    "objectID": "wafer_images/model_testing.html#data-cleansing",
+    "href": "wafer_images/model_testing.html#data-cleansing",
+    "title": "Wafer Defect Prediction",
+    "section": "Data Cleansing",
+    "text": "Data Cleansing\n\n# Default pixels with 3 to 0\nimages[images == 3] = 0\n# String Label Mapping\nlabel_mapping = {\n    \"00000000\": \"Normal\",\n    \"10000000\": \"Center\",\n    \"01000000\": \"Donut\",\n    \"00100000\": \"Edge_Loc\",\n    \"00010000\": \"Edge_Ring\",\n    \"00001000\": \"Loc\",\n    \"00000100\": \"Near_Full\",\n    \"00000010\": \"Scratch\",\n    \"00000001\": \"Random\",\n    \"10100000\": \"Center+Edge_Loc\",\n    \"10010000\": \"Center+Edge_Ring\",\n    \"10001000\": \"Center+Loc\",\n    \"10000010\": \"Center+Scratch\",\n    \"01100000\": \"Donut+Edge_Loc\",\n    \"01010000\": \"Donut+Edge_Ring\",\n    \"01001000\": \"Donut+Loc\",\n    \"01000010\": \"Donut+Scratch\",\n    \"00101000\": \"Edge_Loc+Loc\",\n    \"00100010\": \"Edge_Loc+Scratch\",\n    \"00011000\": \"Edge_Ring+Loc\",\n    \"00010010\": \"Edge_Ring+Scratch\",\n    \"00001010\": \"Loc+Scratch\",\n    \"10101000\": \"Center+Edge_Loc+Loc\",\n    \"10100010\": \"Center+Edge_Loc+Scratch\",\n    \"10011000\": \"Center+Edge_Ring+Loc\",\n    \"10010010\": \"Center+Edge_Ring+Scratch\",\n    \"10001010\": \"Center+Loc+Scratch\",\n    \"01101000\": \"Donut+Edge_Loc+Loc\",\n    \"01100010\": \"Donut+Edge_Loc+Scratch\",\n    \"01011000\": \"Donut+Edge_Ring+Loc\",\n    \"01010010\": \"Donut+Edge_Ring+Scratch\",\n    \"01001010\": \"Donut+Loc+Scratch\",\n    \"00101010\": \"Edge_Loc+Loc+Scratch\",\n    \"00011010\": \"Edge_Ring+Loc+Scratch\",\n    \"10101010\": \"Center+Edge_Loc+Loc+Scratch\",\n    \"10011010\": \"Center+Edge_Ring+Loc+Scratch\",\n    \"01101010\": \"Donut+Edge_Loc+Loc+Scratch\",\n    \"01011010\": \"Donut+Edge_Ring+Loc+Scratch\",\n}\n\n\nunique_patterns = sorted(label_mapping.keys())\npattern_to_id = {pattern: idx for idx, pattern in enumerate(unique_patterns)}\nid_to_pattern = {idx: label_mapping[pattern] for pattern, idx in pattern_to_id.items()}\nlabel_str_arr = np.array([\"\".join(map(str, map(int, row))) for row in labels])\n\nX_test = np.eye(3, dtype=np.float32)[images.astype(int)]  # Shape: (52, 52, 3)\ny_class_test = np.array([pattern_to_id[s] for s in label_str_arr])"
   },
   {
-    "objectID": "wafer_images/data_exploration.html#images",
-    "href": "wafer_images/data_exploration.html#images",
-    "title": "Mixed-type Wafer Map Defect Dataset",
-    "section": "Images",
-    "text": "Images\n\n# Basic summary of images array\nprint(\"Images shape:\", images.shape)\nprint(\"Total entries:\", images.shape[0])\nprint(\"Single image shape:\", images[0].shape)\nprint(\"Dtype:\", images.dtype)\n\n# Missing data check\nmissing_count_images = np.isnan(images).sum()\nprint(\"Missing values (NaN) count:\", missing_count_images)\n\n# Unique values across entire images array\nunique_vals_images = np.unique(images)\nprint(\"Unique values:\", unique_vals_images)\nprint(\"Number of unique values:\", unique_vals_images.size)\n\n# Count images with at least one pixel value of 3\nimages_with_3 = np.sum(np.any(images == 3, axis=(1, 2)))\nprint(f\"Images with at least one pixel value of 3: {images_with_3}\")\n\n# in the images that have at least one pixel value of 3, tell me the average of many pixels have the value 3\nimages_with_3_pixels = images[np.any(images == 3, axis=(1, 2))]\ncount_3_pixels = np.sum(images_with_3_pixels == 3)\naverage_3_pixels = count_3_pixels / images_with_3\nprint(f\"Average number of pixels with value 3 in those images: {average_3_pixels}\")\n\n# Show a few example images (as arrays)\nsample_images = images[:3]\nprint(\"Sample image arrays:\")\nfor i, img in enumerate(sample_images, start=1):\n    print(f\"Image {i} shape: {img.shape}\")\n    print(img)\n\nImages shape: (38015, 52, 52)\nTotal entries: 38015\nSingle image shape: (52, 52)\nDtype: int32\nMissing values (NaN) count: 0\nUnique values: [0 1 2 3]\nNumber of unique values: 4\nImages with at least one pixel value of 3: 105\nAverage number of pixels with value 3 in those images: 2.038095238095238\nSample image arrays:\nImage 1 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 2 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\nImage 3 shape: (52, 52)\n[[0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n ...\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]\n [0 0 0 ... 0 0 0]]\n\n\n\ndef convert_to_rgb(image):\n    height, width = image.shape\n    rgb_image = np.zeros((height, width, 3), dtype=np.uint8)\n    rgb_image[image == 0] = [0, 63, 92]\n    rgb_image[image == 1] = [255, 166, 0]\n    rgb_image[image == 2] = [188, 80, 144]\n    return rgb_image\n\n\n# Separate labels by number of defects (number of '+' in label name)\nunique_labels = label_df[\"LabelName\"].tolist()\n\nlabels_by_defect_count = {0: [], 1: [], 2: [], 3: []}\n\nfor label_name in unique_labels:\n    plus_count = label_name.count(\"+\")\n    labels_by_defect_count[plus_count].append(label_name)\n\n# Plot each group separately\nsns.set_theme(style=\"white\")\n\nfor defect_count, labels_group in labels_by_defect_count.items():\n    if not labels_group:\n        continue\n\n    n_labels = len(labels_group)\n    n_cols = min(5, n_labels)\n    n_rows = (n_labels + n_cols - 1) // n_cols\n\n    fig, axes = plt.subplots(n_rows, n_cols, figsize=(16, n_rows * 3))\n    axes = [axes] if n_labels == 1 else axes.flatten() if n_rows &gt; 1 else axes\n\n    for idx, label_name in enumerate(labels_group):\n        label_idx = label_names.index(label_name)\n        rgb_image = convert_to_rgb(images[label_idx])\n\n        axes[idx].imshow(rgb_image)\n        axes[idx].set_title(label_name, fontsize=10, fontweight=\"bold\", color=\"#333333\")\n        axes[idx].axis(\"off\")\n        axes[idx].spines[\"top\"].set_visible(False)\n        axes[idx].spines[\"right\"].set_visible(False)\n        axes[idx].spines[\"bottom\"].set_visible(False)\n        axes[idx].spines[\"left\"].set_visible(False)\n\n    # Hide unused subplots\n    for idx in range(n_labels, len(axes)):\n        axes[idx].axis(\"off\")\n\n    fig.patch.set_facecolor(\"white\")\n    plt.axis(\"off\")\n    plt.tight_layout()\n\n    # Add a suptitle for the group\n    if defect_count == 0:\n        fig.suptitle(\"Single Defect Types\", fontsize=16, fontweight=\"bold\", y=1.02)\n    else:\n        fig.suptitle(f\"Defect Types with {defect_count} Combined Defects\", fontsize=16, fontweight=\"bold\", y=1.02)\n\n    plt.show()"
+    "objectID": "wafer_images/model_testing.html#predict-wafer-defect",
+    "href": "wafer_images/model_testing.html#predict-wafer-defect",
+    "title": "Wafer Defect Prediction",
+    "section": "Predict Wafer Defect",
+    "text": "Predict Wafer Defect\n\n# Pick a random wafer map from test set\nrandom_idx = np.random.randint(0, len(X_test))\nrandom_wafer = X_test[random_idx : random_idx + 1]\ntrue_class_id = y_class_test[random_idx]\ntrue_pattern_name = id_to_pattern[true_class_id]\n\nprint(f\"Random wafer shape: {random_wafer.shape}\")\nprint(f\"True defect pattern: {true_pattern_name}\")\n\n# Make predictions\npred_cnn = model_p2_cnn.predict(random_wafer, verbose=0)  # Shape: (1, 38)\npred_tl = model_p2_tl.predict(random_wafer, verbose=0)  # Shape: (1, 38)\n\n# Get predicted class IDs (argmax)\npred_class_cnn = pred_cnn[0].argmax()\npred_class_tl = pred_tl[0].argmax()\n\n# Get predicted pattern names\npred_pattern_cnn = id_to_pattern[pred_class_cnn]\npred_pattern_tl = id_to_pattern[pred_class_tl]\n\n# Get confidence scores\nconf_cnn = pred_cnn[0, pred_class_cnn]\nconf_tl = pred_tl[0, pred_class_tl]\n\nprint(\"\\nPredictions:\")\nprint(f\"  Custom CNN:   {pred_pattern_cnn} (confidence: {conf_cnn:.2%})\")\nprint(f\"  MobileNetV2:  {pred_pattern_tl} (confidence: {conf_tl:.2%})\")\nprint(f\"  Match: {'✓' if pred_class_cnn == true_class_id else '✗'} (Custom CNN)\")\nprint(f\"  Match: {'✓' if pred_class_tl == true_class_id else '✗'} (MobileNetV2)\")\n\nRandom wafer shape: (1, 52, 52, 3)\nTrue defect pattern: Loc+Scratch\n\nPredictions:\n  Custom CNN:   Loc+Scratch (confidence: 99.89%)\n  MobileNetV2:  Loc+Scratch (confidence: 98.48%)\n  Match: ✓ (Custom CNN)\n  Match: ✓ (MobileNetV2)"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html",
-    "href": "slides/wafer-map-pixel/KAN_46.html",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "",
-    "text": "Wafer\n\nA thin, round slice of silicon\nUsed as the base to build computer chips\nOne wafer holds many chips\n\nDie (plural: dies)\n\nA single chip on a wafer\nEach die becomes one usable chip if it passes testing\n\nDie-Level Testing (Wafer Probe Test)\n\nElectrical testing done before chips are separated\nChecks if each die works correctly\n\nYield\n\nThe percentage of dies that work correctly\nHigher yield means lower manufacturing cost\n\nWafer Map\n\nA 2D picture of a wafer\nShows which dies passed or failed testing\n\nPixel (in Wafer Maps)\n\nRepresents one die\nStores test results, not colors or brightness\n\nDefect Pattern\n\nA visible shape formed by failing dies\nOften points to a manufacturing problem\nExamples: center failures, edge rings, scratches\n\nProcess Sensors\n\nDevices inside manufacturing machines\nMeasure conditions like temperature, pressure, and power\n\nProcess Run / Production Instance\n\nA single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Agenda",
+    "text": "Agenda\n\nBackground — Why semiconductor defect detection matters\nKey Concepts — Neural networks, CNNs, transfer learning explained\nDataset & Exploration — The wafer map dataset\nData Preprocessing — Encoding, splitting, augmentation\nPhase 1 — Multi-label classification (8 defect types)\nPhase 2 — Multi-class classification (38 defect patterns)\nResults & Evaluation\nLive Demo\n\n\nWalk through the agenda briefly. Emphasize that the first section is a primer for non-technical audience members."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#key-terminology-foundational-concepts",
-    "href": "slides/wafer-map-pixel/KAN_46.html#key-terminology-foundational-concepts",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "",
-    "text": "Wafer\n\nA thin, round slice of silicon\nUsed as the base to build computer chips\nOne wafer holds many chips\n\nDie (plural: dies)\n\nA single chip on a wafer\nEach die becomes one usable chip if it passes testing\n\nDie-Level Testing (Wafer Probe Test)\n\nElectrical testing done before chips are separated\nChecks if each die works correctly\n\nYield\n\nThe percentage of dies that work correctly\nHigher yield means lower manufacturing cost\n\nWafer Map\n\nA 2D picture of a wafer\nShows which dies passed or failed testing\n\nPixel (in Wafer Maps)\n\nRepresents one die\nStores test results, not colors or brightness\n\nDefect Pattern\n\nA visible shape formed by failing dies\nOften points to a manufacturing problem\nExamples: center failures, edge rings, scratches\n\nProcess Sensors\n\nDevices inside manufacturing machines\nMeasure conditions like temperature, pressure, and power\n\nProcess Run / Production Instance\n\nA single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#why-semiconductor-defect-detection",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#why-semiconductor-defect-detection",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Why Semiconductor Defect Detection?",
+    "text": "Why Semiconductor Defect Detection?\n\n\n\nSemiconductor chips are in everything — phones, cars, medical devices\nDuring manufacturing, silicon wafers go through hundreds of process steps\nDefects on the wafer surface cause chip failures\nTraditional inspection: manual review by engineers — slow, subjective, expensive\nOur goal: automate defect pattern recognition using deep learning\n\n\n\n📸 SCREENSHOT: Insert a photo or diagram of a silicon wafer with visible defect patterns (from dataset visualization — the RGB-colored wafer maps you generated in the notebook)\n\n\n\nExplain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#introduction",
-    "href": "slides/wafer-map-pixel/KAN_46.html#introduction",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Introduction",
-    "text": "Introduction\nSemiconductor manufacturing is a highly complex, multi-stage process involving hundreds of tightly controlled fabrication steps. Even minor deviations in process conditions can introduce microscopic defects that significantly reduce product yield and reliability.\nTo monitor, diagnose, and prevent such defects, manufacturers rely on multiple sources of data collected at different stages of production. Two of the most important and complementary data sources are:\n\nWafer map data, which provides a spatial view of defects across a wafer after fabrication and testing\n\nProcess sensor data, which captures physical and electrical conditions during wafer fabrication\n\nWhile both data sources relate to the same manufacturing process, they capture fundamentally different aspects of it. Wafer maps describe where defects occur, whereas sensor data helps explain why those defects may have occurred.\nThis presentation explains how wafer map pixels are generated from physical wafers, how process sensors operate in semiconductor manufacturing, and how these two data modalities complement each other in manufacturing analytics."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-neural-network",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-neural-network",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch defect”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#die-level-electrical-testing",
-    "href": "slides/wafer-map-pixel/KAN_46.html#die-level-electrical-testing",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Die-Level Electrical Testing",
-    "text": "Die-Level Electrical Testing\nBefore a wafer is cut into individual chips, it undergoes die-level electrical testing, commonly referred to as wafer probe testing.\nDuring this stage: - A probe card makes physical contact with each die on the wafer - Electrical characteristics such as continuity, leakage current, and voltage thresholds are measured - Each die is classified as passing, failing, or untested\nThe results of this testing stage provide the raw information used to construct wafer maps."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-convolutional-neural-network-cnn",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-convolutional-neural-network-cnn",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "What is a Convolutional Neural Network (CNN)?",
+    "text": "What is a Convolutional Neural Network (CNN)?\nA CNN is a specialized neural network designed for images.\nKey building blocks:\n\nConv2D layer — slides small filters across the image to detect features (edges, corners, textures)\nPooling layer — shrinks the image to focus on the most important features\nDense layer — combines all detected features to make the final prediction\n\nWhy CNN for wafer maps? Defect patterns are spatial — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#what-is-a-wafer-map",
-    "href": "slides/wafer-map-pixel/KAN_46.html#what-is-a-wafer-map",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "What Is a Wafer Map?",
-    "text": "What Is a Wafer Map?\nA wafer map is a two-dimensional grid representation that preserves the physical layout of dies on a wafer.\n\nEach grid cell corresponds to a single die\nThe spatial arrangement reflects the physical location of dies on the wafer\nThe circular shape of the wafer naturally emerges from the grid structure\n\nWafer maps allow engineers to visually inspect defect distributions and identify spatial patterns that are difficult to detect using tabular data alone."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-activation-functions",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-activation-functions",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Key Terms: Activation Functions",
+    "text": "Key Terms: Activation Functions\n\n\nReLU (Rectified Linear Unit)\n\nUsed in hidden layers\nRule: if input &gt; 0, pass it through; if input ≤ 0, output 0\nWhy? Simple, fast, and avoids the “vanishing gradient” problem where deep networks stop learning\n\nSigmoid\n\nUsed in Phase 1 output (multi-label)\nSquashes any value to a range between 0 and 1\nWhy? Each output neuron independently says “yes/no” for one defect type — like 8 separate binary switches\n\n\nSoftmax\n\nUsed in Phase 2 output (multi-class)\nConverts raw scores into probabilities that sum to 1\nWhy? We pick the single most likely pattern out of 38 — softmax ensures all probabilities are comparable\n\nKey Difference\n\n\n\n\nSigmoid\nSoftmax\n\n\n\n\nOutput range\nEach: 0–1\nAll sum to 1\n\n\nUse case\nMulti-label\nMulti-class\n\n\nPhase\nPhase 1\nPhase 2"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#how-wafer-map-pixels-are-generated",
-    "href": "slides/wafer-map-pixel/KAN_46.html#how-wafer-map-pixels-are-generated",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "How Wafer Map Pixels Are Generated",
-    "text": "How Wafer Map Pixels Are Generated\nIn wafer maps, a pixel does not represent light intensity, as in conventional digital images.\nInstead: - Each pixel encodes the electrical test outcome of a single die - Pixel values are discrete and symbolic\nTypical encoding: - 0 → No die or untested location\n- 1 → Die passed electrical test\n- 2 → Die failed electrical test\nThus, each pixel corresponds directly to a physical die on the wafer."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-training-concepts",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-training-concepts",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Key Terms: Training Concepts",
+    "text": "Key Terms: Training Concepts\n\nBatch Normalization\n\nNormalizes layer inputs during training → faster, more stable learning\n\nDropout (0.5)\n\nRandomly “turns off” 50% of neurons during each training step → forces the network to not rely on any single neuron → prevents overfitting\n\nGlobalAveragePooling2D\n\nInstead of flattening all features into a huge vector, it takes the average of each feature map → far fewer parameters → reduces overfitting\n\nEarly Stopping\n\nMonitors validation loss and stops training when the model stops improving → prevents the model from memorizing training data\n\nLearning Rate\n\nHow big a step the model takes when updating its weights. Too big = overshooting; too small = too slow."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#spatial-defect-patterns",
-    "href": "slides/wafer-map-pixel/KAN_46.html#spatial-defect-patterns",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Spatial Defect Patterns",
-    "text": "Spatial Defect Patterns\nBecause dies are arranged spatially across the wafer surface, defects often form recognizable geometric patterns:\n\nCenter defects — commonly associated with lithography focus or exposure issues\n\nEdge-ring defects — linked to temperature gradients or etching non-uniformity\n\nScratch defects — caused by mechanical handling or tool contact\n\nRandom defects — typically resulting from particle contamination\n\nThese spatial regularities make wafer maps well suited for image-based machine learning models such as convolutional neural networks (CNNs)."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-transfer-learning",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-transfer-learning",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "What is Transfer Learning?",
+    "text": "What is Transfer Learning?\n\n\nInstead of training a CNN from scratch, we reuse a model already trained on millions of images (ImageNet).\nAnalogy: Imagine hiring someone who already knows how to identify shapes, edges, and textures (from years of experience), and just teaching them the specific wafer defect categories.\nOur approach:\n\nTake MobileNetV2 (a lightweight, efficient CNN pre-trained on ImageNet)\nFreeze its learned feature-detection layers\nAdd a new classification head on top for our 8 defect types\nTrain only the new head — the backbone already knows how to “see”"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#process-sensors-in-semiconductor-manufacturing",
-    "href": "slides/wafer-map-pixel/KAN_46.html#process-sensors-in-semiconductor-manufacturing",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Process Sensors in Semiconductor Manufacturing",
-    "text": "Process Sensors in Semiconductor Manufacturing\nUnlike wafer maps, which are generated after fabrication, process sensors operate during fabrication.\nSensors are embedded within manufacturing tools such as etchers, deposition chambers, and lithography systems, and they monitor: - Temperature - Pressure and vacuum levels - Gas flow rates - Plasma density - Radio-frequency (RF) power - Chemical concentrations - Tool health and calibration indicators\nThese sensors provide continuous insight into the conditions under which wafers are manufactured."
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#dataset-overview",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#dataset-overview",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Dataset Overview",
+    "text": "Dataset Overview\n\n\nSource: Mixed-Type Wafer Map Defect Dataset\n\n38,015 wafer map images\nEach image: 52 × 52 pixels\n3 pixel states:\n\n0 = blank (no die)\n1 = normal die (passed test)\n2 = defective die (failed test)\n\nLabels: 8-dimensional one-hot vector (8 base defect types)\n38 unique defect patterns (single + combinations)"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#characteristics-of-sensor-data",
-    "href": "slides/wafer-map-pixel/KAN_46.html#characteristics-of-sensor-data",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Characteristics of Sensor Data",
-    "text": "Characteristics of Sensor Data\nProcess sensor data differs fundamentally from wafer map data:\n\nTabular structure (rows × columns)\nContinuous numeric values\nTime-dependent measurements\nNo spatial information\n\nIn datasets such as SECOM: - Each row represents a production instance (e.g., a wafer or manufacturing run) - Each column represents an anonymized sensor measurement - Sensor names are generic (e.g., sensor_0, sensor_1, etc.)"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "The 8 Base Defect Types",
+    "text": "The 8 Base Defect Types\n\n\n\nDefect\nDescription\n\n\n\n\nCenter\nDefects clustered at wafer center\n\n\nDonut\nRing-shaped pattern in the middle\n\n\nEdge_Loc\nLocalized defects near the edge\n\n\nEdge_Ring\nDefects forming a ring at the edge\n\n\nLoc\nLocalized cluster anywhere\n\n\nNear_Full\nAlmost entire wafer is defective\n\n\nScratch\nLinear scratch pattern\n\n\nRandom\nRandomly distributed defects\n\n\n\nPlus Normal (no defects) and 29 combination patterns (e.g., Center+Scratch)"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#wafer-maps-vs-process-sensors",
-    "href": "slides/wafer-map-pixel/KAN_46.html#wafer-maps-vs-process-sensors",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Wafer Maps vs Process Sensors",
-    "text": "Wafer Maps vs Process Sensors\n\n\n\nAspect\nWafer Maps\nProcess Sensors\n\n\n\n\nData structure\nImage (2D grid)\nTabular\n\n\nResolution\nDie-level (spatial)\nTool-level (global)\n\n\nTiming\nPost-fabrication\nDuring fabrication\n\n\nPrimary insight\nDefect location\nProcess conditions\n\n\nKey question answered\nWhere defects occur\nWhy defects may occur"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#data-preprocessing-pipeline",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#data-preprocessing-pipeline",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Data Preprocessing Pipeline",
+    "text": "Data Preprocessing Pipeline\n\n\n\nRaw Images52×52Values: 0,1,2,3\n\n\n→\n\n\nCleanPixel 3 → 0\n\n\n→\n\n\nOne-Hot Encode52×52×33 channels\n\n\n→\n\n\nStratified Split70 / 15 / 15\n\n\n→\n\n\nAugmentationRotation + Flip\n\n\n\nWhy one-hot encode pixels? Pixel values 0, 1, 2 are categorical (blank, normal, broken) — not ordered intensities. Treating them as numbers (0 &lt; 1 &lt; 2) would imply a false relationship. One-hot encoding gives each state its own channel, preserving the categorical nature.\nWhy only geometric augmentation? Since pixels represent discrete states (not colors), we can only apply spatial transforms (90° rotations, flips) that don’t alter the categorical values. Color jitter or elastic deformation would corrupt the data."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#why-both-data-sources-matter",
-    "href": "slides/wafer-map-pixel/KAN_46.html#why-both-data-sources-matter",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Why Both Data Sources Matter",
-    "text": "Why Both Data Sources Matter\nIn real semiconductor manufacturing environments:\n\nSensors detect abnormal process behavior during fabrication\nWafer maps reveal how those abnormalities manifest spatially across the wafer\nEngineers combine both perspectives to identify root causes and improve yield\n\nThis combined view enables: - More accurate defect detection - Faster root-cause analysis - Data-driven process optimization"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#train-validation-test-split",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#train-validation-test-split",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Train / Validation / Test Split",
+    "text": "Train / Validation / Test Split\n\n\nSplit ratio: 70% / 15% / 15%\nChallenge: With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.\nSolution: Stratified splitting — we convert each 8-dim one-hot label to a string key (e.g., \"10100000\" = Center+Edge_Loc) and stratify on these keys. This guarantees all 38 patterns appear in every split.\n\n\n\n\nSplit\nSamples\nUnique Patterns\n\n\n\n\nTrain\n26,610\n38\n\n\nVal\n5,702\n38\n\n\nTest\n5,703\n38\n\n\n\nPer-Label Sample Counts\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#example-wafer-map-insight-where-defects-occur",
-    "href": "slides/wafer-map-pixel/KAN_46.html#example-wafer-map-insight-where-defects-occur",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Example: Wafer Map Insight (Where Defects Occur)",
-    "text": "Example: Wafer Map Insight (Where Defects Occur)\nWhat we observe\n\nMany failed dies form a ring near the wafer edge\nThe pattern is consistent across multiple wafers\n\nWhat this tells us\n\nThe problem is spatial, not random\nDefects are linked to wafer position\n\nConclusion - The issue likely comes from a process that affects wafer edges - Examples: uneven heating or etching near the boundary"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-goal",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-goal",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 1 Goal",
+    "text": "Phase 1 Goal\nTask: Given a wafer map, predict which of the 8 base defect types are present (zero, one, or multiple can be active simultaneously).\nThis is a multi-label problem — like tagging a photo with multiple hashtags.\nTwo model approaches:\n\nCustom CNN — built from scratch, lightweight\nMobileNetV2 Transfer Learning — leverages pre-trained knowledge\n\nBoth output 8 sigmoid neurons — each independently predicts the probability of one defect type."
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#example-sensor-data-insight-why-defects-occur",
-    "href": "slides/wafer-map-pixel/KAN_46.html#example-sensor-data-insight-why-defects-occur",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Example: Sensor Data Insight (Why Defects Occur)",
-    "text": "Example: Sensor Data Insight (Why Defects Occur)\nWhat we observe\n\nTemperature sensors show higher values near the end of the process\nGas flow readings fluctuate outside normal ranges\n\nWhat this tells us\n\nThe manufacturing process was unstable\nTool conditions drifted during production\n\nConclusion\n\nAbnormal process conditions caused the defects\nThese sensor signals explain why the wafer map shows failures"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1a-custom-cnn-architecture",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1a-custom-cnn-architecture",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Model 1A: Custom CNN Architecture",
+    "text": "Model 1A: Custom CNN Architecture\nModel: custom_cnn — Total params: 424,264 (1.62 MB)\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\ninput_image (Input)\n(52, 52, 3)\n0\n\n\nconv2d (Conv2D)\n(52, 52, 32)\n896\n\n\nbatch_norm\n(52, 52, 32)\n128\n\n\nactivation (ReLU)\n(52, 52, 32)\n0\n\n\nmax_pooling2d\n(26, 26, 32)\n0\n\n\nconv2d_1 (Conv2D)\n(26, 26, 64)\n18,496\n\n\nbatch_norm_1\n(26, 26, 64)\n256\n\n\nactivation_1 (ReLU)\n(26, 26, 64)\n0\n\n\nmax_pooling2d_1\n(13, 13, 64)\n0\n\n\nconv2d_2 (Conv2D)\n(13, 13, 128)\n73,856\n\n\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\nbatch_norm_2\n(13, 13, 128)\n512\n\n\nactivation_2 (ReLU)\n(13, 13, 128)\n0\n\n\nmax_pooling2d_2\n(6, 6, 128)\n0\n\n\nconv2d_3 (Conv2D)\n(6, 6, 256)\n295,168\n\n\nbatch_norm_3\n(6, 6, 256)\n1,024\n\n\nactivation_3 (ReLU)\n(6, 6, 256)\n0\n\n\nmax_pooling2d_3\n(3, 3, 256)\n0\n\n\nglobal_avg_pool\n(256)\n0\n\n\ndense (ReLU)\n(128)\n32,896\n\n\ndropout (0.5)\n(128)\n0\n\n\noutput (Sigmoid)\n(8)\n1,032\n\n\n\n\nDesign choices:\n\nDoubling filters (32→256): Early layers detect simple features (edges), deeper layers detect complex patterns (rings, scratches) — more filters = more capacity for complexity\n3×3 kernels: Standard efficient choice — captures local spatial relationships\nGlobalAveragePooling over Flatten: reduces parameters from ~2,304 to 256, fighting overfitting"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#key-takeaways",
-    "href": "slides/wafer-map-pixel/KAN_46.html#key-takeaways",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "Key Takeaways",
-    "text": "Key Takeaways\n\nWafer map pixels represent die-level electrical test outcomes, not optical images\nEach pixel corresponds to a physical die on the wafer\nProcess sensors capture fabrication conditions in real time\nWafer maps show where defects occur\nSensor data helps explain why defects occur\nTogether, they provide a comprehensive view of semiconductor manufacturing quality"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1b-mobilenetv2-transfer-learning",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1b-mobilenetv2-transfer-learning",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Model 1B: MobileNetV2 Transfer Learning",
+    "text": "Model 1B: MobileNetV2 Transfer Learning\nModel: mobilenet_transfer — Total params: 2,587,988 (9.87 MB)\n\n\n\nLayer\nOutput Shape\nParams\n\n\n\n\ninput_image (Input)\n(52, 52, 3)\n0\n\n\nconv2d_4 (Conv2D)\n(52, 52, 3)\n12\n\n\nresizing (Resizing)\n(224, 224, 3)\n0\n\n\nmobilenetv2 (Functional)\n(7, 7, 1280)\n2,257,984\n\n\nglobal_average_pooling2d_1\n(1280)\n0\n\n\ndense_1 (Dense, ReLU)\n(256)\n327,936\n\n\ndropout_1 (Dropout)\n(256)\n0\n\n\noutput (Dense, Sigmoid)\n(8)\n2,056\n\n\n\nWhy MobileNetV2?\n\nPre-trained on ImageNet → already knows edges, textures, shapes\nLightweight architecture → efficient inference\n1×1 Conv projection: Our data has 3 one-hot channels, not RGB — this layer learns the right mapping\nFrozen backbone: With only ~38K samples, fine-tuning 2.2M parameters risks overfitting"
   },
   {
-    "objectID": "slides/wafer-map-pixel/KAN_46.html#references",
-    "href": "slides/wafer-map-pixel/KAN_46.html#references",
-    "title": "Wafer Maps and Sensors in Semiconductor Manufacturing",
-    "section": "References",
-    "text": "References\n\nKyeong, S., Kim, H., & Kim, S. (2020). Classification of wafer map defects based on deep learning methods with a small amount of data. IEEE Access, 8, 21796–21806. https://www.researchgate.net/publication/339903705\nLi, Y., Zhang, X., & Wang, J. (2024). Deep learning approaches for wafer defect pattern recognition. arXiv Preprint. https://arxiv.org/html/2411.11029v1\nJMP Community. (2021). How to make a wafer map in JMP in under 30 seconds. https://community.jmp.com/t5/JMPer-Cable/How-to-make-a-wafer-map-in-JMP-in-under-30-seconds/ba-p/348607\nMathWorks. (n.d.). Classify defects on wafer maps using deep learning. https://www.mathworks.com/help/vision/ug/classify-defects-on-wafer-maps-using-deep-learning.html\nPDF.com. (n.d.). Understanding semiconductor data visualization with wafer maps: An introduction. https://www.pdf.com/understanding-semiconductor-data-visualization-with-wafer-maps-an-introduction/\nWikipedia contributors. (n.d.). Substrate mapping. https://en.wikipedia.org/wiki/Substrate_mapping"
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-training-configuration",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-training-configuration",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 1 Training Configuration",
+    "text": "Phase 1 Training Configuration\n\n\n\n\n\n\n\n\nParameter\nValue\nWhy\n\n\n\n\nLoss\nBinary Focal Loss (γ=2.0)\nHandles class imbalance\n\n\nOptimizer\nAdam (lr=1e-3)\nAdaptive learning rate, fast convergence\n\n\nBatch size\n32\nBalance between stability and speed\n\n\nEpochs\nUp to 100\nEarly stopping will cut short\n\n\nReduceLROnPlateau\npatience=5, factor=0.5\nHalves LR when validation plateaus\n\n\nEarlyStopping\npatience=10\nStops when no improvement for 10 epochs\n\n\nMetrics\nAUC + Binary Accuracy\nAUC is threshold-independent\n\n\n\nAUC and Loss Graphs of Custom CNN and MobileNetV2"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-results",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-results",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 1 Results",
+    "text": "Phase 1 Results\n\nKey observations to highlight:\n\nBoth models achieve strong per-label F1 scores\nNear_Full is the hardest class (fewest samples ~200)\nCustom CNN and MobileNetV2 each have strengths on different defect types\nThe per-label class weights in focal loss successfully boost rare-class performance"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-goal",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-goal",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Goal",
+    "text": "Phase 2 Goal\nTask: Classify each wafer into exactly one of 38 defect patterns (including combinations like “Center+Edge_Loc+Scratch”).\nWhy a separate phase?\n\nPhase 1 predicts 8 independent labels → can’t distinguish “Center+Loc” from “Center” + “Loc” appearing separately\nPhase 2 treats each combination as its own class → directly predicts the exact pattern\nUses softmax (probabilities sum to 1) instead of sigmoid\n\nStrategy: Backbone reuse\n\nTake the trained Phase 1 CNN backbone (conv layers)\nFreeze it — the backbone already knows how to extract wafer features\nReplace the 8-sigmoid head with Dense(128)→Dropout→Dense(38, softmax)"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-two-stage-training",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-two-stage-training",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2: Two-Stage Training",
+    "text": "Phase 2: Two-Stage Training\n\n\n\nStage A — Head OnlyBackbone: FROZENLR: 1e-3Epochs: ~30Train new head only\n\n\n→\n\n\nStage B — Fine-TuneBackbone: Last 25% UNFROZENLR: 1e-5Epochs: ~30Fine-tune end-to-end\n\n\n\nWhy two stages?\n\nStage A (head-only): The new Dense layers have random weights. Training at high LR while backbone is frozen lets them “catch up” without destroying pre-trained weights.\nStage B (fine-tune): Unfreeze the last ~25% of backbone, train at very low LR (1e-5). Adapts features for the 38-class task while preserving prior knowledge.\nBatchNorm layers stay frozen — their statistics are from Phase 1 and shouldn’t shift.\n\nLoss: sparse_categorical_crossentropy with balanced class weights"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-full-confusion-matrix-3838",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-full-confusion-matrix-3838",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Results — Full Confusion Matrix (38×38)",
+    "text": "Phase 2 Results — Full Confusion Matrix (38×38)"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-single-normal-patterns",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-single-normal-patterns",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Results — Single / Normal Patterns",
+    "text": "Phase 2 Results — Single / Normal Patterns"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-double-combinations",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-double-combinations",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Results — Double Combinations",
+    "text": "Phase 2 Results — Double Combinations"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-triple-combinations",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-triple-combinations",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Results — Triple Combinations",
+    "text": "Phase 2 Results — Triple Combinations"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-quadruple-combinations",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-quadruple-combinations",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Phase 2 Results — Quadruple Combinations",
+    "text": "Phase 2 Results — Quadruple Combinations"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#final-model-comparison",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#final-model-comparison",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Final Model Comparison",
+    "text": "Final Model Comparison\n\n\nFinal Model Comparison — All Phases\n\n\n\n\n\n\nModel\n\n\nMacro F1\n\n\nWeighted F1\n\n\n\n\n\n\n0\n\n\nPhase 1 — Custom CNN (8-label)\n\n\n0.9779\n\n\n0.9905\n\n\n\n\n1\n\n\nPhase 1 — MobileNetV2 (8-label)\n\n\n0.8998\n\n\n0.8847\n\n\n\n\n2\n\n\nPhase 2 — Custom CNN (38-class)\n\n\n0.9736\n\n\n0.9735\n\n\n\n\n3\n\n\nPhase 2 — MobileNetV2 (38-class)\n\n\n0.9667\n\n\n0.9658\n\n\n\n\n\nModel Overview\n\n\n\nModel\nTask\nOutput\n\n\n\n\nPhase 1 — Custom CNN\n8 labels\nSigmoid × 8\n\n\nPhase 1 — MobileNetV2\n8 labels\nSigmoid × 8\n\n\nPhase 2 — Custom CNN\n38 classes\nSoftmax × 38\n\n\nPhase 2 — MobileNetV2\n38 classes\nSoftmax × 38"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#how-inference-works",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#how-inference-works",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "How Inference Works",
+    "text": "How Inference Works\n# 1. Pick a random wafer from the test set\nrandom_idx = np.random.randint(0, len(X_test))\nrandom_wafer = X_test[random_idx : random_idx + 1]  # Shape: (1, 52, 52, 3)\n\n# 2. Run through both Phase 2 models\npred_cnn = model_p2_cnn.predict(random_wafer)   # → (1, 38)\npred_tl  = model_p2_tl.predict(random_wafer)    # → (1, 38)\n\n# 3. Pick the class with highest probability\npred_class_cnn = pred_cnn[0].argmax()            # → integer 0-37\npred_pattern   = id_to_pattern[pred_class_cnn]   # → \"Loc+Scratch\"\nconfidence     = pred_cnn[0, pred_class_cnn]     # → 0.9989 (99.89%)\n\n📸 SCREENSHOT: Insert the output from model_testing.ipynb showing the random prediction with confidence scores and ✓/✗ match indicators"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#summary",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#summary",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Summary",
+    "text": "Summary\n\n\nWhat We Built\n\nA two-phase deep learning pipeline for wafer defect classification\nPhase 1: Multi-label detection of 8 base defect types\nPhase 2: Precise identification of all 38 defect patterns\nTwo architectures: custom CNN and MobileNetV2 transfer learning\n\n\nKey Technical Decisions\n\nOne-hot pixel encoding → preserves categorical nature\nFocal Loss + class weights → handles severe imbalance\nBackbone reuse → leverages Phase 1 knowledge for Phase 2\nTwo-stage fine-tuning → safe adaptation without catastrophic forgetting\nGeometric-only augmentation → respects discrete pixel states"
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#thank-you",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#thank-you",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "Thank You",
+    "text": "Thank You\nQuestions?\n\nAnomaly Detection in Semiconductor Production\nDeep Learning for Wafer Map Defect Classification"
   },
   {
     "objectID": "slides/SecomData/slides.html#what-is-secom-data",
