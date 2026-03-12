@@ -403,14 +403,7 @@
     "href": "index.html#wafer-images-wm811k",
     "title": "WaferGuard ML",
     "section": "Wafer Images (WM811k)",
-    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
-  },
-  {
-    "objectID": "index.html#secom-sensor-data",
-    "href": "index.html#secom-sensor-data",
-    "title": "WaferGuard ML",
-    "section": "SECOM Sensor Data",
-    "text": "SECOM Sensor Data\n\nSECOM EDA"
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA &lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD\n\n=======\n\n\n\n\n\n\n\n351682578ae1db100a0dd1064abf534d95e3c23e ## SECOM Sensor Data - SECOM EDA"
   },
   {
     "objectID": "index.html#wafer-images-wm811k-1",
@@ -420,8 +413,8 @@
     "text": "Wafer Images (WM811k)\n\nWafer Images EDA Notebook\nWafer Images Modeling Notebook\nWafer Images Model testing"
   },
   {
-    "objectID": "index.html#secom-sensor-data-1",
-    "href": "index.html#secom-sensor-data-1",
+    "objectID": "index.html#secom-sensor-data",
+    "href": "index.html#secom-sensor-data",
     "title": "WaferGuard ML",
     "section": "SECOM Sensor Data",
     "text": "SECOM Sensor Data\n\nSECOM EDA Notebook"
