@@ -82,10 +82,7 @@ data/secom
 /.quarto/
 **/*.quarto_ipynb
 docs
-<<<<<<< HEAD
-=======
 .Rhistory
 docs/
 **/slides_files/
 **/training_artifacts/
->>>>>>> 351682578ae1db100a0dd1064abf534d95e3c23e
