@@ -2,42 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/blueprint.html</loc>
-    <lastmod>2026-03-12T06:15:07.177Z</lastmod>
+    <lastmod>2026-03-12T22:15:48.216Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/slides/wm811k/slides.html</loc>
-    <lastmod>2026-03-12T06:15:07.196Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/slides/wafer-map-pixel/KAN_46.html</loc>
-    <lastmod>2026-03-12T06:15:07.190Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/data_exploration.html</loc>
-    <lastmod>2026-03-12T06:15:07.198Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/secom_notebook/secom_eda.html</loc>
-    <lastmod>2026-03-12T06:15:07.182Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/index.html</loc>
-    <lastmod>2026-03-12T06:15:07.177Z</lastmod>
-  </url>
-  <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/model.html</loc>
-    <lastmod>2026-03-12T06:15:07.205Z</lastmod>
+    <lastmod>2026-03-12T22:15:48.231Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/model_testing.html</loc>
-    <lastmod>2026-03-12T06:15:07.205Z</lastmod>
+    <lastmod>2026-03-12T22:15:48.241Z</lastmod>
   </url>
   <url>
-    <loc>https://Waferguard.github.io/waferguard-ml/slides/Sprint-2-Model/Sprint_2_Model.html</loc>
-    <lastmod>2026-03-12T06:15:07.186Z</lastmod>
+    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/architecture.html</loc>
+    <lastmod>2026-03-12T22:15:48.231Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/secom_notebook/secom_eda.html</loc>
+    <lastmod>2026-03-12T22:15:48.222Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/index.html</loc>
+    <lastmod>2026-03-12T22:15:48.217Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/model.html</loc>
+    <lastmod>2026-03-12T22:15:48.241Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/wafer_images/data_exploration.html</loc>
+    <lastmod>2026-03-12T22:15:48.233Z</lastmod>
+  </url>
+  <url>
+    <loc>https://Waferguard.github.io/waferguard-ml/slides/wafer-map-pixel/KAN_46.html</loc>
+    <lastmod>2026-03-12T22:15:48.225Z</lastmod>
   </url>
   <url>
     <loc>https://Waferguard.github.io/waferguard-ml/slides/SecomData/slides.html</loc>
-    <lastmod>2026-03-12T06:15:07.185Z</lastmod>
+    <lastmod>2026-03-12T22:15:48.225Z</lastmod>
   </url>
 </urlset>
