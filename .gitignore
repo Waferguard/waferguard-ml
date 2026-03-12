@@ -82,4 +82,3 @@ data/secom
 /.quarto/
 **/*.quarto_ipynb
 docs
-.Rhistory

@@ -5,10 +5,18 @@
 ## Wafer Images (WM811k)
 - [Wafer Images EDA](slides/wm811k/slides.html)
   
+## SECOM Sensor Data
+- [SECOM EDA](slides/SecomData/slides.html)
+  
 # 📓 Notebooks
 
 ## Wafer Images (WM811k)
 - [Wafer Images EDA Notebook](wafer_images/data_exploration.html)
+- [Wafer Images Modeling Notebook](wafer_images/model.html)
+- [Wafer Images Model testing](wafer_images/model_testing.html)
+
+## SECOM Sensor Data
+- [SECOM EDA Notebook](secom_notebook/secom_eda.html)
 
 # 📑 Documentation
 
