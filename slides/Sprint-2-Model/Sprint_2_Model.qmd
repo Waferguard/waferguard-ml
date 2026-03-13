@@ -103,7 +103,7 @@ The network **learns by example** — we show it thousands of labeled wafer imag
 
 ::: {.column width="50%"}
 
-![](nn1.png){width="85%" fig-align="center"}
+![](images/nn1.png){width="85%" fig-align="center"}
 
 :::
 
@@ -222,7 +222,7 @@ Instead of training a CNN from scratch, we **reuse a model already trained on mi
 
 ::: {.column width="50%"}
 
-![](dtsdis.png){width="95%" fig-align="center"}
+![](images/dtsdis.png){width="95%" fig-align="center"}
 
 :::
 
@@ -244,7 +244,7 @@ Instead of training a CNN from scratch, we **reuse a model already trained on mi
 
 Plus **Normal** (no defects) and **29 combination patterns** (e.g., Center+Scratch)
 
-![](og8.png){width="95%" fig-align="center"}
+![](images/og8.png){width="95%" fig-align="center"}
 
 
 ## Data Preprocessing Pipeline
@@ -409,17 +409,17 @@ Both output **8 sigmoid neurons** — each independently predicts the probabilit
 
 :::: {.columns}
 ::: {.column width="50%"}
-![](modelsEval.png){width="95%" fig-align="center"}
+![](images/modelsEval.png){width="95%" fig-align="center"}
 :::
 ::: {.column width="50%"}
-![](modelsEval1.png){width="95%" fig-align="center"}
+![](images/modelsEval1.png){width="95%" fig-align="center"}
 :::
 ::::
 
 
 ## Phase 1 Results
 
-![](f1Comp.png){width="95%" fig-align="center"}
+![](images/f1Comp.png){width="95%" fig-align="center"}
 
 
 **Key observations to highlight:**
@@ -474,27 +474,27 @@ Both output **8 sigmoid neurons** — each independently predicts the probabilit
 
 ## Phase 2 Results — Full Confusion Matrix (38×38)
 
-![](cMatrixFull.png){width="85%" fig-align="center"}
+![](images/cMatrixFull.png){width="85%" fig-align="center"}
 
 
 ## Phase 2 Results — Single / Normal Patterns
 
-![](ConfMat1.png){width="85%" fig-align="center"}
+![](images/ConfMat1.png){width="85%" fig-align="center"}
 
 
 ## Phase 2 Results — Double Combinations
 
-![](confMat2.png){width="85%" fig-align="center"}
+![](images/confMat2.png){width="85%" fig-align="center"}
 
 
 ## Phase 2 Results — Triple Combinations
 
-![](confMat3.png){width="85%" fig-align="center"}
+![](images/confMat3.png){width="85%" fig-align="center"}
 
 
 ## Phase 2 Results — Quadruple Combinations
 
-![](confMat4.png){width="85%" fig-align="center"}
+![](images/confMat4.png){width="85%" fig-align="center"}
 
 
 ## Final Model Comparison
