@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="WaferGuardML">
-  <meta name="dcterms.date" content="2026-03-13">
+  <meta name="dcterms.date" content="2026-03-18">
   <title>WaferGuard ML Slides – Anomaly Detection in Semiconductor Manufacturing</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -227,7 +227,7 @@ WaferGuardML
 </div>
 </div>
 
-  <p class="date">2026-03-13</p>
+  <p class="date">2026-03-18</p>
 </section>
 <section id="agenda" class="slide level2">
 <h2>Agenda</h2>
@@ -262,8 +262,6 @@ WaferGuardML
 </section>
 <section id="why-semiconductor-defect-detection" class="slide level2">
 <h2>Why Semiconductor Defect Detection?</h2>
-<div class="columns">
-<div class="column" style="width:55%;">
 <ul>
 <li>Semiconductor chips are in <strong>everything</strong> — phones, cars, medical devices</li>
 <li>During manufacturing, silicon <strong>wafers</strong> go through hundreds of process steps</li>
@@ -271,11 +269,6 @@ WaferGuardML
 <li>Traditional inspection: <strong>manual review by engineers</strong> — slow, subjective, expensive</li>
 <li>Our goal: <strong>automate defect pattern recognition</strong> using deep learning</li>
 </ul>
-</div><div class="column" style="width:45%;">
-<blockquote>
-<p>📸 <strong>SCREENSHOT:</strong> Insert a photo or diagram of a silicon wafer with visible defect patterns (from dataset visualization — the RGB-colored wafer maps you generated in the notebook)</p>
-</blockquote>
-</div></div>
 <aside class="notes">
 <p>Explain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost.</p>
 <style type="text/css">
@@ -289,160 +282,6 @@ WaferGuardML
           overflow: hidden!important;
           display:block!important;
       }</style></aside>
-</section>
-<section id="what-is-a-neural-network" class="slide level2">
-<h2>What is a Neural Network?</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p>Think of it as a <strong>decision-making system</strong> inspired by the brain:</p>
-<ul>
-<li><strong>Inputs</strong>: Raw data (e.g., pixel values of a wafer image)</li>
-<li><strong>Hidden layers</strong>: Each layer learns to detect increasingly complex patterns</li>
-<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch defect”)</li>
-</ul>
-<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.</p>
-</div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/nn1.png" class="quarto-figure quarto-figure-center" style="width:85.0%"></p>
-</figure>
-</div>
-</div></div>
-</section>
-<section id="what-is-a-convolutional-neural-network-cnn" class="slide level2">
-<h2>What is a Convolutional Neural Network (CNN)?</h2>
-<p>A <strong>CNN</strong> is a specialized neural network designed for <strong>images</strong>.</p>
-<p><strong>Key building blocks:</strong></p>
-<ul>
-<li><strong>Conv2D layer</strong> — slides small filters across the image to detect features (edges, corners, textures)</li>
-<li><strong>Pooling layer</strong> — shrinks the image to focus on the most important features</li>
-<li><strong>Dense layer</strong> — combines all detected features to make the final prediction</li>
-</ul>
-<p><strong>Why CNN for wafer maps?</strong> Defect patterns are <em>spatial</em> — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures.</p>
-</section>
-<section id="key-terms-activation-functions" class="slide level2">
-<h2>Key Terms: Activation Functions</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<h3 id="relu-rectified-linear-unit">ReLU (Rectified Linear Unit)</h3>
-<ul>
-<li>Used in <strong>hidden layers</strong></li>
-<li>Rule: if input &gt; 0, pass it through; if input ≤ 0, output 0</li>
-<li><strong>Why?</strong> Simple, fast, and avoids the “vanishing gradient” problem where deep networks stop learning</li>
-</ul>
-<h3 id="sigmoid">Sigmoid</h3>
-<ul>
-<li>Used in <strong>Phase 1 output</strong> (multi-label)</li>
-<li>Squashes any value to a range between 0 and 1</li>
-<li><strong>Why?</strong> Each output neuron independently says “yes/no” for one defect type — like 8 separate binary switches</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<h3 id="softmax">Softmax</h3>
-<ul>
-<li>Used in <strong>Phase 2 output</strong> (multi-class)</li>
-<li>Converts raw scores into <strong>probabilities that sum to 1</strong></li>
-<li><strong>Why?</strong> We pick the single most likely pattern out of 38 — softmax ensures all probabilities are comparable</li>
-</ul>
-<h3 id="key-difference">Key Difference</h3>
-<table class="caption-top">
-<thead>
-<tr class="header">
-<th></th>
-<th>Sigmoid</th>
-<th>Softmax</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Output range</td>
-<td>Each: 0–1</td>
-<td>All sum to 1</td>
-</tr>
-<tr class="even">
-<td>Use case</td>
-<td>Multi-label</td>
-<td>Multi-class</td>
-</tr>
-<tr class="odd">
-<td>Phase</td>
-<td>Phase 1</td>
-<td>Phase 2</td>
-</tr>
-</tbody>
-</table>
-</div></div>
-</section>
-<section id="key-terms-training-concepts" class="slide level2">
-<h2>Key Terms: Training Concepts</h2>
-<dl>
-<dt><strong>Batch Normalization</strong></dt>
-<dd>
-Normalizes layer inputs during training → faster, more stable learning
-</dd>
-<dt><strong>Dropout (0.5)</strong></dt>
-<dd>
-Randomly “turns off” 50% of neurons during each training step → forces the network to not rely on any single neuron → <strong>prevents overfitting</strong>
-</dd>
-<dt><strong>GlobalAveragePooling2D</strong></dt>
-<dd>
-Instead of flattening all features into a huge vector, it takes the average of each feature map → far fewer parameters → <strong>reduces overfitting</strong>
-</dd>
-<dt><strong>Early Stopping</strong></dt>
-<dd>
-Monitors validation loss and stops training when the model stops improving → prevents the model from memorizing training data
-</dd>
-<dt><strong>Learning Rate</strong></dt>
-<dd>
-How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.
-</dd>
-</dl>
-</section>
-<section id="what-is-transfer-learning" class="slide level2">
-<h2>What is Transfer Learning?</h2>
-<div class="columns">
-<div class="column" style="width:55%;">
-<p>Instead of training a CNN from scratch, we <strong>reuse a model already trained on millions of images</strong> (ImageNet).</p>
-<p><strong>Analogy:</strong> Imagine hiring someone who already knows how to identify shapes, edges, and textures (from years of experience), and just teaching them the <em>specific</em> wafer defect categories.</p>
-<p><strong>Our approach:</strong></p>
-<ol type="1">
-<li>Take <strong>MobileNetV2</strong> (a lightweight, efficient CNN pre-trained on ImageNet)</li>
-<li><strong>Freeze</strong> its learned feature-detection layers</li>
-<li>Add a new <strong>classification head</strong> on top for our 8 defect types</li>
-<li>Train only the new head — the backbone already knows how to “see”</li>
-</ol>
-</div><div class="column" style="width:45%;">
-
-</div></div>
-</section></section>
-<section>
-<section id="part-2-the-dataset" class="title-slide slide level1 center" data-background-color="#1E2761">
-<h1>Part 2: The Dataset</h1>
-
-</section>
-<section id="dataset-overview" class="slide level2">
-<h2>Dataset Overview</h2>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Source:</strong> Mixed-Type Wafer Map Defect Dataset</p>
-<ul>
-<li><strong>38,015 wafer map images</strong></li>
-<li>Each image: <strong>52 × 52 pixels</strong></li>
-<li><strong>3 pixel states:</strong>
-<ul>
-<li><code>0</code> = blank (no die)</li>
-<li><code>1</code> = normal die (passed test)</li>
-<li><code>2</code> = defective die (failed test)</li>
-</ul></li>
-<li>Labels: <strong>8-dimensional one-hot vector</strong> (8 base defect types)</li>
-<li><strong>38 unique defect patterns</strong> (single + combinations)</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/dtsdis.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
-</figure>
-</div>
-</div></div>
 </section>
 <section id="the-8-base-defect-types" class="slide level2 smaller">
 <h2>The 8 Base Defect Types</h2>
@@ -491,6 +330,133 @@ How big a step the model takes when updating its weights. Too big = overshooting
 <p>Plus <strong>Normal</strong> (no defects) and <strong>29 combination patterns</strong> (e.g., Center+Scratch)</p>
 
 <img data-src="images/og8.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"></section>
+<section id="what-is-a-neural-network" class="slide level2">
+<h2>What is a Neural Network?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Think of it as a <strong>decision-making system</strong> inspired by the brain:</p>
+<ul>
+<li><strong>Inputs</strong>: Raw data (e.g., pixel values of a wafer image)</li>
+<li><strong>Hidden layers</strong>: Each layer learns to detect increasingly complex patterns</li>
+<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch defect”)</li>
+</ul>
+<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/nn1.png" class="quarto-figure quarto-figure-center" style="width:85.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="what-is-a-convolutional-neural-network-cnn" class="slide level2">
+<h2>What is a Convolutional Neural Network (CNN)?</h2>
+<p>A <strong>CNN</strong> is a specialized neural network designed for <strong>images</strong>.</p>
+<p><strong>Key building blocks:</strong></p>
+<ul>
+<li><strong>Conv2D layer</strong> — slides small filters across the image to detect features (edges, corners, textures)</li>
+<li><strong>Pooling layer</strong> — shrinks the image to focus on the most important features</li>
+<li><strong>Dense layer</strong> — combines all detected features to make the final prediction</li>
+</ul>
+<p><strong>Why CNN for wafer maps?</strong> Defect patterns are <em>spatial</em> — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures.</p>
+</section>
+<section id="key-terms" class="slide level2 smaller">
+<h2>Key Terms</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="activation-functions">Activation Functions</h3>
+<ul>
+<li><strong>ReLU</strong> — hidden layers; if input &gt; 0 pass through, else 0. Simple and avoids vanishing gradients</li>
+<li><strong>Sigmoid</strong> — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no</li>
+<li><strong>Softmax</strong> — Phase 2 output; converts scores to probabilities that sum to 1</li>
+</ul>
+<h3 id="loss-functions">Loss Functions</h3>
+<ul>
+<li><strong>Binary Focal Loss</strong> (Phase 1) — down-weights easy examples, focuses on hard/rare ones</li>
+<li><strong>Sparse Categorical Crossentropy</strong> (Phase 2) — standard multi-class loss with class weights</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="regularization">Regularization</h3>
+<ul>
+<li><strong>Batch Normalization</strong> — normalizes layer inputs → faster, more stable training</li>
+<li><strong>Dropout (0.5)</strong> — randomly silences 50% of neurons → prevents overfitting</li>
+<li><strong>GlobalAveragePooling2D</strong> — averages each feature map instead of flattening → fewer parameters</li>
+<li><strong>Early Stopping</strong> — stops training when validation loss plateaus</li>
+<li><strong>Learning Rate</strong> - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.</li>
+</ul>
+</div></div>
+</section>
+<section id="what-is-transfer-learning" class="slide level2 smaller">
+<h2>What is Transfer Learning?</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Transfer learning</strong> means reusing knowledge from one task to improve performance on another.</p>
+<p><strong>Analogy:</strong> Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the <em>specific</em> wafer defect categories.</p>
+<p><strong>We use transfer learning twice in this project:</strong></p>
+<ol type="1">
+<li><strong>Phase 1 → Phase 2:</strong> First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns</li>
+<li><strong>MobileNetV2 → Our task:</strong> Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top</li>
+</ol>
+</div><div class="column" style="width:45%;">
+<p><strong>Two forms of transfer learning:</strong></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 42%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>From</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ours</strong></td>
+<td>Phase 1 (8 types)</td>
+<td>Phase 2 (38 patterns)</td>
+</tr>
+<tr class="even">
+<td><strong>MobileNetV2</strong></td>
+<td>ImageNet (millions of images)</td>
+<td>Wafer defect classification</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</section></section>
+<section>
+<section id="part-2-the-dataset" class="title-slide slide level1 center" data-background-color="#1E2761">
+<h1>Part 2: The Dataset</h1>
+
+</section>
+<section id="dataset-overview" class="slide level2">
+<h2>Dataset Overview</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Source:</strong> Mixed-Type Wafer Map Defect Dataset</p>
+<ul>
+<li><strong>38,015 wafer map images</strong></li>
+<li>Each image: <strong>52 × 52 pixels</strong></li>
+<li><strong>3 pixel states:</strong>
+<ul>
+<li><code>0</code> = blank (no die)</li>
+<li><code>1</code> = normal die (passed test)</li>
+<li><code>2</code> = defective die (failed test)</li>
+</ul></li>
+<li>Labels: <strong>8-dimensional one-hot vector</strong> (8 base defect types)</li>
+<li><strong>38 unique defect patterns</strong> (single + combinations)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/dtsdis.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
 <section id="data-preprocessing-pipeline" class="slide level2">
 <h2>Data Preprocessing Pipeline</h2>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
@@ -629,19 +595,9 @@ Augmentation<br>Rotation + Flip
 <h1>Part 3: Phase 1 — Multi-Label Classification</h1>
 
 </section>
-<section id="phase-1-goal" class="slide level2">
-<h2>Phase 1 Goal</h2>
-<p><strong>Task:</strong> Given a wafer map, predict <strong>which of the 8 base defect types are present</strong> (zero, one, or multiple can be active simultaneously).</p>
-<p>This is a <strong>multi-label</strong> problem — like tagging a photo with multiple hashtags.</p>
-<p><strong>Two model approaches:</strong></p>
-<ol type="1">
-<li><strong>Custom CNN</strong> — built from scratch, lightweight</li>
-<li><strong>MobileNetV2 Transfer Learning</strong> — leverages pre-trained knowledge</li>
-</ol>
-<p>Both output <strong>8 sigmoid neurons</strong> — each independently predicts the probability of one defect type.</p>
-</section>
 <section id="model-1a-custom-cnn-architecture" class="slide level2 smaller">
 <h2>Model 1A: Custom CNN Architecture</h2>
+<p><strong>Phase 1 Task:</strong> Predict which of the 8 base defect types are present (multi-label, 8 sigmoid outputs)</p>
 <p><strong>Model: custom_cnn — Total params: 424,264 (1.62 MB)</strong></p>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -928,24 +884,9 @@ Augmentation<br>Rotation + Flip
 <h1>Part 4: Phase 2 — Multi-Class Classification</h1>
 
 </section>
-<section id="phase-2-goal" class="slide level2">
-<h2>Phase 2 Goal</h2>
-<p><strong>Task:</strong> Classify each wafer into <strong>exactly one of 38 defect patterns</strong> (including combinations like “Center+Edge_Loc+Scratch”).</p>
-<p><strong>Why a separate phase?</strong></p>
-<ul>
-<li>Phase 1 predicts 8 independent labels → can’t distinguish “Center+Loc” from “Center” + “Loc” appearing separately</li>
-<li>Phase 2 treats each <strong>combination as its own class</strong> → directly predicts the exact pattern</li>
-<li>Uses <strong>softmax</strong> (probabilities sum to 1) instead of sigmoid</li>
-</ul>
-<p><strong>Strategy: Backbone reuse</strong></p>
-<ol type="1">
-<li>Take the trained Phase 1 CNN backbone (conv layers)</li>
-<li><strong>Freeze</strong> it — the backbone already knows how to extract wafer features</li>
-<li>Replace the 8-sigmoid head with <strong>Dense(128)→Dropout→Dense(38, softmax)</strong></li>
-</ol>
-</section>
 <section id="phase-2-two-stage-training" class="slide level2">
 <h2>Phase 2: Two-Stage Training</h2>
+<p><strong>Task:</strong> Classify each wafer into exactly one of 38 defect patterns using <strong>softmax</strong>. We reuse the Phase 1 backbone (frozen) and replace the head with Dense(128) → Dropout → Dense(38, softmax).</p>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
 <tbody><tr>
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
@@ -1149,10 +1090,6 @@ Phase 2 — MobileNetV2 (38-class)
 </section>
 <section id="thank-you" class="slide level2 center">
 <h2>Thank You</h2>
-<h3 id="questions">Questions?</h3>
-<p><br></p>
-<p><strong>Anomaly Detection in Semiconductor Production</strong></p>
-<p>Deep Learning for Wafer Map Defect Classification</p>
 
 
 </section></section>

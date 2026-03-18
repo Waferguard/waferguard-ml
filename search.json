@@ -578,7 +578,14 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#why-semiconductor-defect-detection",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Why Semiconductor Defect Detection?",
-    "text": "Why Semiconductor Defect Detection?\n\n\n\nSemiconductor chips are in everything — phones, cars, medical devices\nDuring manufacturing, silicon wafers go through hundreds of process steps\nDefects on the wafer surface cause chip failures\nTraditional inspection: manual review by engineers — slow, subjective, expensive\nOur goal: automate defect pattern recognition using deep learning\n\n\n\n📸 SCREENSHOT: Insert a photo or diagram of a silicon wafer with visible defect patterns (from dataset visualization — the RGB-colored wafer maps you generated in the notebook)\n\n\n\nExplain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost."
+    "text": "Why Semiconductor Defect Detection?\n\nSemiconductor chips are in everything — phones, cars, medical devices\nDuring manufacturing, silicon wafers go through hundreds of process steps\nDefects on the wafer surface cause chip failures\nTraditional inspection: manual review by engineers — slow, subjective, expensive\nOur goal: automate defect pattern recognition using deep learning\n\n\nExplain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost."
+  },
+  {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "The 8 Base Defect Types",
+    "text": "The 8 Base Defect Types\n\n\n\nDefect\nDescription\n\n\n\n\nCenter\nDefects clustered at wafer center\n\n\nDonut\nRing-shaped pattern in the middle\n\n\nEdge_Loc\nLocalized defects near the edge\n\n\nEdge_Ring\nDefects forming a ring at the edge\n\n\nLoc\nLocalized cluster anywhere\n\n\nNear_Full\nAlmost entire wafer is defective\n\n\nScratch\nLinear scratch pattern\n\n\nRandom\nRandomly distributed defects\n\n\n\nPlus Normal (no defects) and 29 combination patterns (e.g., Center+Scratch)"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-neural-network",
@@ -595,25 +602,18 @@
     "text": "What is a Convolutional Neural Network (CNN)?\nA CNN is a specialized neural network designed for images.\nKey building blocks:\n\nConv2D layer — slides small filters across the image to detect features (edges, corners, textures)\nPooling layer — shrinks the image to focus on the most important features\nDense layer — combines all detected features to make the final prediction\n\nWhy CNN for wafer maps? Defect patterns are spatial — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures."
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-activation-functions",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-activation-functions",
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Key Terms: Activation Functions",
-    "text": "Key Terms: Activation Functions\n\n\nReLU (Rectified Linear Unit)\n\nUsed in hidden layers\nRule: if input &gt; 0, pass it through; if input ≤ 0, output 0\nWhy? Simple, fast, and avoids the “vanishing gradient” problem where deep networks stop learning\n\nSigmoid\n\nUsed in Phase 1 output (multi-label)\nSquashes any value to a range between 0 and 1\nWhy? Each output neuron independently says “yes/no” for one defect type — like 8 separate binary switches\n\n\nSoftmax\n\nUsed in Phase 2 output (multi-class)\nConverts raw scores into probabilities that sum to 1\nWhy? We pick the single most likely pattern out of 38 — softmax ensures all probabilities are comparable\n\nKey Difference\n\n\n\n\nSigmoid\nSoftmax\n\n\n\n\nOutput range\nEach: 0–1\nAll sum to 1\n\n\nUse case\nMulti-label\nMulti-class\n\n\nPhase\nPhase 1\nPhase 2"
-  },
-  {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-training-concepts",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#key-terms-training-concepts",
-    "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Key Terms: Training Concepts",
-    "text": "Key Terms: Training Concepts\n\nBatch Normalization\n\nNormalizes layer inputs during training → faster, more stable learning\n\nDropout (0.5)\n\nRandomly “turns off” 50% of neurons during each training step → forces the network to not rely on any single neuron → prevents overfitting\n\nGlobalAveragePooling2D\n\nInstead of flattening all features into a huge vector, it takes the average of each feature map → far fewer parameters → reduces overfitting\n\nEarly Stopping\n\nMonitors validation loss and stops training when the model stops improving → prevents the model from memorizing training data\n\nLearning Rate\n\nHow big a step the model takes when updating its weights. Too big = overshooting; too small = too slow."
+    "section": "Key Terms",
+    "text": "Key Terms\n\n\nActivation Functions\n\nReLU — hidden layers; if input &gt; 0 pass through, else 0. Simple and avoids vanishing gradients\nSigmoid — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no\nSoftmax — Phase 2 output; converts scores to probabilities that sum to 1\n\nLoss Functions\n\nBinary Focal Loss (Phase 1) — down-weights easy examples, focuses on hard/rare ones\nSparse Categorical Crossentropy (Phase 2) — standard multi-class loss with class weights\n\n\nRegularization\n\nBatch Normalization — normalizes layer inputs → faster, more stable training\nDropout (0.5) — randomly silences 50% of neurons → prevents overfitting\nGlobalAveragePooling2D — averages each feature map instead of flattening → fewer parameters\nEarly Stopping — stops training when validation loss plateaus\nLearning Rate - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-transfer-learning",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-transfer-learning",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "What is Transfer Learning?",
-    "text": "What is Transfer Learning?\n\n\nInstead of training a CNN from scratch, we reuse a model already trained on millions of images (ImageNet).\nAnalogy: Imagine hiring someone who already knows how to identify shapes, edges, and textures (from years of experience), and just teaching them the specific wafer defect categories.\nOur approach:\n\nTake MobileNetV2 (a lightweight, efficient CNN pre-trained on ImageNet)\nFreeze its learned feature-detection layers\nAdd a new classification head on top for our 8 defect types\nTrain only the new head — the backbone already knows how to “see”"
+    "text": "What is Transfer Learning?\n\n\nTransfer learning means reusing knowledge from one task to improve performance on another.\nAnalogy: Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the specific wafer defect categories.\nWe use transfer learning twice in this project:\n\nPhase 1 → Phase 2: First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns\nMobileNetV2 → Our task: Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top\n\n\nTwo forms of transfer learning:\n\n\n\n\n\n\n\n\n\nFrom\nTo\n\n\n\n\nOurs\nPhase 1 (8 types)\nPhase 2 (38 patterns)\n\n\nMobileNetV2\nImageNet (millions of images)\nWafer defect classification"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#dataset-overview",
@@ -621,13 +621,6 @@
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Dataset Overview",
     "text": "Dataset Overview\n\n\nSource: Mixed-Type Wafer Map Defect Dataset\n\n38,015 wafer map images\nEach image: 52 × 52 pixels\n3 pixel states:\n\n0 = blank (no die)\n1 = normal die (passed test)\n2 = defective die (failed test)\n\nLabels: 8-dimensional one-hot vector (8 base defect types)\n38 unique defect patterns (single + combinations)"
-  },
-  {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#the-8-base-defect-types",
-    "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "The 8 Base Defect Types",
-    "text": "The 8 Base Defect Types\n\n\n\nDefect\nDescription\n\n\n\n\nCenter\nDefects clustered at wafer center\n\n\nDonut\nRing-shaped pattern in the middle\n\n\nEdge_Loc\nLocalized defects near the edge\n\n\nEdge_Ring\nDefects forming a ring at the edge\n\n\nLoc\nLocalized cluster anywhere\n\n\nNear_Full\nAlmost entire wafer is defective\n\n\nScratch\nLinear scratch pattern\n\n\nRandom\nRandomly distributed defects\n\n\n\nPlus Normal (no defects) and 29 combination patterns (e.g., Center+Scratch)"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#data-preprocessing-pipeline",
@@ -644,18 +637,11 @@
     "text": "Train / Validation / Test Split\n\n\nSplit ratio: 70% / 15% / 15%\nChallenge: With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.\nSolution: Stratified splitting — we convert each 8-dim one-hot label to a string key (e.g., \"10100000\" = Center+Edge_Loc) and stratify on these keys. This guarantees all 38 patterns appear in every split.\n\n\n\n\nSplit\nSamples\nUnique Patterns\n\n\n\n\nTrain\n26,610\n38\n\n\nVal\n5,702\n38\n\n\nTest\n5,703\n38\n\n\n\nPer-Label Sample Counts\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-goal",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-goal",
-    "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Phase 1 Goal",
-    "text": "Phase 1 Goal\nTask: Given a wafer map, predict which of the 8 base defect types are present (zero, one, or multiple can be active simultaneously).\nThis is a multi-label problem — like tagging a photo with multiple hashtags.\nTwo model approaches:\n\nCustom CNN — built from scratch, lightweight\nMobileNetV2 Transfer Learning — leverages pre-trained knowledge\n\nBoth output 8 sigmoid neurons — each independently predicts the probability of one defect type."
-  },
-  {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1a-custom-cnn-architecture",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1a-custom-cnn-architecture",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Model 1A: Custom CNN Architecture",
-    "text": "Model 1A: Custom CNN Architecture\nModel: custom_cnn — Total params: 424,264 (1.62 MB)\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\ninput_image (Input)\n(52, 52, 3)\n0\n\n\nconv2d (Conv2D)\n(52, 52, 32)\n896\n\n\nbatch_norm\n(52, 52, 32)\n128\n\n\nactivation (ReLU)\n(52, 52, 32)\n0\n\n\nmax_pooling2d\n(26, 26, 32)\n0\n\n\nconv2d_1 (Conv2D)\n(26, 26, 64)\n18,496\n\n\nbatch_norm_1\n(26, 26, 64)\n256\n\n\nactivation_1 (ReLU)\n(26, 26, 64)\n0\n\n\nmax_pooling2d_1\n(13, 13, 64)\n0\n\n\nconv2d_2 (Conv2D)\n(13, 13, 128)\n73,856\n\n\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\nbatch_norm_2\n(13, 13, 128)\n512\n\n\nactivation_2 (ReLU)\n(13, 13, 128)\n0\n\n\nmax_pooling2d_2\n(6, 6, 128)\n0\n\n\nconv2d_3 (Conv2D)\n(6, 6, 256)\n295,168\n\n\nbatch_norm_3\n(6, 6, 256)\n1,024\n\n\nactivation_3 (ReLU)\n(6, 6, 256)\n0\n\n\nmax_pooling2d_3\n(3, 3, 256)\n0\n\n\nglobal_avg_pool\n(256)\n0\n\n\ndense (ReLU)\n(128)\n32,896\n\n\ndropout (0.5)\n(128)\n0\n\n\noutput (Sigmoid)\n(8)\n1,032\n\n\n\n\nDesign choices:\n\nDoubling filters (32→256): Early layers detect simple features (edges), deeper layers detect complex patterns (rings, scratches) — more filters = more capacity for complexity\n3×3 kernels: Standard efficient choice — captures local spatial relationships\nGlobalAveragePooling over Flatten: reduces parameters from ~2,304 to 256, fighting overfitting"
+    "text": "Model 1A: Custom CNN Architecture\nPhase 1 Task: Predict which of the 8 base defect types are present (multi-label, 8 sigmoid outputs)\nModel: custom_cnn — Total params: 424,264 (1.62 MB)\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\ninput_image (Input)\n(52, 52, 3)\n0\n\n\nconv2d (Conv2D)\n(52, 52, 32)\n896\n\n\nbatch_norm\n(52, 52, 32)\n128\n\n\nactivation (ReLU)\n(52, 52, 32)\n0\n\n\nmax_pooling2d\n(26, 26, 32)\n0\n\n\nconv2d_1 (Conv2D)\n(26, 26, 64)\n18,496\n\n\nbatch_norm_1\n(26, 26, 64)\n256\n\n\nactivation_1 (ReLU)\n(26, 26, 64)\n0\n\n\nmax_pooling2d_1\n(13, 13, 64)\n0\n\n\nconv2d_2 (Conv2D)\n(13, 13, 128)\n73,856\n\n\n\n\n\n\n\nLayer\nShape\nParams\n\n\n\n\nbatch_norm_2\n(13, 13, 128)\n512\n\n\nactivation_2 (ReLU)\n(13, 13, 128)\n0\n\n\nmax_pooling2d_2\n(6, 6, 128)\n0\n\n\nconv2d_3 (Conv2D)\n(6, 6, 256)\n295,168\n\n\nbatch_norm_3\n(6, 6, 256)\n1,024\n\n\nactivation_3 (ReLU)\n(6, 6, 256)\n0\n\n\nmax_pooling2d_3\n(3, 3, 256)\n0\n\n\nglobal_avg_pool\n(256)\n0\n\n\ndense (ReLU)\n(128)\n32,896\n\n\ndropout (0.5)\n(128)\n0\n\n\noutput (Sigmoid)\n(8)\n1,032\n\n\n\n\nDesign choices:\n\nDoubling filters (32→256): Early layers detect simple features (edges), deeper layers detect complex patterns (rings, scratches) — more filters = more capacity for complexity\n3×3 kernels: Standard efficient choice — captures local spatial relationships\nGlobalAveragePooling over Flatten: reduces parameters from ~2,304 to 256, fighting overfitting"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#model-1b-mobilenetv2-transfer-learning",
@@ -679,18 +665,11 @@
     "text": "Phase 1 Results\n\nKey observations to highlight:\n\nBoth models achieve strong per-label F1 scores\nNear_Full is the hardest class (fewest samples ~200)\nCustom CNN and MobileNetV2 each have strengths on different defect types\nThe per-label class weights in focal loss successfully boost rare-class performance"
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-goal",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-goal",
-    "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Phase 2 Goal",
-    "text": "Phase 2 Goal\nTask: Classify each wafer into exactly one of 38 defect patterns (including combinations like “Center+Edge_Loc+Scratch”).\nWhy a separate phase?\n\nPhase 1 predicts 8 independent labels → can’t distinguish “Center+Loc” from “Center” + “Loc” appearing separately\nPhase 2 treats each combination as its own class → directly predicts the exact pattern\nUses softmax (probabilities sum to 1) instead of sigmoid\n\nStrategy: Backbone reuse\n\nTake the trained Phase 1 CNN backbone (conv layers)\nFreeze it — the backbone already knows how to extract wafer features\nReplace the 8-sigmoid head with Dense(128)→Dropout→Dense(38, softmax)"
-  },
-  {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-two-stage-training",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-two-stage-training",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Phase 2: Two-Stage Training",
-    "text": "Phase 2: Two-Stage Training\n\n\n\nStage A — Head OnlyBackbone: FROZENLR: 1e-3Epochs: ~30Train new head only\n\n\n→\n\n\nStage B — Fine-TuneBackbone: Last 25% UNFROZENLR: 1e-5Epochs: ~30Fine-tune end-to-end\n\n\n\nWhy two stages?\n\nStage A (head-only): The new Dense layers have random weights. Training at high LR while backbone is frozen lets them “catch up” without destroying pre-trained weights.\nStage B (fine-tune): Unfreeze the last ~25% of backbone, train at very low LR (1e-5). Adapts features for the 38-class task while preserving prior knowledge.\nBatchNorm layers stay frozen — their statistics are from Phase 1 and shouldn’t shift.\n\nLoss: sparse_categorical_crossentropy with balanced class weights"
+    "text": "Phase 2: Two-Stage Training\nTask: Classify each wafer into exactly one of 38 defect patterns using softmax. We reuse the Phase 1 backbone (frozen) and replace the head with Dense(128) → Dropout → Dense(38, softmax).\n\n\n\nStage A — Head OnlyBackbone: FROZENLR: 1e-3Epochs: ~30Train new head only\n\n\n→\n\n\nStage B — Fine-TuneBackbone: Last 25% UNFROZENLR: 1e-5Epochs: ~30Fine-tune end-to-end\n\n\n\nWhy two stages?\n\nStage A (head-only): The new Dense layers have random weights. Training at high LR while backbone is frozen lets them “catch up” without destroying pre-trained weights.\nStage B (fine-tune): Unfreeze the last ~25% of backbone, train at very low LR (1e-5). Adapts features for the 38-class task while preserving prior knowledge.\nBatchNorm layers stay frozen — their statistics are from Phase 1 and shouldn’t shift.\n\nLoss: sparse_categorical_crossentropy with balanced class weights"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-full-confusion-matrix-3838",
@@ -753,7 +732,7 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#thank-you",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Thank You",
-    "text": "Thank You\nQuestions?\n\nAnomaly Detection in Semiconductor Production\nDeep Learning for Wafer Map Defect Classification"
+    "text": "Thank You"
   },
   {
     "objectID": "slides/SecomData/slides.html#what-is-secom-data",
