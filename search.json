@@ -714,11 +714,11 @@
     "text": "Final Model Comparison\n\n\nFinal Model Comparison — All Phases\n\n\n\n\n\n\nModel\n\n\nMacro F1\n\n\nWeighted F1\n\n\n\n\n\n\n0\n\n\nPhase 1 — Custom CNN (8-label)\n\n\n0.9779\n\n\n0.9905\n\n\n\n\n1\n\n\nPhase 1 — MobileNetV2 (8-label)\n\n\n0.8998\n\n\n0.8847\n\n\n\n\n2\n\n\nPhase 2 — Custom CNN (38-class)\n\n\n0.9736\n\n\n0.9735\n\n\n\n\n3\n\n\nPhase 2 — MobileNetV2 (38-class)\n\n\n0.9667\n\n\n0.9658\n\n\n\n\n\nModel Overview\n\n\n\nModel\nTask\nOutput\n\n\n\n\nPhase 1 — Custom CNN\n8 labels\nSigmoid × 8\n\n\nPhase 1 — MobileNetV2\n8 labels\nSigmoid × 8\n\n\nPhase 2 — Custom CNN\n38 classes\nSoftmax × 38\n\n\nPhase 2 — MobileNetV2\n38 classes\nSoftmax × 38"
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#how-inference-works",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#how-inference-works",
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#live-inference-demo",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#live-inference-demo",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "How Inference Works",
-    "text": "How Inference Works\n# 1. Pick a random wafer from the test set\nrandom_idx = np.random.randint(0, len(X_test))\nrandom_wafer = X_test[random_idx : random_idx + 1]  # Shape: (1, 52, 52, 3)\n\n# 2. Run through both Phase 2 models\npred_cnn = model_p2_cnn.predict(random_wafer)   # → (1, 38)\npred_tl  = model_p2_tl.predict(random_wafer)    # → (1, 38)\n\n# 3. Pick the class with highest probability\npred_class_cnn = pred_cnn[0].argmax()            # → integer 0-37\npred_pattern   = id_to_pattern[pred_class_cnn]   # → \"Loc+Scratch\"\nconfidence     = pred_cnn[0, pred_class_cnn]     # → 0.9989 (99.89%)\n\n📸 SCREENSHOT: Insert the output from model_testing.ipynb showing the random prediction with confidence scores and ✓/✗ match indicators"
+    "section": "Live Inference Demo",
+    "text": "Live Inference Demo\nRandom wafer selected from test set (shape: 1 × 52 × 52 × 3)\nTrue defect pattern: Loc+Scratch\n\n\n\n\nModel\n\n\nPrediction\n\n\nConfidence\n\n\nMatch\n\n\n\n\n\n\nCustom CNN\n\n\nLoc+Scratch\n\n\n99.89%\n\n\n✓\n\n\n\n\nMobileNetV2\n\n\nLoc+Scratch\n\n\n98.48%\n\n\n✓\n\n\n\n\nBoth models correctly identify the Loc+Scratch combination pattern with high confidence — demonstrating that the Phase 2 pipeline generalizes well to unseen wafer maps."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#summary",
@@ -726,13 +726,6 @@
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Summary",
     "text": "Summary\n\n\nWhat We Built\n\nA two-phase deep learning pipeline for wafer defect classification\nPhase 1: Multi-label detection of 8 base defect types\nPhase 2: Precise identification of all 38 defect patterns\nTwo architectures: custom CNN and MobileNetV2 transfer learning\n\n\nKey Technical Decisions\n\nOne-hot pixel encoding → preserves categorical nature\nFocal Loss + class weights → handles severe imbalance\nBackbone reuse → leverages Phase 1 knowledge for Phase 2\nTwo-stage fine-tuning → safe adaptation without catastrophic forgetting\nGeometric-only augmentation → respects discrete pixel states"
-  },
-  {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#thank-you",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#thank-you",
-    "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Thank You",
-    "text": "Thank You"
   },
   {
     "objectID": "slides/SecomData/slides.html#what-is-secom-data",
