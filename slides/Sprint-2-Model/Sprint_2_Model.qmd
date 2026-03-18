@@ -64,28 +64,32 @@ Walk through the agenda briefly. Emphasize that the first section is a primer fo
 
 ## Why Semiconductor Defect Detection?
 
-:::: {.columns}
-
-::: {.column width="55%"}
 - Semiconductor chips are in **everything** — phones, cars, medical devices
 - During manufacturing, silicon **wafers** go through hundreds of process steps
 - Defects on the wafer surface cause **chip failures**
 - Traditional inspection: **manual review by engineers** — slow, subjective, expensive
 - Our goal: **automate defect pattern recognition** using deep learning
-:::
-
-::: {.column width="45%"}
-
-> 📸 **SCREENSHOT:** Insert a photo or diagram of a silicon wafer with visible defect patterns (from dataset visualization — the RGB-colored wafer maps you generated in the notebook)
-
-:::
-
-::::
 
 ::: {.notes}
 Explain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost.
 :::
 
+## The 8 Base Defect Types {.smaller}
+
+| Defect | Description |
+|--------|-------------|
+| **Center** | Defects clustered at wafer center |
+| **Donut** | Ring-shaped pattern in the middle |
+| **Edge_Loc** | Localized defects near the edge |
+| **Edge_Ring** | Defects forming a ring at the edge |
+| **Loc** | Localized cluster anywhere |
+| **Near_Full** | Almost entire wafer is defective |
+| **Scratch** | Linear scratch pattern |
+| **Random** | Randomly distributed defects |
+
+Plus **Normal** (no defects) and **29 combination patterns** (e.g., Center+Scratch)
+
+![](images/og8.png){width="95%" fig-align="center"}
 
 ## What is a Neural Network?
 
@@ -122,58 +126,35 @@ A **CNN** is a specialized neural network designed for **images**.
 
 **Why CNN for wafer maps?** Defect patterns are *spatial* — a "ring" defect forms a circle, a "scratch" forms a line. CNNs are built to detect exactly these kinds of spatial structures.
  
-## Key Terms: Activation Functions
+## Key Terms {.smaller}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-### ReLU (Rectified Linear Unit)
-- Used in **hidden layers**
-- Rule: if input > 0, pass it through; if input ≤ 0, output 0
-- **Why?** Simple, fast, and avoids the "vanishing gradient" problem where deep networks stop learning
+### Activation Functions
+- **ReLU** — hidden layers; if input > 0 pass through, else 0. Simple and avoids vanishing gradients
+- **Sigmoid** — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no
+- **Softmax** — Phase 2 output; converts scores to probabilities that sum to 1
 
-### Sigmoid
-- Used in **Phase 1 output** (multi-label)
-- Squashes any value to a range between 0 and 1
-- **Why?** Each output neuron independently says "yes/no" for one defect type — like 8 separate binary switches
+### Loss Functions
+- **Binary Focal Loss** (Phase 1) — down-weights easy examples, focuses on hard/rare ones
+- **Sparse Categorical Crossentropy** (Phase 2) — standard multi-class loss with class weights
 :::
 
 ::: {.column width="50%"}
-### Softmax
-- Used in **Phase 2 output** (multi-class)
-- Converts raw scores into **probabilities that sum to 1**
-- **Why?** We pick the single most likely pattern out of 38 — softmax ensures all probabilities are comparable
+### Regularization
+- **Batch Normalization** — normalizes layer inputs → faster, more stable training
+- **Dropout (0.5)** — randomly silences 50% of neurons → prevents overfitting
+- **GlobalAveragePooling2D** — averages each feature map instead of flattening → fewer parameters
+- **Early Stopping** — stops training when validation loss plateaus
+- **Learning Rate** - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.
 
-### Key Difference
-| | Sigmoid | Softmax |
-|---|---------|---------|
-| Output range | Each: 0–1 | All sum to 1 |
-| Use case | Multi-label | Multi-class |
-| Phase | Phase 1 | Phase 2 |
 :::
 
 ::::
 
 
-## Key Terms: Training Concepts
-
-**Batch Normalization**
-: Normalizes layer inputs during training → faster, more stable learning
-
-**Dropout (0.5)**
-: Randomly "turns off" 50% of neurons during each training step → forces the network to not rely on any single neuron → **prevents overfitting**
-
-**GlobalAveragePooling2D**
-: Instead of flattening all features into a huge vector, it takes the average of each feature map → far fewer parameters → **reduces overfitting**
-
-**Early Stopping**
-: Monitors validation loss and stops training when the model stops improving → prevents the model from memorizing training data
-
-**Learning Rate**
-: How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.
-
-
-## What is Transfer Learning?
+## What is Transfer Learning? {.smaller}
 
 :::: {.columns}
 
@@ -197,7 +178,6 @@ A **CNN** is a specialized neural network designed for **images**.
 | **Ours** | Phase 1 (8 types) | Phase 2 (38 patterns) |
 | **MobileNetV2** | ImageNet (millions of images) | Wafer defect classification |
 
-Both approaches share the same principle: **don't start from scratch** — build on existing knowledge.
 
 :::
 
@@ -233,25 +213,6 @@ Both approaches share the same principle: **don't start from scratch** — build
 :::
 
 ::::
-
-
-## The 8 Base Defect Types {.smaller}
-
-| Defect | Description |
-|--------|-------------|
-| **Center** | Defects clustered at wafer center |
-| **Donut** | Ring-shaped pattern in the middle |
-| **Edge_Loc** | Localized defects near the edge |
-| **Edge_Ring** | Defects forming a ring at the edge |
-| **Loc** | Localized cluster anywhere |
-| **Near_Full** | Almost entire wafer is defective |
-| **Scratch** | Linear scratch pattern |
-| **Random** | Randomly distributed defects |
-
-Plus **Normal** (no defects) and **29 combination patterns** (e.g., Center+Scratch)
-
-![](images/og8.png){width="95%" fig-align="center"}
-
 
 ## Data Preprocessing Pipeline
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
@@ -314,22 +275,9 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 # Part 3: Phase 1 — Multi-Label Classification {background-color="#1E2761"}
 
-
-## Phase 1 Goal
-
-**Task:** Given a wafer map, predict **which of the 8 base defect types are present** (zero, one, or multiple can be active simultaneously).
-
-This is a **multi-label** problem — like tagging a photo with multiple hashtags.
-
-**Two model approaches:**
-
-1. **Custom CNN** — built from scratch, lightweight
-2. **MobileNetV2 Transfer Learning** — leverages pre-trained knowledge
-
-Both output **8 sigmoid neurons** — each independently predicts the probability of one defect type.
-
-
 ## Model 1A: Custom CNN Architecture {.smaller}
+
+**Phase 1 Task:** Predict which of the 8 base defect types are present (multi-label, 8 sigmoid outputs)
 
 **Model: custom_cnn — Total params: 424,264 (1.62 MB)**
 
@@ -438,25 +386,10 @@ Both output **8 sigmoid neurons** — each independently predicts the probabilit
 
 # Part 4: Phase 2 — Multi-Class Classification {background-color="#1E2761"}
 
-
-## Phase 2 Goal
-
-**Task:** Classify each wafer into **exactly one of 38 defect patterns** (including combinations like "Center+Edge_Loc+Scratch").
-
-**Why a separate phase?**
-
-- Phase 1 predicts 8 independent labels → can't distinguish "Center+Loc" from "Center" + "Loc" appearing separately
-- Phase 2 treats each **combination as its own class** → directly predicts the exact pattern
-- Uses **softmax** (probabilities sum to 1) instead of sigmoid
-
-**Strategy: Backbone reuse**
-
-1. Take the trained Phase 1 CNN backbone (conv layers)
-2. **Freeze** it — the backbone already knows how to extract wafer features
-3. Replace the 8-sigmoid head with **Dense(128)→Dropout→Dense(38, softmax)**
-
-
 ## Phase 2: Two-Stage Training
+
+**Task:** Classify each wafer into exactly one of 38 defect patterns using **softmax**. We reuse the Phase 1 backbone (frozen) and replace the head with Dense(128) → Dropout → Dense(38, softmax).
+
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
 <tr>
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
@@ -584,11 +517,4 @@ confidence     = pred_cnn[0, pred_class_cnn]     # → 0.9989 (99.89%)
 
 ## Thank You {.center}
 
-### Questions?
-
-<br>
-
-**Anomaly Detection in Semiconductor Production**
-
-Deep Learning for Wafer Map Defect Classification
 
