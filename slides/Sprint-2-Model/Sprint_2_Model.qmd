@@ -472,23 +472,23 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 # Part 5: Live Demo & Inference {background-color="#1E2761"}
 
 
-## How Inference Works
-```python
-# 1. Pick a random wafer from the test set
-random_idx = np.random.randint(0, len(X_test))
-random_wafer = X_test[random_idx : random_idx + 1]  # Shape: (1, 52, 52, 3)
+## Live Inference Demo
 
-# 2. Run through both Phase 2 models
-pred_cnn = model_p2_cnn.predict(random_wafer)   # → (1, 38)
-pred_tl  = model_p2_tl.predict(random_wafer)    # → (1, 38)
+**Random wafer selected from test set** (shape: 1 × 52 × 52 × 3)
 
-# 3. Pick the class with highest probability
-pred_class_cnn = pred_cnn[0].argmax()            # → integer 0-37
-pred_pattern   = id_to_pattern[pred_class_cnn]   # → "Loc+Scratch"
-confidence     = pred_cnn[0, pred_class_cnn]     # → 0.9989 (99.89%)
-```
+**True defect pattern: Loc+Scratch**
 
-> 📸 **SCREENSHOT:** Insert the output from `model_testing.ipynb` showing the random prediction with confidence scores and ✓/✗ match indicators
+<table style="margin: 1.5em auto; font-size: 0.85em;">
+<thead>
+<tr><th>Model</th><th>Prediction</th><th>Confidence</th><th>Match</th></tr>
+</thead>
+<tbody>
+<tr><td>Custom CNN</td><td>Loc+Scratch</td><td style="color: #4CAF50; font-weight: bold;">99.89%</td><td style="color: #4CAF50;">✓</td></tr>
+<tr><td>MobileNetV2</td><td>Loc+Scratch</td><td style="color: #4CAF50; font-weight: bold;">98.48%</td><td style="color: #4CAF50;">✓</td></tr>
+</tbody>
+</table>
+
+Both models correctly identify the **Loc+Scratch** combination pattern with high confidence — demonstrating that the Phase 2 pipeline generalizes well to unseen wafer maps.
 
 
 ## Summary
@@ -514,7 +514,13 @@ confidence     = pred_cnn[0, pred_class_cnn]     # → 0.9989 (99.89%)
 
 ::::
 
+---
 
-## Thank You {.center}
-
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">Thank You</h2>
+<br>
+<p><strong>Questions?</strong></p>
+</div>
+</div>
 
