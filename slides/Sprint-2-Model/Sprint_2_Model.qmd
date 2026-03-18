@@ -178,20 +178,26 @@ A **CNN** is a specialized neural network designed for **images**.
 :::: {.columns}
 
 ::: {.column width="55%"}
-Instead of training a CNN from scratch, we **reuse a model already trained on millions of images** (ImageNet).
+**Transfer learning** means reusing knowledge from one task to improve performance on another.
 
-**Analogy:** Imagine hiring someone who already knows how to identify shapes, edges, and textures (from years of experience), and just teaching them the *specific* wafer defect categories.
+**Analogy:** Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the *specific* wafer defect categories.
 
-**Our approach:**
+**We use transfer learning twice in this project:**
 
-1. Take **MobileNetV2** (a lightweight, efficient CNN pre-trained on ImageNet)
-2. **Freeze** its learned feature-detection layers
-3. Add a new **classification head** on top for our 8 defect types
-4. Train only the new head — the backbone already knows how to "see"
+1. **Phase 1 → Phase 2:** First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns
+2. **MobileNetV2 → Our task:** Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top
 :::
 
 ::: {.column width="45%"}
 
+**Two forms of transfer learning:**
+
+| | From | To |
+|---|------|-----|
+| **Ours** | Phase 1 (8 types) | Phase 2 (38 patterns) |
+| **MobileNetV2** | ImageNet (millions of images) | Wafer defect classification |
+
+Both approaches share the same principle: **don't start from scratch** — build on existing knowledge.
 
 :::
 
