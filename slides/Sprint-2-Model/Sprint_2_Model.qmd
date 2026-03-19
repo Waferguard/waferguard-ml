@@ -438,57 +438,30 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 ## Final Model Comparison
 
-:::: {.columns}
-
-::: {.column width="55%"}
-**Final Model Comparison — All Phases**
-
-<table style="font-size: 0.7em;">
+<table style="font-size: 0.8em; margin: 2em auto;">
 <thead>
-<tr><th></th><th>Model</th><th>Macro F1</th><th>Weighted F1</th></tr>
+<tr>
+<th></th>
+<th>Phase 1 — Custom CNN<br/>(8-label)</th>
+<th>Phase 1 — MobileNetV2<br/>(8-label)</th>
+<th>Phase 2 — Custom CNN<br/>(38-class)</th>
+<th>Phase 2 — MobileNetV2<br/>(38-class)</th>
+</tr>
 </thead>
 <tbody>
-<tr><td>0</td><td>Phase 1 — Custom CNN (8-label)</td><td style="background: #4CAF50; color: white; font-weight: bold;">0.9779</td><td style="background: #4CAF50; color: white; font-weight: bold;">0.9905</td></tr>
-<tr><td>1</td><td>Phase 1 — MobileNetV2 (8-label)</td><td>0.8998</td><td>0.8847</td></tr>
-<tr><td>2</td><td>Phase 2 — Custom CNN (38-class)</td><td>0.9736</td><td>0.9735</td></tr>
-<tr><td>3</td><td>Phase 2 — MobileNetV2 (38-class)</td><td>0.9667</td><td>0.9658</td></tr>
+<tr><td><strong>Macro F1</strong></td><td>0.9779</td><td>0.8998</td><td>0.9736</td><td>0.9667</td></tr>
+<tr><td><strong>Weighted F1</strong></td><td>0.9905</td><td>0.8847</td><td>0.9735</td><td>0.9658</td></tr>
 </tbody>
 </table>
-:::
 
-::: {.column width="45%"}
-**Model Overview**
 
-| Model | Task | Output |
-|-------|------|--------|
-| Phase 1 — Custom CNN | 8 labels | Sigmoid × 8 |
-| Phase 1 — MobileNetV2 | 8 labels | Sigmoid × 8 |
-| Phase 2 — Custom CNN | 38 classes | Softmax × 38 |
-| Phase 2 — MobileNetV2 | 38 classes | Softmax × 38 |
-:::
-
-::::
 
 # Part 5: Live Demo & Inference {background-color="#1E2761"}
 
 
 ## Live Inference Demo
 
-**Random wafer selected from test set** (shape: 1 × 52 × 52 × 3)
-
-**True defect pattern: Loc+Scratch**
-
-<table style="margin: 1.5em auto; font-size: 0.85em;">
-<thead>
-<tr><th>Model</th><th>Prediction</th><th>Confidence</th><th>Match</th></tr>
-</thead>
-<tbody>
-<tr><td>Custom CNN</td><td>Loc+Scratch</td><td style="color: #4CAF50; font-weight: bold;">99.89%</td><td style="color: #4CAF50;">✓</td></tr>
-<tr><td>MobileNetV2</td><td>Loc+Scratch</td><td style="color: #4CAF50; font-weight: bold;">98.48%</td><td style="color: #4CAF50;">✓</td></tr>
-</tbody>
-</table>
-
-Both models correctly identify the **Loc+Scratch** combination pattern with high confidence — demonstrating that the Phase 2 pipeline generalizes well to unseen wafer maps.
+- Dashboard link
 
 
 ## Summary
@@ -524,3 +497,17 @@ Both models correctly identify the **Loc+Scratch** combination pattern with high
 </div>
 </div>
 
+# Appendix {visibility="uncounted"}
+
+## The 8 Base Defect Types {.smaller visibility="uncounted"}
+
+(your slide content here)
+
+## Model Overview {visibility="uncounted"}
+
+| Model | Task | Output |
+|-------|------|--------|
+| Phase 1 — Custom CNN | 8 labels | Sigmoid × 8 |
+| Phase 1 — MobileNetV2 | 8 labels | Sigmoid × 8 |
+| Phase 2 — Custom CNN | 38 classes | Softmax × 38 |
+| Phase 2 — MobileNetV2 | 38 classes | Softmax × 38 |
