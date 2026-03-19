@@ -68,7 +68,7 @@ Walk through the agenda briefly. Emphasize that the first section is a primer fo
 - Traditional inspection: **manual review by engineers** — slow, subjective, expensive
 - Our goal: **automate defect pattern recognition** using deep learning
 
-**The 8 Base Defect Types {.smaller}**
+**The 8 Base Defect Types**
 
 ![](images/og8.png){width="95%" fig-align="center"}
 
