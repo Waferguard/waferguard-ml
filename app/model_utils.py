@@ -24,6 +24,7 @@ def predict_single(model: tf.keras.Model, prepared_input: np.ndarray) -> dict:
 
     Returns:
         dict with class_id, pattern_name, confidence, probabilities
+
     """
     probs = model.predict(prepared_input, verbose=0)[0]
     class_id = int(np.argmax(probs))
@@ -43,6 +44,7 @@ def predict_batch(model: tf.keras.Model, prepared_inputs: np.ndarray) -> list[di
 
     Returns:
         list of result dicts, one per wafer
+
     """
     all_probs = model.predict(prepared_inputs, verbose=0)
     results = []

@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart TD
-    A[Mixed-Type Wafer Map Dataset<br/>52x52 images, 38 defect patterns] --> B[Preprocessing<br/>One-hot encode pixels → 52x52x4]
+    A[Mixed-Type Wafer Map Dataset<br/>52x52 images, 38 defect patterns] --> B[Preprocessing<br/>One-hot encode pixels → 52x52x3]
     B --> C[Train / Val / Test Split<br/>70% / 15% / 15%<br/>Iterative stratification]
     C --> D[Data Augmentation<br/>Rotations, flips, shifts<br/>Training only]
     D --> E[Focal Loss + Class Weights<br/>Handle class imbalance]

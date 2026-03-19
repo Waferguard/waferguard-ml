@@ -33,9 +33,9 @@ NUM_CLASSES = 38
 
 # Wafer map colors (from data_exploration.ipynb convert_to_rgb)
 WAFER_RGB = {
-    0: (0, 63, 92),      # blank — dark teal
-    1: (255, 166, 0),     # normal die — amber
-    2: (188, 80, 144),    # broken die — magenta
+    0: (0, 63, 92),  # blank — dark teal
+    1: (255, 166, 0),  # normal die — amber
+    2: (188, 80, 144),  # broken die — magenta
 }
 
 # Normalized for matplotlib

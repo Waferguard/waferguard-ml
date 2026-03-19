@@ -48,7 +48,7 @@ with st.sidebar:
     st.markdown(f"**Model:** {model_choice}")
     st.markdown(f"**Size:** {info['size']}  |  **Params:** {info['params']}")
     st.markdown(f"**Macro F1:** {info['macro_f1']}  |  **Weighted F1:** {info['weighted_f1']}")
-    st.markdown(f"**Input:** 52 x 52 x 3  |  **Output:** 38 classes")
+    st.markdown("**Input:** 52 x 52 x 3  |  **Output:** 38 classes")
     st.caption(info["description"])
 
     st.divider()

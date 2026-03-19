@@ -19,6 +19,7 @@ def render_wafer_map(raw_array: np.ndarray) -> plt.Figure:
 
     Args:
         raw_array: shape (52, 52) int array with values in {0, 1, 2}
+
     """
     fig, ax = plt.subplots(figsize=(4, 4), facecolor=BG_COLOR)
     ax.set_facecolor(BG_COLOR)
@@ -65,7 +66,7 @@ def render_confidence_chart(probabilities: np.ndarray, top_n: int = 5) -> plt.Fi
         spine.set_color("#444")
 
     # Percentage labels on bars
-    for bar, prob in zip(bars, top_probs[::-1]):
+    for bar, prob in zip(bars, top_probs[::-1], strict=False):
         ax.text(
             bar.get_width() + 0.01,
             bar.get_y() + bar.get_height() / 2,

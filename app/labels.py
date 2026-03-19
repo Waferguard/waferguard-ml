@@ -54,8 +54,7 @@ BASE_DEFECT_DESCRIPTIONS: dict[str, str] = {
         "to gas flow or temperature gradients during deposition."
     ),
     "Edge_Loc": (
-        "Defects localized at the wafer edge, commonly caused by edge bead "
-        "removal issues or handling damage."
+        "Defects localized at the wafer edge, commonly caused by edge bead removal issues or handling damage."
     ),
     "Edge_Ring": (
         "Defects forming a ring along the wafer periphery, often from "
@@ -65,18 +64,12 @@ BASE_DEFECT_DESCRIPTIONS: dict[str, str] = {
         "Localized cluster of defects in a specific region, potentially "
         "caused by particle contamination or tool-specific issues."
     ),
-    "Near_Full": (
-        "Defects spread across nearly the entire wafer surface, indicating "
-        "systemic process failure."
-    ),
+    "Near_Full": ("Defects spread across nearly the entire wafer surface, indicating systemic process failure."),
     "Scratch": (
         "Linear scratch patterns across the wafer, typically from mechanical "
         "handling, CMP pad issues, or robotic arm contact."
     ),
-    "Random": (
-        "Randomly distributed defects with no spatial pattern, often from "
-        "airborne particle contamination."
-    ),
+    "Random": ("Randomly distributed defects with no spatial pattern, often from airborne particle contamination."),
 }
 
 
