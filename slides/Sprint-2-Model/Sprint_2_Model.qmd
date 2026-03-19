@@ -53,14 +53,12 @@ format:
 5. **Phase 1** — Multi-label classification (8 defect types)
 6. **Phase 2** — Multi-class classification (38 defect patterns)
 7. **Results & Evaluation**
-8. **Live Demo**
+8. **Visual Representation**
 
 ::: {.notes}
 Walk through the agenda briefly. Emphasize that the first section is a primer for non-technical audience members.
 :::
 
-
-# Part 1: Background & Key Concepts {background-color="#1E2761"}
 
 ## Why Semiconductor Defect Detection?
 
@@ -70,26 +68,13 @@ Walk through the agenda briefly. Emphasize that the first section is a primer fo
 - Traditional inspection: **manual review by engineers** — slow, subjective, expensive
 - Our goal: **automate defect pattern recognition** using deep learning
 
+**The 8 Base Defect Types {.smaller}**
+
+![](images/og8.png){width="95%" fig-align="center"}
+
 ::: {.notes}
 Explain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost.
 :::
-
-## The 8 Base Defect Types {.smaller}
-
-| Defect | Description |
-|--------|-------------|
-| **Center** | Defects clustered at wafer center |
-| **Donut** | Ring-shaped pattern in the middle |
-| **Edge_Loc** | Localized defects near the edge |
-| **Edge_Ring** | Defects forming a ring at the edge |
-| **Loc** | Localized cluster anywhere |
-| **Near_Full** | Almost entire wafer is defective |
-| **Scratch** | Linear scratch pattern |
-| **Random** | Randomly distributed defects |
-
-Plus **Normal** (no defects) and **29 combination patterns** (e.g., Center+Scratch)
-
-![](images/og8.png){width="95%" fig-align="center"}
 
 ## What is a Neural Network?
 
@@ -125,69 +110,6 @@ A **CNN** is a specialized neural network designed for **images**.
 - **Dense layer** — combines all detected features to make the final prediction
 
 **Why CNN for wafer maps?** Defect patterns are *spatial* — a "ring" defect forms a circle, a "scratch" forms a line. CNNs are built to detect exactly these kinds of spatial structures.
- 
-## Key Terms {.smaller}
-
-:::: {.columns}
-
-::: {.column width="50%"}
-### Activation Functions
-- **ReLU** — hidden layers; if input > 0 pass through, else 0. Simple and avoids vanishing gradients
-- **Sigmoid** — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no
-- **Softmax** — Phase 2 output; converts scores to probabilities that sum to 1
-
-### Loss Functions
-- **Binary Focal Loss** (Phase 1) — down-weights easy examples, focuses on hard/rare ones
-- **Sparse Categorical Crossentropy** (Phase 2) — standard multi-class loss with class weights
-:::
-
-::: {.column width="50%"}
-### Regularization
-- **Batch Normalization** — normalizes layer inputs → faster, more stable training
-- **Dropout (0.5)** — randomly silences 50% of neurons → prevents overfitting
-- **GlobalAveragePooling2D** — averages each feature map instead of flattening → fewer parameters
-- **Early Stopping** — stops training when validation loss plateaus
-- **Learning Rate** - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.
-
-:::
-
-::::
-
-
-## What is Transfer Learning? {.smaller}
-
-:::: {.columns}
-
-::: {.column width="55%"}
-**Transfer learning** means reusing knowledge from one task to improve performance on another.
-
-**Analogy:** Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the *specific* wafer defect categories.
-
-**We use transfer learning twice in this project:**
-
-1. **Phase 1 → Phase 2:** First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns
-2. **MobileNetV2 → Our task:** Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top
-:::
-
-::: {.column width="45%"}
-
-**Two forms of transfer learning:**
-
-| | From | To |
-|---|------|-----|
-| **Ours** | Phase 1 (8 types) | Phase 2 (38 patterns) |
-| **MobileNetV2** | ImageNet (millions of images) | Wafer defect classification |
-
-
-:::
-
-::::
-
-
-
-
-# Part 2: The Dataset {background-color="#1E2761"}
-
 
 ## Dataset Overview
 
@@ -229,12 +151,13 @@ A **CNN** is a specialized neural network designed for **images**.
 </tr>
 </table>
 
-**Why one-hot encode pixels?**
+::: {.notes}
+Why one-hot encode pixels?**
 Pixel values 0, 1, 2 are **categorical** (blank, normal, broken) — not ordered intensities. Treating them as numbers (0 < 1 < 2) would imply a false relationship. One-hot encoding gives each state its own channel, preserving the categorical nature.
 
-**Why only geometric augmentation?**
+Why only geometric augmentation?**
 Since pixels represent discrete states (not colors), we can only apply **spatial transforms** (90° rotations, flips) that don't alter the categorical values. Color jitter or elastic deformation would corrupt the data.
-
+:::
 
 ## Train / Validation / Test Split
 
@@ -272,10 +195,273 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 ::::
 
+## Phase 1: Detecting the 8 Base Defect Types
 
-# Part 3: Phase 1 — Multi-Label Classification {background-color="#1E2761"}
+**Goal:** Look at a wafer map and identify which of the 8 basic defect types are present — a wafer can have more than one at the same time.
 
-## Model 1A: Custom CNN Architecture {.smaller}
+:::: {.columns}
+
+::: {.column width="50%"}
+### What we built
+- Build from scratch
+- A lightweight model designed for our 52×52 wafer images
+- Learns to recognize defect shapes like rings, scratches, and clusters directly from our data
+- Small and efficient — only **424K parameters**
+:::
+
+::: {.column width="50%"}
+### How we validated it
+- Compared against MobileNetV2 — a model Google trained on millions of images
+- If our custom model matches or beats it, we know our approach works
+:::
+
+::::
+
+## Phase 1 Training Configuration {.smaller}
+
+| Parameter | Value | Why |
+|-----------|-------|-----|
+| **Loss** | Binary Focal Loss (γ=2.0) | Handles class imbalance |
+| **Optimizer** | Adam (lr=1e-3) | Adaptive learning rate, fast convergence |
+| **Batch size** | 32 | Balance between stability and speed |
+| **Epochs** | Up to 100 | Early stopping will cut short |
+| **ReduceLROnPlateau** | patience=5, factor=0.5 | Halves LR when validation plateaus |
+| **EarlyStopping** | patience=10 | Stops when no improvement for 10 epochs |
+| **Metrics** | AUC + Binary Accuracy | AUC is threshold-independent |
+
+*AUC and Loss Graphs of Custom CNN and MobileNetV2*
+
+:::: {.columns}
+::: {.column width="50%"}
+![](images/modelsEval.png){width="95%" fig-align="center"}
+:::
+::: {.column width="50%"}
+![](images/modelsEval1.png){width="95%" fig-align="center"}
+:::
+::::
+
+
+## Phase 1 Results
+
+![](images/f1Comp.png){width="95%" fig-align="center"}
+
+
+**Key observations to highlight:**
+
+- Both models achieve strong per-label F1 scores
+- **Near_Full** is the hardest class (fewest samples ~200)
+- Custom CNN and MobileNetV2 each have strengths on different defect types
+- The per-label class weights in focal loss successfully boost rare-class performance
+
+## Phase 2: From 8 Base Types to 38 Defect Patterns
+
+We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all **38 defect patterns.**
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 1 Model</strong><br/><br/>Detects 8 base defect types<br/>(Center, Donut, Scratch, etc.)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br/><br/>Classifies all 38 patterns<br/>(single + combinations)
+</td>
+</tr>
+</table>
+
+- The Phase 1 model already learned **how to read wafer maps** — it knows what edges, clusters, and rings look like
+- We **keep that knowledge** and add a new layer that learns to distinguish all 38 specific patterns
+- This is more efficient than training a brand new model from scratch — we're building on what's already been learned
+- The final model picks the **single most likely pattern** out of 38 for each wafer
+
+
+## Phase 2 Results — Full Confusion Matrix (38×38)
+
+![](images/cMatrixFull.png){width="85%" fig-align="center"}
+
+
+## Phase 2 Results — Single / Normal Patterns
+
+![](images/ConfMat1.png){width="85%" fig-align="center"}
+
+
+## Phase 2 Results — Double Combinations
+
+![](images/confMat2.png){width="85%" fig-align="center"}
+
+
+## Phase 2 Results — Triple Combinations
+
+![](images/confMat3.png){width="85%" fig-align="center"}
+
+
+## Phase 2 Results — Quadruple Combinations
+
+![](images/confMat4.png){width="85%" fig-align="center"}
+
+
+## Final Model Comparison
+
+<table style="font-size: 0.8em; margin: 2em auto;">
+<thead>
+<tr>
+<th></th>
+<th>Phase 1 — Custom CNN<br/>(8-label)</th>
+<th>Phase 1 — MobileNetV2<br/>(8-label)</th>
+<th>Phase 2 — Custom CNN<br/>(38-class)</th>
+<th>Phase 2 — MobileNetV2<br/>(38-class)</th>
+</tr>
+</thead>
+<tbody>
+<tr><td><strong>Macro F1</strong></td><td>0.9779</td><td>0.8998</td><td>0.9736</td><td>0.9667</td></tr>
+<tr><td><strong>Weighted F1</strong></td><td>0.9905</td><td>0.8847</td><td>0.9735</td><td>0.9658</td></tr>
+</tbody>
+</table>
+
+- Our **Custom CNN outperformed MobileNetV2** in both phases
+- The **Phase 2 Custom CNN (38-class)** is our final production model — it can identify all 38 defect patterns with **97%+ accuracy**
+- Building our own model from scratch proved more effective than using a pre-trained one for this task
+
+## Live Inference Demo
+
+- Dashboard link
+
+
+## Summary
+
+**Our Custom CNN Pipeline:**
+
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Phase 1</strong><br/><br/>Train our CNN to detect<br/>8 base defect types
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Phase 2</strong><br/><br/>Reuse Phase 1 knowledge<br/>to classify all 38 patterns
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Final Model</strong><br/><br/>38-class Custom CNN<br/>97%+ accuracy
+</td>
+</tr>
+</table>
+
+**Benchmark Comparison:**
+
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>MobileNetV2</strong><br/><br/>Google's pre-trained<br/>model (2.6M params)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Same tasks</strong><br/><br/>Phase 1 (8 types)<br/>Phase 2 (38 patterns)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Result</strong><br/><br/>Our CNN outperformed<br/>on both phases
+</td>
+</tr>
+</table>
+
+Building our own model from scratch proved more effective than using a pre-trained one for this specialized task.
+
+
+---
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">Thank You</h2>
+<br>
+<p><strong>Questions?</strong></p>
+</div>
+</div>
+
+---
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">Appendix</h2>
+</div>
+</div>
+
+## The 8 Base Defect Types {.smaller data-visibility="uncounted"}
+
+| Defect | Description |
+|--------|-------------|
+| **Center** | Defects clustered at wafer center |
+| **Donut** | Ring-shaped pattern in the middle |
+| **Edge_Loc** | Localized defects near the edge |
+| **Edge_Ring** | Defects forming a ring at the edge |
+| **Loc** | Localized cluster anywhere |
+| **Near_Full** | Almost entire wafer is defective |
+| **Scratch** | Linear scratch pattern |
+| **Random** | Randomly distributed defects |
+
+Plus **Normal** (no defects) and **29 combination patterns** (e.g., Center+Scratch)
+
+![](images/og8.png){width="95%" fig-align="center"}
+
+
+## Key Terms {.smaller data-visibility="uncounted"}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### Activation Functions
+- **ReLU** — hidden layers; if input > 0 pass through, else 0. Simple and avoids vanishing gradients
+- **Sigmoid** — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no
+- **Softmax** — Phase 2 output; converts scores to probabilities that sum to 1
+
+### Loss Functions
+- **Binary Focal Loss** (Phase 1) — down-weights easy examples, focuses on hard/rare ones
+- **Sparse Categorical Crossentropy** (Phase 2) — standard multi-class loss with class weights
+:::
+
+::: {.column width="50%"}
+### Regularization
+- **Batch Normalization** — normalizes layer inputs → faster, more stable training
+- **Dropout (0.5)** — randomly silences 50% of neurons → prevents overfitting
+- **GlobalAveragePooling2D** — averages each feature map instead of flattening → fewer parameters
+- **Early Stopping** — stops training when validation loss plateaus
+- **Learning Rate** - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.
+
+:::
+
+::::
+
+
+## What is Transfer Learning? {.smaller data-visibility="uncounted"}
+
+:::: {.columns}
+
+::: {.column width="55%"}
+**Transfer learning** means reusing knowledge from one task to improve performance on another.
+
+**Analogy:** Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the *specific* wafer defect categories.
+
+**We use transfer learning twice in this project:**
+
+1. **Phase 1 → Phase 2:** First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns
+2. **MobileNetV2 → Our task:** Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top
+:::
+
+::: {.column width="45%"}
+
+**Two forms of transfer learning:**
+
+| | From | To |
+|---|------|-----|
+| **Ours** | Phase 1 (8 types) | Phase 2 (38 patterns) |
+| **MobileNetV2** | ImageNet (millions of images) | Wafer defect classification |
+
+
+:::
+
+::::
+
+## Custom CNN Architecture {.smaller data-visibility="uncounted"}
 
 **Phase 1 Task:** Predict which of the 8 base defect types are present (multi-label, 8 sigmoid outputs)
 
@@ -323,7 +509,7 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 - **GlobalAveragePooling** over Flatten: reduces parameters from ~2,304 to 256, fighting overfitting
 
 
-## Model 1B: MobileNetV2 Transfer Learning
+## MobileNetV2 Architecture {data-visibility="uncounted"}
 
 **Model: mobilenet_transfer — Total params: 2,587,988 (9.87 MB)**
 
@@ -346,47 +532,7 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 - **1×1 Conv projection:** Our data has 3 one-hot channels, not RGB — this layer learns the right mapping
 - **Frozen backbone:** With only ~38K samples, fine-tuning 2.2M parameters risks overfitting
 
-
-## Phase 1 Training Configuration {.smaller}
-
-| Parameter | Value | Why |
-|-----------|-------|-----|
-| **Loss** | Binary Focal Loss (γ=2.0) | Handles class imbalance |
-| **Optimizer** | Adam (lr=1e-3) | Adaptive learning rate, fast convergence |
-| **Batch size** | 32 | Balance between stability and speed |
-| **Epochs** | Up to 100 | Early stopping will cut short |
-| **ReduceLROnPlateau** | patience=5, factor=0.5 | Halves LR when validation plateaus |
-| **EarlyStopping** | patience=10 | Stops when no improvement for 10 epochs |
-| **Metrics** | AUC + Binary Accuracy | AUC is threshold-independent |
-
-*AUC and Loss Graphs of Custom CNN and MobileNetV2*
-
-:::: {.columns}
-::: {.column width="50%"}
-![](images/modelsEval.png){width="95%" fig-align="center"}
-:::
-::: {.column width="50%"}
-![](images/modelsEval1.png){width="95%" fig-align="center"}
-:::
-::::
-
-
-## Phase 1 Results
-
-![](images/f1Comp.png){width="95%" fig-align="center"}
-
-
-**Key observations to highlight:**
-
-- Both models achieve strong per-label F1 scores
-- **Near_Full** is the hardest class (fewest samples ~200)
-- Custom CNN and MobileNetV2 each have strengths on different defect types
-- The per-label class weights in focal loss successfully boost rare-class performance
-
-
-# Part 4: Phase 2 — Multi-Class Classification {background-color="#1E2761"}
-
-## Phase 2: Two-Stage Training
+## Phase 2: Two-Stage Training Details {data-visibility="uncounted"}
 
 **Task:** Classify each wafer into exactly one of 38 defect patterns using **softmax**. We reuse the Phase 1 backbone (frozen) and replace the head with Dense(128) → Dropout → Dense(38, softmax).
 
@@ -410,100 +556,7 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 **Loss:** `sparse_categorical_crossentropy` with **balanced class weights**
 
-
-## Phase 2 Results — Full Confusion Matrix (38×38)
-
-![](images/cMatrixFull.png){width="85%" fig-align="center"}
-
-
-## Phase 2 Results — Single / Normal Patterns
-
-![](images/ConfMat1.png){width="85%" fig-align="center"}
-
-
-## Phase 2 Results — Double Combinations
-
-![](images/confMat2.png){width="85%" fig-align="center"}
-
-
-## Phase 2 Results — Triple Combinations
-
-![](images/confMat3.png){width="85%" fig-align="center"}
-
-
-## Phase 2 Results — Quadruple Combinations
-
-![](images/confMat4.png){width="85%" fig-align="center"}
-
-
-## Final Model Comparison
-
-<table style="font-size: 0.8em; margin: 2em auto;">
-<thead>
-<tr>
-<th></th>
-<th>Phase 1 — Custom CNN<br/>(8-label)</th>
-<th>Phase 1 — MobileNetV2<br/>(8-label)</th>
-<th>Phase 2 — Custom CNN<br/>(38-class)</th>
-<th>Phase 2 — MobileNetV2<br/>(38-class)</th>
-</tr>
-</thead>
-<tbody>
-<tr><td><strong>Macro F1</strong></td><td>0.9779</td><td>0.8998</td><td>0.9736</td><td>0.9667</td></tr>
-<tr><td><strong>Weighted F1</strong></td><td>0.9905</td><td>0.8847</td><td>0.9735</td><td>0.9658</td></tr>
-</tbody>
-</table>
-
-
-
-# Part 5: Live Demo & Inference {background-color="#1E2761"}
-
-
-## Live Inference Demo
-
-- Dashboard link
-
-
-## Summary
-
-:::: {.columns}
-
-::: {.column width="50%"}
-### What We Built
-- A **two-phase deep learning pipeline** for wafer defect classification
-- **Phase 1:** Multi-label detection of 8 base defect types
-- **Phase 2:** Precise identification of all 38 defect patterns
-- Two architectures: **custom CNN** and **MobileNetV2 transfer learning**
-:::
-
-::: {.column width="50%"}
-### Key Technical Decisions
-- **One-hot pixel encoding** → preserves categorical nature
-- **Focal Loss + class weights** → handles severe imbalance
-- **Backbone reuse** → leverages Phase 1 knowledge for Phase 2
-- **Two-stage fine-tuning** → safe adaptation without catastrophic forgetting
-- **Geometric-only augmentation** → respects discrete pixel states
-:::
-
-::::
-
----
-
-<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
-<div>
-<h2 style="border: none; margin: 0; padding: 0;">Thank You</h2>
-<br>
-<p><strong>Questions?</strong></p>
-</div>
-</div>
-
-# Appendix {visibility="uncounted"}
-
-## The 8 Base Defect Types {.smaller visibility="uncounted"}
-
-(your slide content here)
-
-## Model Overview {visibility="uncounted"}
+## Model Overview {data-visibility="uncounted"}
 
 | Model | Task | Output |
 |-------|------|--------|
@@ -511,3 +564,20 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 | Phase 1 — MobileNetV2 | 8 labels | Sigmoid × 8 |
 | Phase 2 — Custom CNN | 38 classes | Softmax × 38 |
 | Phase 2 — MobileNetV2 | 38 classes | Softmax × 38 |
+
+## Summary {data-visibility="uncounted"}
+
+
+### What We Built
+- A **two-phase deep learning pipeline** for wafer defect classification
+- **Phase 1:** Multi-label detection of 8 base defect types
+- **Phase 2:** Precise identification of all 38 defect patterns
+- Two architectures: **custom CNN** and **MobileNetV2 transfer learning**
+
+
+## Key Technical Decisions {data-visibility="uncounted"}
+- **One-hot pixel encoding** → preserves categorical nature
+- **Focal Loss + class weights** → handles severe imbalance
+- **Backbone reuse** → leverages Phase 1 knowledge for Phase 2
+- **Two-stage fine-tuning** → safe adaptation without catastrophic forgetting
+- **Geometric-only augmentation** → respects discrete pixel states
