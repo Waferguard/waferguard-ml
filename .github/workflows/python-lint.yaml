@@ -15,7 +15,7 @@ jobs:
           python-version: "3.11"
       - name: Install requirements
         run: |
-          pip install poetry==2.2.1
+          pip install poetry==2.3.1
           poetry install --no-root
         shell: bash
       - name: Run linting
