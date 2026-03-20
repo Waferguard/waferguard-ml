@@ -4,9 +4,12 @@
 
 ## Wafer Images (WM811k)
 - [Wafer Images EDA](slides/wm811k/slides.html)
-
+  
 ## SECOM Sensor Data
 - [SECOM EDA](slides/SecomData/slides.html)
+
+## Sprint 2 (Model Building)
+- [Sprint 2 Model Building](slides/Sprint-2-Model/Sprint_2_Model.html)
   
 # 📓 Notebooks
 
