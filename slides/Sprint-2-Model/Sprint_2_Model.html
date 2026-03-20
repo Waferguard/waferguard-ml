@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-ff73747157bea4a22cb1ab1a769f836e.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
+
+  <meta name="author" content="WaferGuardML">
+  <meta name="dcterms.date" content="2026-03-20">
+  <title>WaferGuard ML Slides – Anomaly Detection in Semiconductor Manufacturing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-44a157fb0331a1520d9859d627e72c37.css">
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <style>
+  .reveal .mermaid { margin: 0 auto; text-align: center; }
+  .reveal .slide-background-content { background-color: #2D2D2D; }
+  .reveal { font-size: 28px; color: #F0F0F0; }
+  .reveal h1, .reveal h2 { font-family: Georgia, serif; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em; }
+  .reveal h2 { border-bottom: 3px solid #888888; padding-bottom: 0.3em; margin-bottom: 0.6em; }
+  .reveal h3 { color: #E0E0E0; }
+  .reveal strong { color: #FFFFFF; }
+  .reveal blockquote {    background: #3A3A3A; border-left: 5px solid #888888; padding: 1em 1.2em; font-size: 0.8em; font-style: normal; color: #CCCCCC; border-radius: 4px; }
+  .reveal table { font-size: 0.75em; color: #F0F0F0; }
+  .reveal th { background-color: #4A4A4A; color: white; padding: 0.5em 0.8em; }
+  .reveal td { padding: 0.4em 0.8em; border-color: #555555; }
+  .reveal .slide-number { color: #AAAAAA; }
+  .reveal code { font-size: 0.85em; color: #E0E0E0; }
+  .reveal pre { font-size: 0.6em; border-radius: 8px; background: #1A1A1A; }
+  .reveal a { color: #7EB8DA; }
+  .reveal .footer { color: #999999; }
+  .reveal ul, .reveal ol { color: #F0F0F0; }
+  .reveal dt { color: #FFFFFF; }
+  .reveal dd { color: #DDDDDD; }
+  section.center h2 { border-bottom: none; }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Anomaly Detection in Semiconductor Manufacturing</h1>
+  <p class="subtitle">Deep Learning for Wafer Map Defect Classification</p>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+WaferGuardML 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-03-20</p>
+</section>
+<section id="agenda" class="slide level2">
+<h2>Agenda</h2>
+<ol type="1">
+<li><strong>Background</strong> — Why semiconductor defect detection matters</li>
+<li><strong>Key Concepts</strong> — Neural networks, CNNs, transfer learning explained</li>
+<li><strong>Dataset &amp; Exploration</strong> — The wafer map dataset</li>
+<li><strong>Data Preprocessing</strong> — Encoding, splitting, augmentation</li>
+<li><strong>Phase 1</strong> — Multi-label classification (8 defect types)</li>
+<li><strong>Phase 2</strong> — Multi-class classification (38 defect patterns)</li>
+<li><strong>Results &amp; Evaluation</strong></li>
+<li><strong>Visual Representation</strong></li>
+</ol>
+<aside class="notes">
+<p>Walk through the agenda briefly. Emphasize that the first section is a primer for non-technical audience members.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="why-semiconductor-defect-detection" class="slide level2">
+<h2>Why Semiconductor Defect Detection?</h2>
+<ul>
+<li>Semiconductor chips are in <strong>everything</strong> — phones, cars, medical devices</li>
+<li>During manufacturing, silicon <strong>wafers</strong> go through hundreds of process steps</li>
+<li>Defects on the wafer surface cause <strong>chip failures</strong></li>
+<li>Traditional inspection: <strong>manual review by engineers</strong> — slow, subjective, expensive</li>
+<li>Our goal: <strong>automate defect pattern recognition</strong> using deep learning</li>
+</ul>
+<p><strong>The 8 Base Defect Types</strong></p>
+
+<img data-src="images/og8.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"><aside class="notes">
+<p>Explain that a wafer is a thin slice of silicon, and each small square on it becomes a chip. Defects = bad chips = money lost.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="what-is-a-neural-network" class="slide level2">
+<h2>What is a Neural Network?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Think of it as a <strong>decision-making system</strong> inspired by the brain:</p>
+<ul>
+<li><strong>Inputs</strong>: Raw data (e.g., pixel values of a wafer image)</li>
+<li><strong>Hidden layers</strong>: Each layer learns to detect increasingly complex patterns</li>
+<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch defect”)</li>
+</ul>
+<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/nn1.png" class="quarto-figure quarto-figure-center" style="width:85.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="what-is-a-convolutional-neural-network-cnn" class="slide level2">
+<h2>What is a Convolutional Neural Network (CNN)?</h2>
+<p>A <strong>CNN</strong> is a specialized neural network designed for <strong>images</strong>.</p>
+<p><strong>Key building blocks:</strong></p>
+<ul>
+<li><strong>Conv2D layer</strong> — slides small filters across the image to detect features (edges, corners, textures)</li>
+<li><strong>Pooling layer</strong> — shrinks the image to focus on the most important features</li>
+<li><strong>Dense layer</strong> — combines all detected features to make the final prediction</li>
+</ul>
+<p><strong>Why CNN for wafer maps?</strong> Defect patterns are <em>spatial</em> — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures.</p>
+</section>
+<section id="dataset-overview" class="slide level2">
+<h2>Dataset Overview</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Source:</strong> Mixed-Type Wafer Map Defect Dataset</p>
+<ul>
+<li><strong>38,015 wafer map images</strong></li>
+<li>Each image: <strong>52 × 52 pixels</strong></li>
+<li><strong>3 pixel states:</strong>
+<ul>
+<li><code>0</code> = blank (no die)</li>
+<li><code>1</code> = normal die (passed test)</li>
+<li><code>2</code> = defective die (failed test)</li>
+</ul></li>
+<li>Labels: <strong>8-dimensional one-hot vector</strong> (8 base defect types)</li>
+<li><strong>38 unique defect patterns</strong> (single + combinations)</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/dtsdis.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="data-preprocessing-pipeline" class="slide level2">
+<h2>Data Preprocessing Pipeline</h2>
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+Raw Images<br>52×52<br>Values: 0,1,2,3
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+Clean<br>Pixel 3 → 0
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+One-Hot Encode<br>52×52×3<br>3 channels
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+Stratified Split<br>70 / 15 / 15
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+Augmentation<br>Rotation + Flip
+</td>
+</tr>
+</tbody></table>
+<aside class="notes">
+<p>Why one-hot encode pixels?<strong> Pixel values 0, 1, 2 are </strong>categorical** (blank, normal, broken) — not ordered intensities. Treating them as numbers (0 &lt; 1 &lt; 2) would imply a false relationship. One-hot encoding gives each state its own channel, preserving the categorical nature.</p>
+<p>Why only geometric augmentation?<strong> Since pixels represent discrete states (not colors), we can only apply </strong>spatial transforms** (90° rotations, flips) that don’t alter the categorical values. Color jitter or elastic deformation would corrupt the data.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="train-validation-test-split" class="slide level2">
+<h2>Train / Validation / Test Split</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Split ratio:</strong> 70% / 15% / 15%</p>
+<p><strong>Challenge:</strong> With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.</p>
+<p><strong>Solution: Stratified splitting</strong> — we convert each 8-dim one-hot label to a string key (e.g., <code>"10100000"</code> = Center+Edge_Loc) and stratify on these keys. This guarantees <strong>all 38 patterns appear in every split</strong>.</p>
+</div><div class="column" style="width:50%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Split</th>
+<th>Samples</th>
+<th>Unique Patterns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Train</td>
+<td>26,610</td>
+<td>38</td>
+</tr>
+<tr class="even">
+<td>Val</td>
+<td>5,702</td>
+<td>38</td>
+</tr>
+<tr class="odd">
+<td>Test</td>
+<td>5,703</td>
+<td>38</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Per-Label Sample Counts</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Label</th>
+<th style="text-align: right;">Train</th>
+<th style="text-align: right;">Val</th>
+<th style="text-align: right;">Test</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Center</td>
+<td style="text-align: right;">9,100</td>
+<td style="text-align: right;">1,950</td>
+<td style="text-align: right;">1,950</td>
+</tr>
+<tr class="even">
+<td>Donut</td>
+<td style="text-align: right;">8,400</td>
+<td style="text-align: right;">1,800</td>
+<td style="text-align: right;">1,800</td>
+</tr>
+<tr class="odd">
+<td>Edge_Loc</td>
+<td style="text-align: right;">9,100</td>
+<td style="text-align: right;">1,950</td>
+<td style="text-align: right;">1,950</td>
+</tr>
+<tr class="even">
+<td>Edge_Ring</td>
+<td style="text-align: right;">8,400</td>
+<td style="text-align: right;">1,800</td>
+<td style="text-align: right;">1,800</td>
+</tr>
+<tr class="odd">
+<td>Loc</td>
+<td style="text-align: right;">12,600</td>
+<td style="text-align: right;">2,700</td>
+<td style="text-align: right;">2,700</td>
+</tr>
+<tr class="even">
+<td>Near_Full</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">23</td>
+</tr>
+<tr class="odd">
+<td>Scratch</td>
+<td style="text-align: right;">13,300</td>
+<td style="text-align: right;">2,850</td>
+<td style="text-align: right;">2,850</td>
+</tr>
+<tr class="even">
+<td>Random</td>
+<td style="text-align: right;">606</td>
+<td style="text-align: right;">130</td>
+<td style="text-align: right;">130</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</section>
+<section id="phase-1-detecting-the-8-base-defect-types" class="slide level2">
+<h2>Phase 1: Detecting the 8 Base Defect Types</h2>
+<p><strong>Goal:</strong> Look at a wafer map and identify which of the 8 basic defect types are present — a wafer can have more than one at the same time.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="what-we-built">What we built</h3>
+<ul>
+<li>Build from scratch</li>
+<li>A lightweight model designed for our 52×52 wafer images</li>
+<li>Learns to recognize defect shapes like rings, scratches, and clusters directly from our data</li>
+<li>Small and efficient — only <strong>424K parameters</strong></li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="how-we-validated-it">How we validated it</h3>
+<ul>
+<li>Compared against MobileNetV2 — a model Google trained on millions of images</li>
+<li>If our custom model matches or beats it, we know our approach works</li>
+</ul>
+</div></div>
+</section>
+<section id="phase-1-training-configuration" class="slide level2 smaller">
+<h2>Phase 1 Training Configuration</h2>
+<table class="caption-top">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 30%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Value</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Loss</strong></td>
+<td>Binary Focal Loss (γ=2.0)</td>
+<td>Handles class imbalance</td>
+</tr>
+<tr class="even">
+<td><strong>Optimizer</strong></td>
+<td>Adam (lr=1e-3)</td>
+<td>Adaptive learning rate, fast convergence</td>
+</tr>
+<tr class="odd">
+<td><strong>Batch size</strong></td>
+<td>32</td>
+<td>Balance between stability and speed</td>
+</tr>
+<tr class="even">
+<td><strong>Epochs</strong></td>
+<td>Up to 100</td>
+<td>Early stopping will cut short</td>
+</tr>
+<tr class="odd">
+<td><strong>ReduceLROnPlateau</strong></td>
+<td>patience=5, factor=0.5</td>
+<td>Halves LR when validation plateaus</td>
+</tr>
+<tr class="even">
+<td><strong>EarlyStopping</strong></td>
+<td>patience=10</td>
+<td>Stops when no improvement for 10 epochs</td>
+</tr>
+<tr class="odd">
+<td><strong>Metrics</strong></td>
+<td>AUC + Binary Accuracy</td>
+<td>AUC is threshold-independent</td>
+</tr>
+</tbody>
+</table>
+<p><em>AUC and Loss Graphs of Custom CNN and MobileNetV2</em></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/modelsEval.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/modelsEval1.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="phase-1-results" class="slide level2">
+<h2>Phase 1 Results</h2>
+
+<img data-src="images/f1Comp.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"><p><strong>Key observations to highlight:</strong></p>
+<ul>
+<li>Both models achieve strong per-label F1 scores</li>
+<li><strong>Near_Full</strong> is the hardest class (fewest samples ~200)</li>
+<li>Custom CNN and MobileNetV2 each have strengths on different defect types</li>
+<li>The per-label class weights in focal loss successfully boost rare-class performance</li>
+</ul>
+</section>
+<section id="phase-2-from-8-base-types-to-38-defect-patterns" class="slide level2">
+<h2>Phase 2: From 8 Base Types to 38 Defect Patterns</h2>
+<p>We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all <strong>38 defect patterns.</strong></p>
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 1 Model</strong><br><br>Detects 8 base defect types<br>(Center, Donut, Scratch, etc.)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br><br>Classifies all 38 patterns<br>(single + combinations)
+</td>
+</tr>
+</tbody></table>
+<ul>
+<li>The Phase 1 model already learned <strong>how to read wafer maps</strong> — it knows what edges, clusters, and rings look like</li>
+<li>We <strong>keep that knowledge</strong> and add a new layer that learns to distinguish all 38 specific patterns</li>
+<li>This is more efficient than training a brand new model from scratch — we’re building on what’s already been learned</li>
+<li>The final model picks the <strong>single most likely pattern</strong> out of 38 for each wafer</li>
+</ul>
+</section>
+<section id="phase-2-results-full-confusion-matrix-3838" class="slide level2">
+<h2>Phase 2 Results — Full Confusion Matrix (38×38)</h2>
+
+<img data-src="images/cMatrixFull.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<section id="phase-2-results-single-normal-patterns" class="slide level2">
+<h2>Phase 2 Results — Single / Normal Patterns</h2>
+
+<img data-src="images/ConfMat1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<section id="phase-2-results-double-combinations" class="slide level2">
+<h2>Phase 2 Results — Double Combinations</h2>
+
+<img data-src="images/confMat2.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<section id="phase-2-results-triple-combinations" class="slide level2">
+<h2>Phase 2 Results — Triple Combinations</h2>
+
+<img data-src="images/confMat3.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<section id="phase-2-results-quadruple-combinations" class="slide level2">
+<h2>Phase 2 Results — Quadruple Combinations</h2>
+
+<img data-src="images/confMat4.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<section id="final-model-comparison" class="slide level2">
+<h2>Final Model Comparison</h2>
+<table style="font-size: 0.8em; margin: 2em auto;">
+<thead>
+<tr>
+<th>
+</th>
+<th>
+Phase 1 — Custom CNN<br>(8-label)
+</th>
+<th>
+Phase 1 — MobileNetV2<br>(8-label)
+</th>
+<th>
+Phase 2 — Custom CNN<br>(38-class)
+</th>
+<th>
+Phase 2 — MobileNetV2<br>(38-class)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<strong>Macro F1</strong>
+</td>
+<td>
+0.9779
+</td>
+<td>
+0.8998
+</td>
+<td>
+0.9736
+</td>
+<td>
+0.9667
+</td>
+</tr>
+<tr>
+<td>
+<strong>Weighted F1</strong>
+</td>
+<td>
+0.9905
+</td>
+<td>
+0.8847
+</td>
+<td>
+0.9735
+</td>
+<td>
+0.9658
+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Our <strong>Custom CNN outperformed MobileNetV2</strong> in both phases</li>
+<li>The <strong>Phase 2 Custom CNN (38-class)</strong> is our final production model — it can identify all 38 defect patterns with <strong>97%+ accuracy</strong></li>
+<li>Building our own model from scratch proved more effective than using a pre-trained one for this task</li>
+</ul>
+</section>
+<section id="live-inference-demo" class="slide level2">
+<h2>Live Inference Demo</h2>
+<ul>
+<li>Dashboard link</li>
+</ul>
+</section>
+<section id="summary" class="slide level2">
+<h2>Summary</h2>
+<p><strong>Our Custom CNN Pipeline:</strong></p>
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Phase 1</strong><br><br>Train our CNN to detect<br>8 base defect types
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Phase 2</strong><br><br>Reuse Phase 1 knowledge<br>to classify all 38 patterns
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Final Model</strong><br><br>38-class Custom CNN<br>97%+ accuracy
+</td>
+</tr>
+</tbody></table>
+<p><strong>Benchmark Comparison:</strong></p>
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>MobileNetV2</strong><br><br>Google’s pre-trained<br>model (2.6M params)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Same tasks</strong><br><br>Phase 1 (8 types)<br>Phase 2 (38 patterns)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 180px; vertical-align: middle;">
+<strong>Result</strong><br><br>Our CNN outperformed<br>on both phases
+</td>
+</tr>
+</tbody></table>
+<p>Building our own model from scratch proved more effective than using a pre-trained one for this specialized task.</p>
+</section>
+<section class="slide level2">
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">
+Thank You
+</h2>
+<br>
+<p>
+<strong>Questions?</strong>
+</p>
+</div>
+</div>
+</section>
+<section class="slide level2">
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">
+Appendix
+</h2>
+</div>
+</div>
+</section>
+<section id="the-8-base-defect-types" class="slide level2 smaller" data-visibility="uncounted">
+<h2>The 8 Base Defect Types</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Defect</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Center</strong></td>
+<td>Defects clustered at wafer center</td>
+</tr>
+<tr class="even">
+<td><strong>Donut</strong></td>
+<td>Ring-shaped pattern in the middle</td>
+</tr>
+<tr class="odd">
+<td><strong>Edge_Loc</strong></td>
+<td>Localized defects near the edge</td>
+</tr>
+<tr class="even">
+<td><strong>Edge_Ring</strong></td>
+<td>Defects forming a ring at the edge</td>
+</tr>
+<tr class="odd">
+<td><strong>Loc</strong></td>
+<td>Localized cluster anywhere</td>
+</tr>
+<tr class="even">
+<td><strong>Near_Full</strong></td>
+<td>Almost entire wafer is defective</td>
+</tr>
+<tr class="odd">
+<td><strong>Scratch</strong></td>
+<td>Linear scratch pattern</td>
+</tr>
+<tr class="even">
+<td><strong>Random</strong></td>
+<td>Randomly distributed defects</td>
+</tr>
+</tbody>
+</table>
+<p>Plus <strong>Normal</strong> (no defects) and <strong>29 combination patterns</strong> (e.g., Center+Scratch)</p>
+
+<img data-src="images/og8.png" class="quarto-figure quarto-figure-center r-stretch" style="width:95.0%"></section>
+<section id="key-terms" class="slide level2 smaller" data-visibility="uncounted">
+<h2>Key Terms</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<h3 id="activation-functions">Activation Functions</h3>
+<ul>
+<li><strong>ReLU</strong> — hidden layers; if input &gt; 0 pass through, else 0. Simple and avoids vanishing gradients</li>
+<li><strong>Sigmoid</strong> — Phase 1 output; squashes to 0–1 per label. Each neuron independently says yes/no</li>
+<li><strong>Softmax</strong> — Phase 2 output; converts scores to probabilities that sum to 1</li>
+</ul>
+<h3 id="loss-functions">Loss Functions</h3>
+<ul>
+<li><strong>Binary Focal Loss</strong> (Phase 1) — down-weights easy examples, focuses on hard/rare ones</li>
+<li><strong>Sparse Categorical Crossentropy</strong> (Phase 2) — standard multi-class loss with class weights</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<h3 id="regularization">Regularization</h3>
+<ul>
+<li><strong>Batch Normalization</strong> — normalizes layer inputs → faster, more stable training</li>
+<li><strong>Dropout (0.5)</strong> — randomly silences 50% of neurons → prevents overfitting</li>
+<li><strong>GlobalAveragePooling2D</strong> — averages each feature map instead of flattening → fewer parameters</li>
+<li><strong>Early Stopping</strong> — stops training when validation loss plateaus</li>
+<li><strong>Learning Rate</strong> - How big a step the model takes when updating its weights. Too big = overshooting; too small = too slow.</li>
+</ul>
+</div></div>
+</section>
+<section id="what-is-transfer-learning" class="slide level2 smaller" data-visibility="uncounted">
+<h2>What is Transfer Learning?</h2>
+<div class="columns">
+<div class="column" style="width:55%;">
+<p><strong>Transfer learning</strong> means reusing knowledge from one task to improve performance on another.</p>
+<p><strong>Analogy:</strong> Imagine hiring someone who already knows how to identify shapes, edges, and textures, and just teaching them the <em>specific</em> wafer defect categories.</p>
+<p><strong>We use transfer learning twice in this project:</strong></p>
+<ol type="1">
+<li><strong>Phase 1 → Phase 2:</strong> First learn to predict the 8 base defect types, then transfer that learned knowledge to predict all 38 defect patterns</li>
+<li><strong>MobileNetV2 → Our task:</strong> Reuse a pre-trained model (trained on millions of images) as a feature extractor, and only train a new classification head on top</li>
+</ol>
+</div><div class="column" style="width:45%;">
+<p><strong>Two forms of transfer learning:</strong></p>
+<table class="caption-top">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 42%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>From</th>
+<th>To</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Ours</strong></td>
+<td>Phase 1 (8 types)</td>
+<td>Phase 2 (38 patterns)</td>
+</tr>
+<tr class="even">
+<td><strong>MobileNetV2</strong></td>
+<td>ImageNet (millions of images)</td>
+<td>Wafer defect classification</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+</section>
+<section id="custom-cnn-architecture" class="slide level2 smaller" data-visibility="uncounted">
+<h2>Custom CNN Architecture</h2>
+<p><strong>Phase 1 Task:</strong> Predict which of the 8 base defect types are present (multi-label, 8 sigmoid outputs)</p>
+<p><strong>Model: custom_cnn — Total params: 424,264 (1.62 MB)</strong></p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Shape</th>
+<th style="text-align: right;">Params</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>input_image (Input)</td>
+<td>(52, 52, 3)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>conv2d (Conv2D)</td>
+<td>(52, 52, 32)</td>
+<td style="text-align: right;">896</td>
+</tr>
+<tr class="odd">
+<td>batch_norm</td>
+<td>(52, 52, 32)</td>
+<td style="text-align: right;">128</td>
+</tr>
+<tr class="even">
+<td>activation (ReLU)</td>
+<td>(52, 52, 32)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>max_pooling2d</td>
+<td>(26, 26, 32)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>conv2d_1 (Conv2D)</td>
+<td>(26, 26, 64)</td>
+<td style="text-align: right;">18,496</td>
+</tr>
+<tr class="odd">
+<td>batch_norm_1</td>
+<td>(26, 26, 64)</td>
+<td style="text-align: right;">256</td>
+</tr>
+<tr class="even">
+<td>activation_1 (ReLU)</td>
+<td>(26, 26, 64)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>max_pooling2d_1</td>
+<td>(13, 13, 64)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>conv2d_2 (Conv2D)</td>
+<td>(13, 13, 128)</td>
+<td style="text-align: right;">73,856</td>
+</tr>
+</tbody>
+</table>
+</div><div class="column" style="width:50%;">
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Shape</th>
+<th style="text-align: right;">Params</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>batch_norm_2</td>
+<td>(13, 13, 128)</td>
+<td style="text-align: right;">512</td>
+</tr>
+<tr class="even">
+<td>activation_2 (ReLU)</td>
+<td>(13, 13, 128)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>max_pooling2d_2</td>
+<td>(6, 6, 128)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>conv2d_3 (Conv2D)</td>
+<td>(6, 6, 256)</td>
+<td style="text-align: right;">295,168</td>
+</tr>
+<tr class="odd">
+<td>batch_norm_3</td>
+<td>(6, 6, 256)</td>
+<td style="text-align: right;">1,024</td>
+</tr>
+<tr class="even">
+<td>activation_3 (ReLU)</td>
+<td>(6, 6, 256)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>max_pooling2d_3</td>
+<td>(3, 3, 256)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>global_avg_pool</td>
+<td>(256)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>dense (ReLU)</td>
+<td>(128)</td>
+<td style="text-align: right;">32,896</td>
+</tr>
+<tr class="even">
+<td>dropout (0.5)</td>
+<td>(128)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="odd">
+<td>output (Sigmoid)</td>
+<td>(8)</td>
+<td style="text-align: right;">1,032</td>
+</tr>
+</tbody>
+</table>
+</div></div>
+<p><strong>Design choices:</strong></p>
+<ul>
+<li><strong>Doubling filters (32→256):</strong> Early layers detect simple features (edges), deeper layers detect complex patterns (rings, scratches) — more filters = more capacity for complexity</li>
+<li><strong>3×3 kernels:</strong> Standard efficient choice — captures local spatial relationships</li>
+<li><strong>GlobalAveragePooling</strong> over Flatten: reduces parameters from ~2,304 to 256, fighting overfitting</li>
+</ul>
+</section>
+<section id="mobilenetv2-architecture" class="slide level2" data-visibility="uncounted">
+<h2>MobileNetV2 Architecture</h2>
+<p><strong>Model: mobilenet_transfer — Total params: 2,587,988 (9.87 MB)</strong></p>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Output Shape</th>
+<th style="text-align: right;">Params</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>input_image (Input)</td>
+<td>(52, 52, 3)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>conv2d_4 (Conv2D)</td>
+<td>(52, 52, 3)</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr class="odd">
+<td>resizing (Resizing)</td>
+<td>(224, 224, 3)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>mobilenetv2 (Functional)</td>
+<td>(7, 7, 1280)</td>
+<td style="text-align: right;">2,257,984</td>
+</tr>
+<tr class="odd">
+<td>global_average_pooling2d_1</td>
+<td>(1280)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>dense_1 (Dense, ReLU)</td>
+<td>(256)</td>
+<td style="text-align: right;">327,936</td>
+</tr>
+<tr class="odd">
+<td>dropout_1 (Dropout)</td>
+<td>(256)</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr class="even">
+<td>output (Dense, Sigmoid)</td>
+<td>(8)</td>
+<td style="text-align: right;">2,056</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why MobileNetV2?</strong></p>
+<ul>
+<li>Pre-trained on ImageNet → already knows edges, textures, shapes</li>
+<li>Lightweight architecture → efficient inference</li>
+<li><strong>1×1 Conv projection:</strong> Our data has 3 one-hot channels, not RGB — this layer learns the right mapping</li>
+<li><strong>Frozen backbone:</strong> With only ~38K samples, fine-tuning 2.2M parameters risks overfitting</li>
+</ul>
+</section>
+<section id="phase-2-two-stage-training-details" class="slide level2" data-visibility="uncounted">
+<h2>Phase 2: Two-Stage Training Details</h2>
+<p><strong>Task:</strong> Classify each wafer into exactly one of 38 defect patterns using <strong>softmax</strong>. We reuse the Phase 1 backbone (frozen) and replace the head with Dense(128) → Dropout → Dense(38, softmax).</p>
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Stage A — Head Only</strong><br><br>Backbone: FROZEN<br>LR: 1e-3<br>Epochs: ~30<br>Train new head only
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Stage B — Fine-Tune</strong><br><br>Backbone: Last 25% UNFROZEN<br>LR: 1e-5<br>Epochs: ~30<br>Fine-tune end-to-end
+</td>
+</tr>
+</tbody></table>
+<p><strong>Why two stages?</strong></p>
+<ul>
+<li><strong>Stage A (head-only):</strong> The new Dense layers have random weights. Training at high LR while backbone is frozen lets them “catch up” without destroying pre-trained weights.</li>
+<li><strong>Stage B (fine-tune):</strong> Unfreeze the last ~25% of backbone, train at very low LR (1e-5). Adapts features for the 38-class task while preserving prior knowledge.</li>
+<li><strong>BatchNorm layers stay frozen</strong> — their statistics are from Phase 1 and shouldn’t shift.</li>
+</ul>
+<p><strong>Loss:</strong> <code>sparse_categorical_crossentropy</code> with <strong>balanced class weights</strong></p>
+</section>
+<section id="model-overview" class="slide level2" data-visibility="uncounted">
+<h2>Model Overview</h2>
+<table class="caption-top">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Task</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Phase 1 — Custom CNN</td>
+<td>8 labels</td>
+<td>Sigmoid × 8</td>
+</tr>
+<tr class="even">
+<td>Phase 1 — MobileNetV2</td>
+<td>8 labels</td>
+<td>Sigmoid × 8</td>
+</tr>
+<tr class="odd">
+<td>Phase 2 — Custom CNN</td>
+<td>38 classes</td>
+<td>Softmax × 38</td>
+</tr>
+<tr class="even">
+<td>Phase 2 — MobileNetV2</td>
+<td>38 classes</td>
+<td>Softmax × 38</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="summary-1" class="slide level2" data-visibility="uncounted">
+<h2>Summary</h2>
+<h3 id="what-we-built-1">What We Built</h3>
+<ul>
+<li>A <strong>two-phase deep learning pipeline</strong> for wafer defect classification</li>
+<li><strong>Phase 1:</strong> Multi-label detection of 8 base defect types</li>
+<li><strong>Phase 2:</strong> Precise identification of all 38 defect patterns</li>
+<li>Two architectures: <strong>custom CNN</strong> and <strong>MobileNetV2 transfer learning</strong></li>
+</ul>
+</section>
+<section id="key-technical-decisions" class="slide level2" data-visibility="uncounted">
+<h2>Key Technical Decisions</h2>
+<ul>
+<li><strong>One-hot pixel encoding</strong> → preserves categorical nature</li>
+<li><strong>Focal Loss + class weights</strong> → handles severe imbalance</li>
+<li><strong>Backbone reuse</strong> → leverages Phase 1 knowledge for Phase 2</li>
+<li><strong>Two-stage fine-tuning</strong> → safe adaptation without catastrophic forgetting</li>
+<li><strong>Geometric-only augmentation</strong> → respects discrete pixel states</li>
+</ul>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+<p>Anomaly Detection in Semiconductor Manufacturing</p>
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'slide',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+
+        height: 720,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp("https:\/\/Waferguard\.github\.io\/waferguard-ml\/");
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>
