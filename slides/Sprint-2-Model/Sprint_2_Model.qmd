@@ -322,6 +322,62 @@ We take our trained Phase 1 model (which learned to detect 8 base defect types) 
 - The **Phase 2 Custom CNN (38-class)** is our final production model — it can identify all 38 defect patterns with **97%+ accuracy**
 - Building our own model from scratch proved more effective than using a pre-trained one for this task
 
+## How Accuracy is Measured
+
+**Example wafer - Center + Loc + Scratch**
+
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
+<tr>
+<td style="vertical-align: top; width: 30%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br/><br/>
+<span>Center → 90% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Loc → 95% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Scratch → 88% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br/><br/>
+<em>Above 50% = Yes, Below = No</em>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: center;">
+<strong style="font-size: 1.1em;">Transfer<br/>Learning</strong><br/><br/>
+Freeze Phase 1<br/>knowledge<br/><br/>
+Pass features<br/>to Phase 2
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 22%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br/><br/>
+<span style="color: #888;">Center — 2%</span><br/>
+<span style="color: #888;">Loc+Scratch — 1%</span><br/>
+<span style="color: #4CAF50; font-weight: bold;">Center+Loc+Scratch — 97%</span><br/>
+<span style="color: #888;">Center+Scratch — 0.5%</span><br/>
+<span style="color: #888;">... 34 others &lt;1%</span><br/><br/>
+<em>Highest probability wins</em>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #3A6B35; border-radius: 8px; padding: 15px; text-align: center;">
+<strong style="font-size: 1.1em;">Accuracy Check</strong><br/><br/>
+Predicted:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
+Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
+<span style="color: #4CAF50; font-size: 1.3em;">✓ Correct</span>
+</div>
+</td>
+</tr>
+</table>
+
+- **Phase 1:** Each defect scored independently — above 50% means "present." Accuracy measured per defect type (F1 score)
+- **Phase 2:** Picks the single highest-probability pattern out of 38. Correct if it matches the true label
+- We repeat this for every wafer in the test set — **97%+ are predicted correctly**
+
 ## Live Inference Demo
 
 - Dashboard link
