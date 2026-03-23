@@ -686,6 +686,13 @@
     "text": "Final Model Comparison\n\n\n\n\n\n\nPhase 1 — Custom CNN(8-label)\n\n\nPhase 1 — MobileNetV2(8-label)\n\n\nPhase 2 — Custom CNN(38-class)\n\n\nPhase 2 — MobileNetV2(38-class)\n\n\n\n\n\n\nMacro F1\n\n\n0.9779\n\n\n0.8998\n\n\n0.9736\n\n\n0.9667\n\n\n\n\nWeighted F1\n\n\n0.9905\n\n\n0.8847\n\n\n0.9735\n\n\n0.9658\n\n\n\n\n\nOur Custom CNN outperformed MobileNetV2 in both phases\nThe Phase 2 Custom CNN (38-class) is our final production model — it can identify all 38 defect patterns with 97%+ accuracy\nBuilding our own model from scratch proved more effective than using a pre-trained one for this task"
   },
   {
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#how-accuracy-is-measured",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#how-accuracy-is-measured",
+    "title": "Anomaly Detection in Semiconductor Manufacturing",
+    "section": "How Accuracy is Measured",
+    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each defect scored independently — above 50% means “present.” Accuracy measured per defect type (F1 score)\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nWe repeat this for every wafer in the test set — 97%+ are predicted correctly"
+  },
+  {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#live-inference-demo",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#live-inference-demo",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
