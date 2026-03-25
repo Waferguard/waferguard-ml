@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="WaferGuardML">
-  <meta name="dcterms.date" content="2026-03-23">
+  <meta name="dcterms.date" content="2026-03-25">
   <title>WaferGuard ML Slides – Anomaly Detection in Semiconductor Manufacturing</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -164,7 +164,7 @@ WaferGuardML
 </div>
 </div>
 
-  <p class="date">2026-03-23</p>
+  <p class="date">2026-03-25</p>
 </section>
 <section id="agenda" class="slide level2">
 <h2>Agenda</h2>
@@ -239,13 +239,8 @@ WaferGuardML
 <section id="what-is-a-convolutional-neural-network-cnn" class="slide level2">
 <h2>What is a Convolutional Neural Network (CNN)?</h2>
 <p>A <strong>CNN</strong> is a specialized neural network designed for <strong>images</strong>.</p>
-<p><strong>Key building blocks:</strong></p>
-<ul>
-<li><strong>Conv2D layer</strong> — slides small filters across the image to detect features (edges, corners, textures)</li>
-<li><strong>Pooling layer</strong> — shrinks the image to focus on the most important features</li>
-<li><strong>Dense layer</strong> — combines all detected features to make the final prediction</li>
-</ul>
-<p><strong>Why CNN for wafer maps?</strong> Defect patterns are <em>spatial</em> — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures.</p>
+
+<img data-src="images/cnn.webp" class="quarto-figure quarto-figure-center r-stretch" style="width:100.0%"><p><strong>Why CNN for wafer maps?</strong> Defect patterns are <em>spatial</em> — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures.</p>
 </section>
 <section id="dataset-overview" class="slide level2">
 <h2>Dataset Overview</h2>
@@ -272,7 +267,7 @@ WaferGuardML
 </div>
 </div></div>
 </section>
-<section id="data-preprocessing-pipeline" class="slide level2">
+<section id="data-preprocessing-pipeline" class="slide level2 center middle">
 <h2>Data Preprocessing Pipeline</h2>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
 <tbody><tr>
@@ -297,12 +292,6 @@ One-Hot Encode<br>52×52×3<br>3 channels
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
 Stratified Split<br>70 / 15 / 15
 </td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
-→
-</td>
-<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
-Augmentation<br>Rotation + Flip
-</td>
 </tr>
 </tbody></table>
 <aside class="notes">
@@ -320,14 +309,75 @@ Augmentation<br>Rotation + Flip
           display:block!important;
       }</style></aside>
 </section>
-<section id="train-validation-test-split" class="slide level2">
-<h2>Train / Validation / Test Split</h2>
+<section id="stratified-split-ensures-all-38-defect-patterns-in-every-set" class="slide level2 center">
+<h2>Stratified Split Ensures All 38 Defect Patterns in Every Set</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
-<p><strong>Split ratio:</strong> 70% / 15% / 15%</p>
-<p><strong>Challenge:</strong> With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.</p>
-<p><strong>Solution: Stratified splitting</strong> — we convert each 8-dim one-hot label to a string key (e.g., <code>"10100000"</code> = Center+Edge_Loc) and stratify on these keys. This guarantees <strong>all 38 patterns appear in every split</strong>.</p>
-</div><div class="column" style="width:50%;">
+<div class="stretch">
+<div style="
+display:flex;
+align-items:center;
+justify-content:center;
+gap:18px;
+font-size:0.75em;
+height:100%;
+margin-top:20%;
+">
+<!-- DATASET -->
+<div style="
+background:#2C2C2C; 
+padding:16px; 
+border-radius:10px; 
+width:150px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+">
+<div style="font-size:1.2em;">
+📦
+</div>
+<p><b>Dataset</b><br> <span style="color:#CCCCCC;">38 patterns</span><br> <span style="color:#888888;">Rare (~200)</span></p>
+</div>
+<!-- ARROW -->
+<div style="font-size:1.6em; color:#888;">
+→
+</div>
+<!-- RANDOM SPLIT -->
+<div style="
+background:#3A3A3A; 
+padding:16px; 
+border-radius:10px; 
+width:160px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+">
+<div style="font-size:1.2em;">
+⚠️
+</div>
+<p><b>Random Split</b><br> <span style="color:#FF6B6B;">Missing patterns</span><br> <span style="color:#AAAAAA;">in Val/Test</span></p>
+</div>
+<!-- ARROW -->
+<div style="font-size:1.6em; color:#888;">
+→
+</div>
+<!-- STRATIFIED SPLIT -->
+<div style="
+background:#1E6F5C; 
+padding:16px; 
+border-radius:10px; 
+width:170px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.4);
+">
+<div style="font-size:1.2em;">
+✅
+</div>
+<p><b>Stratified Split</b><br> <span style="color:#DFFFE2;">All 38 preserved</span><br> <span style="color:#BFE3D8;">Train / Val / Test</span></p>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:10%;">
+
+</div><div class="column" style="width:30%;">
 <table class="caption-top">
 <thead>
 <tr class="header">
@@ -419,17 +469,16 @@ Augmentation<br>Rotation + Flip
 </section>
 <section id="phase-1-detecting-the-8-base-defect-types" class="slide level2">
 <h2>Phase 1: Detecting the 8 Base Defect Types</h2>
-<p><strong>Goal:</strong> Look at a wafer map and identify which of the 8 basic defect types are present — a wafer can have more than one at the same time.</p>
 <div class="columns">
 <div class="column" style="width:50%;">
-<h3 id="what-we-built">What we built</h3>
-<ul>
-<li>Build from scratch</li>
-<li>A lightweight model designed for our 52×52 wafer images</li>
-<li>Learns to recognize defect shapes like rings, scratches, and clusters directly from our data</li>
-<li>Small and efficient — only <strong>424K parameters</strong></li>
-</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/phase1.webp" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
 </div><div class="column" style="width:50%;">
+<h3 id="output-threshold-50">Output (Threshold = 50%)</h3>
+<p>Center = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌</p>
 <h3 id="how-we-validated-it">How we validated it</h3>
 <ul>
 <li>Compared against MobileNetV2 — a model Google trained on millions of images</li>
@@ -437,8 +486,19 @@ Augmentation<br>Rotation + Flip
 </ul>
 </div></div>
 </section>
-<section id="phase-1-training-configuration" class="slide level2 smaller">
-<h2>Phase 1 Training Configuration</h2>
+<section id="custom-cnn-outperforms-mobilenetv2" class="slide level2">
+<h2>Custom CNN outperforms MobileNetV2</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/modelsEval.png" class="quarto-figure quarto-figure-center" style="width:60.0%"></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/modelsEval1.png" class="quarto-figure quarto-figure-center" style="width:60.0%"></p>
+</figure>
+</div>
+<aside class="notes">
 <table class="caption-top">
 <colgroup>
 <col style="width: 47%">
@@ -490,21 +550,17 @@ Augmentation<br>Rotation + Flip
 </tr>
 </tbody>
 </table>
-<p><em>AUC and Loss Graphs of Custom CNN and MobileNetV2</em></p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/modelsEval.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
-</figure>
-</div>
-</div><div class="column" style="width:50%;">
-<div class="quarto-figure quarto-figure-center">
-<figure>
-<p><img data-src="images/modelsEval1.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
-</figure>
-</div>
-</div></div>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="phase-1-results" class="slide level2">
 <h2>Phase 1 Results</h2>
@@ -520,25 +576,46 @@ Augmentation<br>Rotation + Flip
 <section id="phase-2-from-8-base-types-to-38-defect-patterns" class="slide level2">
 <h2>Phase 2: From 8 Base Types to 38 Defect Patterns</h2>
 <p>We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all <strong>38 defect patterns.</strong></p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/phase2.webp" class="quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
 <tbody><tr>
 <td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 1 Model</strong><br><br>Detects 8 base defect types<br>(Center, Donut, Scratch, etc.)
+<strong>Transfer learning from Phase 1 Model</strong><br><br>Detects 8 base defect patterns<br>(Center, Donut, Scratch, etc.)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
 →
 </td>
 <td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 2 Model</strong><br><br>Classifies all 38 patterns<br>(single + combinations)
+<strong>Phase 2 Model</strong><br><br>Classify all 38 defect patterns<br>(base + combinations)
 </td>
 </tr>
 </tbody></table>
+</div></div>
+<aside class="notes">
 <ul>
 <li>The Phase 1 model already learned <strong>how to read wafer maps</strong> — it knows what edges, clusters, and rings look like</li>
 <li>We <strong>keep that knowledge</strong> and add a new layer that learns to distinguish all 38 specific patterns</li>
 <li>This is more efficient than training a brand new model from scratch — we’re building on what’s already been learned</li>
 <li>The final model picks the <strong>single most likely pattern</strong> out of 38 for each wafer</li>
 </ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
 </section>
 <section id="phase-2-results-full-confusion-matrix-3838" class="slide level2">
 <h2>Phase 2 Results — Full Confusion Matrix (38×38)</h2>
@@ -547,7 +624,23 @@ Augmentation<br>Rotation + Flip
 <section id="phase-2-results-single-normal-patterns" class="slide level2">
 <h2>Phase 2 Results — Single / Normal Patterns</h2>
 
-<img data-src="images/ConfMat1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"></section>
+<img data-src="images/ConfMat1.png" class="quarto-figure quarto-figure-center r-stretch" style="width:85.0%"><aside class="notes">
+<ul>
+<li>Actual random defects are often misclassified as Near Full. These two are the low imbalance defect types.</li>
+<li>Edge ring and Edge loc are confused with each other.</li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
 <section id="phase-2-results-double-combinations" class="slide level2">
 <h2>Phase 2 Results — Double Combinations</h2>
 
@@ -1118,7 +1211,7 @@ Appendix
 </section>
 <section id="summary-1" class="slide level2" data-visibility="uncounted">
 <h2>Summary</h2>
-<h3 id="what-we-built-1">What We Built</h3>
+<h3 id="what-we-built">What We Built</h3>
 <ul>
 <li>A <strong>two-phase deep learning pipeline</strong> for wafer defect classification</li>
 <li><strong>Phase 1:</strong> Multi-label detection of 8 base defect types</li>

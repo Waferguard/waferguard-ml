@@ -555,7 +555,7 @@ Image 3 shape: (52, 52)
 </section>
 <section id="step-1-data-preprocessing" class="level2">
 <h2 class="anchored" data-anchor-id="step-1-data-preprocessing">Step 1 — Data Preprocessing</h2>
-<p>Convert each <code>(52, 52)</code> image to <code>(52, 52, 4)</code> via one-hot encoding of the 4 pixel states: - Channel 0: blank (pixel == 0) - Channel 1: normal die (pixel == 1) - Channel 2: broken die (pixel == 2) - Channel 3: undocumented state (pixel == 3, found in data exploration)</p>
+<p>Convert each <code>(52, 52)</code> image to <code>(52, 52, 3)</code> via one-hot encoding of the 3 pixel states: - Channel 0: blank (pixel == 0) - Channel 1: normal die (pixel == 1) - Channel 2: broken die (pixel == 2)</p>
 <p>This preserves the categorical nature of the data — these are discrete states, not intensity values.</p>
 <div id="3c885c97" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot encode pixel values: (N, 52, 52) -&gt; (N, 52, 52, 3)</span></span>

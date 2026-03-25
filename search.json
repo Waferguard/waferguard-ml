@@ -459,7 +459,7 @@
     "href": "wafer_images/model.html#step-1-data-preprocessing",
     "title": "Mixed-type Wafer Map Defect Dataset",
     "section": "Step 1 — Data Preprocessing",
-    "text": "Step 1 — Data Preprocessing\nConvert each (52, 52) image to (52, 52, 4) via one-hot encoding of the 4 pixel states: - Channel 0: blank (pixel == 0) - Channel 1: normal die (pixel == 1) - Channel 2: broken die (pixel == 2) - Channel 3: undocumented state (pixel == 3, found in data exploration)\nThis preserves the categorical nature of the data — these are discrete states, not intensity values.\n\n# One-hot encode pixel values: (N, 52, 52) -&gt; (N, 52, 52, 3)\n# Channel 0 = blank (0), Channel 1 = normal (1), Channel 2 = broken (2).\nimages_onehot = np.eye(3, dtype=np.float32)[images.astype(int)]\n\nprint(\"Original images shape:\", images.shape)\nprint(\"One-hot encoded shape:\", images_onehot.shape)\nprint(\"Labels shape:\", labels.shape)\nprint(\"Dtype:\", images_onehot.dtype)\n\n# Verify encoding: show channel sums for first image\nsample = images_onehot[0]\nprint(\"\\nVerification — channel sums for first image:\")\nfor ch in range(3):\n    print(f\"  Channel {ch} (pixel={ch}): {sample[:, :, ch].sum():.0f} pixels\")\n\nOriginal images shape: (38015, 52, 52)\nOne-hot encoded shape: (38015, 52, 52, 3)\nLabels shape: (38015, 8)\nDtype: float32\n\nVerification — channel sums for first image:\n  Channel 0 (pixel=0): 643 pixels\n  Channel 1 (pixel=1): 1441 pixels\n  Channel 2 (pixel=2): 620 pixels"
+    "text": "Step 1 — Data Preprocessing\nConvert each (52, 52) image to (52, 52, 3) via one-hot encoding of the 3 pixel states: - Channel 0: blank (pixel == 0) - Channel 1: normal die (pixel == 1) - Channel 2: broken die (pixel == 2)\nThis preserves the categorical nature of the data — these are discrete states, not intensity values.\n\n# One-hot encode pixel values: (N, 52, 52) -&gt; (N, 52, 52, 3)\n# Channel 0 = blank (0), Channel 1 = normal (1), Channel 2 = broken (2).\nimages_onehot = np.eye(3, dtype=np.float32)[images.astype(int)]\n\nprint(\"Original images shape:\", images.shape)\nprint(\"One-hot encoded shape:\", images_onehot.shape)\nprint(\"Labels shape:\", labels.shape)\nprint(\"Dtype:\", images_onehot.dtype)\n\n# Verify encoding: show channel sums for first image\nsample = images_onehot[0]\nprint(\"\\nVerification — channel sums for first image:\")\nfor ch in range(3):\n    print(f\"  Channel {ch} (pixel={ch}): {sample[:, :, ch].sum():.0f} pixels\")\n\nOriginal images shape: (38015, 52, 52)\nOne-hot encoded shape: (38015, 52, 52, 3)\nLabels shape: (38015, 8)\nDtype: float32\n\nVerification — channel sums for first image:\n  Channel 0 (pixel=0): 643 pixels\n  Channel 1 (pixel=1): 1441 pixels\n  Channel 2 (pixel=2): 620 pixels"
   },
   {
     "objectID": "wafer_images/model.html#step-2-train-validation-test-split",
@@ -592,7 +592,7 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#what-is-a-convolutional-neural-network-cnn",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "What is a Convolutional Neural Network (CNN)?",
-    "text": "What is a Convolutional Neural Network (CNN)?\nA CNN is a specialized neural network designed for images.\nKey building blocks:\n\nConv2D layer — slides small filters across the image to detect features (edges, corners, textures)\nPooling layer — shrinks the image to focus on the most important features\nDense layer — combines all detected features to make the final prediction\n\nWhy CNN for wafer maps? Defect patterns are spatial — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures."
+    "text": "What is a Convolutional Neural Network (CNN)?\nA CNN is a specialized neural network designed for images.\n\nWhy CNN for wafer maps? Defect patterns are spatial — a “ring” defect forms a circle, a “scratch” forms a line. CNNs are built to detect exactly these kinds of spatial structures."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#dataset-overview",
@@ -606,28 +606,28 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#data-preprocessing-pipeline",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Data Preprocessing Pipeline",
-    "text": "Data Preprocessing Pipeline\n\n\n\nRaw Images52×52Values: 0,1,2,3\n\n\n→\n\n\nCleanPixel 3 → 0\n\n\n→\n\n\nOne-Hot Encode52×52×33 channels\n\n\n→\n\n\nStratified Split70 / 15 / 15\n\n\n→\n\n\nAugmentationRotation + Flip\n\n\n\n\nWhy one-hot encode pixels? Pixel values 0, 1, 2 are categorical** (blank, normal, broken) — not ordered intensities. Treating them as numbers (0 &lt; 1 &lt; 2) would imply a false relationship. One-hot encoding gives each state its own channel, preserving the categorical nature.\nWhy only geometric augmentation? Since pixels represent discrete states (not colors), we can only apply spatial transforms** (90° rotations, flips) that don’t alter the categorical values. Color jitter or elastic deformation would corrupt the data."
+    "text": "Data Preprocessing Pipeline\n\n\n\nRaw Images52×52Values: 0,1,2,3\n\n\n→\n\n\nCleanPixel 3 → 0\n\n\n→\n\n\nOne-Hot Encode52×52×33 channels\n\n\n→\n\n\nStratified Split70 / 15 / 15\n\n\n\n\nWhy one-hot encode pixels? Pixel values 0, 1, 2 are categorical** (blank, normal, broken) — not ordered intensities. Treating them as numbers (0 &lt; 1 &lt; 2) would imply a false relationship. One-hot encoding gives each state its own channel, preserving the categorical nature.\nWhy only geometric augmentation? Since pixels represent discrete states (not colors), we can only apply spatial transforms** (90° rotations, flips) that don’t alter the categorical values. Color jitter or elastic deformation would corrupt the data."
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#train-validation-test-split",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#train-validation-test-split",
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#stratified-split-ensures-all-38-defect-patterns-in-every-set",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#stratified-split-ensures-all-38-defect-patterns-in-every-set",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Train / Validation / Test Split",
-    "text": "Train / Validation / Test Split\n\n\nSplit ratio: 70% / 15% / 15%\nChallenge: With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.\nSolution: Stratified splitting — we convert each 8-dim one-hot label to a string key (e.g., \"10100000\" = Center+Edge_Loc) and stratify on these keys. This guarantees all 38 patterns appear in every split.\n\n\n\n\nSplit\nSamples\nUnique Patterns\n\n\n\n\nTrain\n26,610\n38\n\n\nVal\n5,702\n38\n\n\nTest\n5,703\n38\n\n\n\nPer-Label Sample Counts\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
+    "section": "Stratified Split Ensures All 38 Defect Patterns in Every Set",
+    "text": "Stratified Split Ensures All 38 Defect Patterns in Every Set\n\n\n\n\n\n\n\n📦\n\nDataset 38 patterns Rare (~200)\n\n\n\n→\n\n\n\n\n⚠️\n\nRandom Split Missing patterns in Val/Test\n\n\n\n→\n\n\n\n\n✅\n\nStratified Split All 38 preserved Train / Val / Test\n\n\n\n\n\n\n\n\n\nSplit\nSamples\nUnique Patterns\n\n\n\n\nTrain\n26,610\n38\n\n\nVal\n5,702\n38\n\n\nTest\n5,703\n38\n\n\n\nPer-Label Sample Counts\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-detecting-the-8-base-defect-types",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-detecting-the-8-base-defect-types",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Phase 1: Detecting the 8 Base Defect Types",
-    "text": "Phase 1: Detecting the 8 Base Defect Types\nGoal: Look at a wafer map and identify which of the 8 basic defect types are present — a wafer can have more than one at the same time.\n\n\nWhat we built\n\nBuild from scratch\nA lightweight model designed for our 52×52 wafer images\nLearns to recognize defect shapes like rings, scratches, and clusters directly from our data\nSmall and efficient — only 424K parameters\n\n\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
+    "text": "Phase 1: Detecting the 8 Base Defect Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
   },
   {
-    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-training-configuration",
-    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-training-configuration",
+    "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#custom-cnn-outperforms-mobilenetv2",
+    "href": "slides/Sprint-2-Model/Sprint_2_Model.html#custom-cnn-outperforms-mobilenetv2",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
-    "section": "Phase 1 Training Configuration",
-    "text": "Phase 1 Training Configuration\n\n\n\n\n\n\n\n\nParameter\nValue\nWhy\n\n\n\n\nLoss\nBinary Focal Loss (γ=2.0)\nHandles class imbalance\n\n\nOptimizer\nAdam (lr=1e-3)\nAdaptive learning rate, fast convergence\n\n\nBatch size\n32\nBalance between stability and speed\n\n\nEpochs\nUp to 100\nEarly stopping will cut short\n\n\nReduceLROnPlateau\npatience=5, factor=0.5\nHalves LR when validation plateaus\n\n\nEarlyStopping\npatience=10\nStops when no improvement for 10 epochs\n\n\nMetrics\nAUC + Binary Accuracy\nAUC is threshold-independent\n\n\n\nAUC and Loss Graphs of Custom CNN and MobileNetV2"
+    "section": "Custom CNN outperforms MobileNetV2",
+    "text": "Custom CNN outperforms MobileNetV2\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nParameter\nValue\nWhy\n\n\n\n\nLoss\nBinary Focal Loss (γ=2.0)\nHandles class imbalance\n\n\nOptimizer\nAdam (lr=1e-3)\nAdaptive learning rate, fast convergence\n\n\nBatch size\n32\nBalance between stability and speed\n\n\nEpochs\nUp to 100\nEarly stopping will cut short\n\n\nReduceLROnPlateau\npatience=5, factor=0.5\nHalves LR when validation plateaus\n\n\nEarlyStopping\npatience=10\nStops when no improvement for 10 epochs\n\n\nMetrics\nAUC + Binary Accuracy\nAUC is threshold-independent"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-1-results",
@@ -641,7 +641,7 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-from-8-base-types-to-38-defect-patterns",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Phase 2: From 8 Base Types to 38 Defect Patterns",
-    "text": "Phase 2: From 8 Base Types to 38 Defect Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all 38 defect patterns.\n\n\n\nPhase 1 ModelDetects 8 base defect types(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassifies all 38 patterns(single + combinations)\n\n\n\n\nThe Phase 1 model already learned how to read wafer maps — it knows what edges, clusters, and rings look like\nWe keep that knowledge and add a new layer that learns to distinguish all 38 specific patterns\nThis is more efficient than training a brand new model from scratch — we’re building on what’s already been learned\nThe final model picks the single most likely pattern out of 38 for each wafer"
+    "text": "Phase 2: From 8 Base Types to 38 Defect Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all 38 defect patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base defect patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 defect patterns(base + combinations)\n\n\n\n\n\n\nThe Phase 1 model already learned how to read wafer maps — it knows what edges, clusters, and rings look like\nWe keep that knowledge and add a new layer that learns to distinguish all 38 specific patterns\nThis is more efficient than training a brand new model from scratch — we’re building on what’s already been learned\nThe final model picks the single most likely pattern out of 38 for each wafer"
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-full-confusion-matrix-3838",
@@ -655,7 +655,7 @@
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-single-normal-patterns",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Phase 2 Results — Single / Normal Patterns",
-    "text": "Phase 2 Results — Single / Normal Patterns"
+    "text": "Phase 2 Results — Single / Normal Patterns\n\n\n\nActual random defects are often misclassified as Near Full. These two are the low imbalance defect types.\nEdge ring and Edge loc are confused with each other."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#phase-2-results-double-combinations",
