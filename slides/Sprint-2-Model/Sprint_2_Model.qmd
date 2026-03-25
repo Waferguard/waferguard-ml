@@ -103,11 +103,7 @@ The network **learns by example** — we show it thousands of labeled wafer imag
 
 A **CNN** is a specialized neural network designed for **images**.
 
-**Key building blocks:**
-
-- **Conv2D layer** — slides small filters across the image to detect features (edges, corners, textures)
-- **Pooling layer** — shrinks the image to focus on the most important features
-- **Dense layer** — combines all detected features to make the final prediction
+![](images/cnn.webp){width="100%" fig-align="center"}
 
 **Why CNN for wafer maps?** Defect patterns are *spatial* — a "ring" defect forms a circle, a "scratch" forms a line. CNNs are built to detect exactly these kinds of spatial structures.
 
@@ -136,7 +132,7 @@ A **CNN** is a specialized neural network designed for **images**.
 
 ::::
 
-## Data Preprocessing Pipeline
+## Data Preprocessing Pipeline {.center .middle}
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 20px 0; font-size: 0.7em;">
 <tr>
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">Raw Images<br/>52×52<br/>Values: 0,1,2,3</td>
@@ -146,8 +142,6 @@ A **CNN** is a specialized neural network designed for **images**.
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">One-Hot Encode<br/>52×52×3<br/>3 channels</td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
 <td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">Stratified Split<br/>70 / 15 / 15</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
-<td style="background: #4A4A4A; color: white; padding: 20px 25px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">Augmentation<br/>Rotation + Flip</td>
 </tr>
 </table>
 
@@ -159,19 +153,83 @@ Why only geometric augmentation?**
 Since pixels represent discrete states (not colors), we can only apply **spatial transforms** (90° rotations, flips) that don't alter the categorical values. Color jitter or elastic deformation would corrupt the data.
 :::
 
-## Train / Validation / Test Split
+## Stratified Split Ensures All 38 Defect Patterns in Every Set {.center}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Split ratio:** 70% / 15% / 15%
 
-**Challenge:** With 38 unique label patterns and some having very few samples (~200), a random split could miss entire defect types in the validation or test set.
+::: {.stretch}
+<div style="
+display:flex;
+align-items:center;
+justify-content:center;
+gap:18px;
+font-size:0.75em;
+height:100%;
+margin-top:20%;
+">
 
-**Solution: Stratified splitting** — we convert each 8-dim one-hot label to a string key (e.g., `"10100000"` = Center+Edge_Loc) and stratify on these keys. This guarantees **all 38 patterns appear in every split**.
+<!-- DATASET -->
+<div style="
+background:#2C2C2C; 
+padding:16px; 
+border-radius:10px; 
+width:150px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+">
+<div style="font-size:1.2em;">📦</div>
+<b>Dataset</b><br>
+<span style="color:#CCCCCC;">38 patterns</span><br>
+<span style="color:#888888;">Rare (~200)</span>
+</div>
+
+<!-- ARROW -->
+<div style="font-size:1.6em; color:#888;">→</div>
+
+<!-- RANDOM SPLIT -->
+<div style="
+background:#3A3A3A; 
+padding:16px; 
+border-radius:10px; 
+width:160px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+">
+<div style="font-size:1.2em;">⚠️</div>
+<b>Random Split</b><br>
+<span style="color:#FF6B6B;">Missing patterns</span><br>
+<span style="color:#AAAAAA;">in Val/Test</span>
+</div>
+
+<!-- ARROW -->
+<div style="font-size:1.6em; color:#888;">→</div>
+
+<!-- STRATIFIED SPLIT -->
+<div style="
+background:#1E6F5C; 
+padding:16px; 
+border-radius:10px; 
+width:170px; 
+text-align:center;
+box-shadow:0 4px 12px rgba(0,0,0,0.4);
+">
+<div style="font-size:1.2em;">✅</div>
+<b>Stratified Split</b><br>
+<span style="color:#DFFFE2;">All 38 preserved</span><br>
+<span style="color:#BFE3D8;">Train / Val / Test</span>
+</div>
+
+</div>
 :::
 
-::: {.column width="50%"}
+:::
+
+::: {.column width="10%"}
+
+:::
+::: {.column width="30%"}
 | Split | Samples | Unique Patterns |
 |-------|---------|-----------------|
 | Train | 26,610 | 38 |
@@ -197,19 +255,23 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 ## Phase 1: Detecting the 8 Base Defect Types
 
-**Goal:** Look at a wafer map and identify which of the 8 basic defect types are present — a wafer can have more than one at the same time.
-
 :::: {.columns}
 
 ::: {.column width="50%"}
-### What we built
-- Build from scratch
-- A lightweight model designed for our 52×52 wafer images
-- Learns to recognize defect shapes like rings, scratches, and clusters directly from our data
-- Small and efficient — only **424K parameters**
+![](images/phase1.webp){width="100%" fig-align="center"}
 :::
 
 ::: {.column width="50%"}
+### Output (Threshold = 50%)
+Center = 80% ✅
+Edge Ring = 85% ✅
+Scratch = 80% ✅
+Donut = 30% ❌
+Edge Loc = 40% ❌
+Loc = 10% ❌
+Near Full = 1% ❌
+Random = 23% ❌
+
 ### How we validated it
 - Compared against MobileNetV2 — a model Google trained on millions of images
 - If our custom model matches or beats it, we know our approach works
@@ -217,8 +279,14 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 ::::
 
-## Phase 1 Training Configuration {.smaller}
+## Custom CNN outperforms MobileNetV2
 
+
+![](images/modelsEval.png){width="60%" fig-align="center"}
+
+![](images/modelsEval1.png){width="60%" fig-align="center"}
+
+::: {.notes}
 | Parameter | Value | Why |
 |-----------|-------|-----|
 | **Loss** | Binary Focal Loss (γ=2.0) | Handles class imbalance |
@@ -228,17 +296,7 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 | **ReduceLROnPlateau** | patience=5, factor=0.5 | Halves LR when validation plateaus |
 | **EarlyStopping** | patience=10 | Stops when no improvement for 10 epochs |
 | **Metrics** | AUC + Binary Accuracy | AUC is threshold-independent |
-
-*AUC and Loss Graphs of Custom CNN and MobileNetV2*
-
-:::: {.columns}
-::: {.column width="50%"}
-![](images/modelsEval.png){width="95%" fig-align="center"}
 :::
-::: {.column width="50%"}
-![](images/modelsEval1.png){width="95%" fig-align="center"}
-:::
-::::
 
 
 ## Phase 1 Results
@@ -257,23 +315,39 @@ Since pixels represent discrete states (not colors), we can only apply **spatial
 
 We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all **38 defect patterns.**
 
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](images/phase2.webp){width="70%" fig-align="center"}
+
+:::
+
+::: {.column width="70%"}
+
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
 <tr>
+
 <td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 1 Model</strong><br/><br/>Detects 8 base defect types<br/>(Center, Donut, Scratch, etc.)
+<strong>Transfer learning from Phase 1 Model</strong><br/><br/>Detects 8 base defect patterns<br/>(Center, Donut, Scratch, etc.)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
 <td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 2 Model</strong><br/><br/>Classifies all 38 patterns<br/>(single + combinations)
+<strong>Phase 2 Model</strong><br/><br/>Classify all 38 defect patterns<br/>(base + combinations)
 </td>
 </tr>
 </table>
 
+:::
+
+::::
+
+:::{.notes}
 - The Phase 1 model already learned **how to read wafer maps** — it knows what edges, clusters, and rings look like
 - We **keep that knowledge** and add a new layer that learns to distinguish all 38 specific patterns
 - This is more efficient than training a brand new model from scratch — we're building on what's already been learned
 - The final model picks the **single most likely pattern** out of 38 for each wafer
-
+:::
 
 ## Phase 2 Results — Full Confusion Matrix (38×38)
 
@@ -283,6 +357,11 @@ We take our trained Phase 1 model (which learned to detect 8 base defect types) 
 ## Phase 2 Results — Single / Normal Patterns
 
 ![](images/ConfMat1.png){width="85%" fig-align="center"}
+
+:::{.notes}
+- Actual random defects are often misclassified as Near Full. These two are the low imbalance defect types.
+- Edge ring and Edge loc are confused with each other.
+:::
 
 
 ## Phase 2 Results — Double Combinations
