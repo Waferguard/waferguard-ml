@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import streamlit.components.v1 as components
 
-from app.config import MAX_BATCH_SIZE, MODEL_REGISTRY, TOP_N_DEFAULT
+from app.config import DATASET_PATH, MAX_BATCH_SIZE, MODEL_REGISTRY, TOP_N_DEFAULT
 from app.labels import get_description
 from app.model_utils import load_model, predict_batch, predict_single
 from app.preprocessing import parse_upload, prepare_for_model
@@ -136,7 +136,7 @@ def display_prediction(raw, result, elapsed, top_n):
 
 
 # ── Main content ─────────────────────────────────────────────────────
-tab_single, tab_batch = st.tabs(["Single Wafer", "Batch Upload"])
+tab_single, tab_batch, tab_sample = st.tabs(["Single Wafer", "Batch Upload", "Sample Data"])
 
 # ── Single Wafer Tab ─────────────────────────────────────────────────
 with tab_single:
@@ -207,6 +207,8 @@ with tab_batch:
     )
 
     if uploaded_files:
+        import io
+
         import numpy as np
 
         # Parse all files
@@ -236,6 +238,16 @@ with tab_batch:
                 results = predict_batch(model, prepared)
                 elapsed = time.perf_counter() - t0
 
+            # Download uploaded batch as NPZ
+            buf = io.BytesIO()
+            np.savez_compressed(buf, arr_0=combined)
+            st.download_button(
+                label=f"Download batch ({len(combined)} wafers, .npz)",
+                data=buf.getvalue(),
+                file_name="wafer_batch.npz",
+                mime="application/octet-stream",
+            )
+
             # Summary
             st.subheader(f"Results ({len(results)} wafers)")
             st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
@@ -249,6 +261,116 @@ with tab_batch:
                     c1, c2 = st.columns([1, 1.5])
                     with c1:
                         fig_w = render_wafer_map(combined[r["index"]])
+                        st.pyplot(fig_w)
+                        plt.close(fig_w)
+                    with c2:
+                        fig_c = render_confidence_chart(r["probabilities"], top_n)
+                        st.pyplot(fig_c)
+                        plt.close(fig_c)
+                    st.info(get_description(r["pattern_name"]))
+
+# ── Sample Data Tab ──────────────────────────────────────────────────
+with tab_sample:
+    import io
+
+    import numpy as np
+
+    from app.labels import ID_TO_PATTERN
+
+    st.subheader("Random Sample Generator")
+    st.caption("Generate random wafer map samples from the dataset for demo and testing purposes.")
+
+    if not DATASET_PATH.exists():
+        st.error("Dataset not found. Run `poetry run python data/download_kaggle_data.py` to download it first.")
+    else:
+
+        @st.cache_data
+        def load_dataset():
+            """Load the full wafer map dataset and compute pattern labels."""
+            data = np.load(str(DATASET_PATH), allow_pickle=True)
+            images = data["arr_0"]  # (N, 52, 52)
+            labels = data["arr_1"]  # (N, 8) multi-label
+
+            # Map multi-label rows to pattern IDs (0-37)
+            label_tuples = [tuple(row) for row in labels]
+            unique_patterns = sorted(set(label_tuples))
+            pattern_map = {p: i for i, p in enumerate(unique_patterns)}
+            pattern_ids = np.array([pattern_map[t] for t in label_tuples])
+
+            return images, pattern_ids
+
+        images, pattern_ids = load_dataset()
+
+        # Pattern selection
+        all_pattern_names = [ID_TO_PATTERN[i] for i in range(len(ID_TO_PATTERN))]
+        selected_patterns = st.multiselect(
+            "Select defect patterns",
+            options=all_pattern_names,
+            default=None,
+            help="Leave empty to sample from all patterns.",
+            placeholder="All patterns",
+        )
+
+        # Batch size
+        sample_size = st.slider("Number of samples", min_value=1, max_value=50, value=10)
+
+        if st.button("Generate Samples", type="primary"):
+            # Filter by selected patterns
+            if selected_patterns:
+                from app.labels import PATTERN_TO_ID
+
+                selected_ids = [PATTERN_TO_ID[p] for p in selected_patterns]
+                mask = np.isin(pattern_ids, selected_ids)
+                pool = images[mask]
+            else:
+                pool = images
+
+            if len(pool) == 0:
+                st.error("No samples found for the selected patterns.")
+            else:
+                actual_size = min(sample_size, len(pool))
+                rng = np.random.default_rng()
+                indices = rng.choice(len(pool), size=actual_size, replace=False)
+                sampled = pool[indices]
+
+                # Store in session for display
+                st.session_state["generated_samples"] = sampled
+
+                st.success(f"Generated {actual_size} random wafer map samples.")
+
+        # Display and download generated samples
+        if "generated_samples" in st.session_state:
+            sampled = st.session_state["generated_samples"]
+
+            # Download button
+            buf = io.BytesIO()
+            np.savez_compressed(buf, arr_0=sampled)
+            st.download_button(
+                label=f"Download samples ({len(sampled)} wafers, .npz)",
+                data=buf.getvalue(),
+                file_name="wafer_samples.npz",
+                mime="application/octet-stream",
+            )
+
+            # Classify samples
+            with st.spinner(f"Classifying {len(sampled)} sample(s)..."):
+                t0 = time.perf_counter()
+                prepared = prepare_for_model(sampled)
+                results = predict_batch(model, prepared)
+                elapsed = time.perf_counter() - t0
+
+            st.subheader(f"Results ({len(results)} wafers)")
+            st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
+            df = build_results_dataframe(results)
+            st.dataframe(df, use_container_width=True, hide_index=True)
+
+            # Expandable details
+            st.subheader("Details")
+            for r in results:
+                with st.expander(f"Wafer #{r['index'] + 1} — {r['pattern_name']} ({r['confidence']:.1%})"):
+                    c1, c2 = st.columns([1, 1.5])
+                    with c1:
+                        fig_w = render_wafer_map(sampled[r["index"]])
                         st.pyplot(fig_w)
                         plt.close(fig_w)
                     with c2:

@@ -2,6 +2,11 @@
 
 from pathlib import Path
 
+# Dataset path
+DATASET_PATH = (
+    Path(__file__).resolve().parent.parent / "data" / "mixedtype-wafer-defect-datasets" / "Wafer_Map_Datasets.npz"
+)
+
 # Project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
