@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="waferguard-ml team">
 
-<title>Wafer Maps and Sensors in Semiconductor Manufacturing – WaferGuard ML Slides</title>
+<title>architecture – WaferGuard ML Slides</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -27,22 +26,22 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
-<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap-be3771519f21acc1c5b6733774c6dcd8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-be3771519f21acc1c5b6733774c6dcd8.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -83,254 +82,210 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Wafer Maps and Sensors in Semiconductor Manufacturing</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>waferguard-ml team </p>
-          </div>
-  </div>
-    
-  
-    
-  </div>
-  
+<section id="wafer-map-defect-classification-architecture-model-comparison" class="level1">
+<h1>Wafer Map Defect Classification — Architecture &amp; Model Comparison</h1>
+<section id="pipeline-overview" class="level2">
+<h2 class="anchored" data-anchor-id="pipeline-overview">Pipeline Overview</h2>
+<pre class="mermaid"><code>flowchart TD
+    A[Mixed-Type Wafer Map Dataset&lt;br/&gt;52x52 images, 38 defect patterns] --&gt; B[Preprocessing&lt;br/&gt;One-hot encode pixels → 52x52x3]
+    B --&gt; C[Train / Val / Test Split&lt;br/&gt;70% / 15% / 15%&lt;br/&gt;Iterative stratification]
+    C --&gt; D[Data Augmentation&lt;br/&gt;Rotations, flips, shifts&lt;br/&gt;Training only]
+    D --&gt; E[Focal Loss + Class Weights&lt;br/&gt;Handle class imbalance]
 
+    E --&gt; F[Phase 1: Multi-Label&lt;br/&gt;8 base defect types]
+    E --&gt; G[Phase 2: Multi-Class&lt;br/&gt;38 defect patterns]
 
-</header>
+    F --&gt; F1[Custom CNN]
+    F --&gt; F2[MobileNetV2&lt;br/&gt;Transfer Learning]
 
+    F1 -.-&gt;|Freeze backbone&lt;br/&gt;Replace head| G1[Phase 2 CNN]
+    F2 -.-&gt;|Freeze backbone&lt;br/&gt;Replace head| G2[Phase 2 MobileNetV2]
 
-<section id="key-terminology-foundational-concepts" class="level2">
-<h2 class="anchored" data-anchor-id="key-terminology-foundational-concepts">Key Terminology (Foundational Concepts)</h2>
-<p><strong>Wafer</strong></p>
-<ul>
-<li>A thin, round slice of silicon</li>
-<li>Used as the base to build computer chips</li>
-<li>One wafer holds many chips</li>
-</ul>
-<p><strong>Die (plural: dies)</strong></p>
-<ul>
-<li>A single chip on a wafer</li>
-<li>Each die becomes one usable chip if it passes testing</li>
-</ul>
-<p><strong>Die-Level Testing (Wafer Probe Test)</strong></p>
-<ul>
-<li>Electrical testing done before chips are separated</li>
-<li>Checks if each die works correctly</li>
-</ul>
-<p><strong>Yield</strong></p>
-<ul>
-<li>The percentage of dies that work correctly</li>
-<li>Higher yield means lower manufacturing cost</li>
-</ul>
-<p><strong>Wafer Map</strong></p>
-<ul>
-<li>A 2D picture of a wafer</li>
-<li>Shows which dies passed or failed testing</li>
-</ul>
-<p><strong>Pixel (in Wafer Maps)</strong></p>
-<ul>
-<li>Represents one die</li>
-<li>Stores test results, not colors or brightness</li>
-</ul>
-<p><strong>Defect Pattern</strong></p>
-<ul>
-<li>A visible shape formed by failing dies</li>
-<li>Often points to a manufacturing problem</li>
-<li>Examples: center failures, edge rings, scratches</li>
-</ul>
-<p><strong>Process Sensors</strong></p>
-<ul>
-<li>Devices inside manufacturing machines</li>
-<li>Measure conditions like temperature, pressure, and power</li>
-</ul>
-<p><strong>Process Run / Production Instance</strong></p>
-<ul>
-<li>A single execution of a manufacturing process, often corresponding to the processing of one wafer or lot under a specific set of tool conditions.</li>
-</ul>
+    G --&gt; G1
+    G --&gt; G2</code></pre>
 </section>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>Semiconductor manufacturing is a highly complex, multi-stage process involving hundreds of tightly controlled fabrication steps. Even minor deviations in process conditions can introduce microscopic defects that significantly reduce product yield and reliability.</p>
-<p>To monitor, diagnose, and prevent such defects, manufacturers rely on multiple sources of data collected at different stages of production. Two of the most important and complementary data sources are:</p>
-<ul>
-<li><strong>Wafer map data</strong>, which provides a spatial view of defects across a wafer after fabrication and testing<br>
-</li>
-<li><strong>Process sensor data</strong>, which captures physical and electrical conditions during wafer fabrication</li>
-</ul>
-<p>While both data sources relate to the same manufacturing process, they capture fundamentally different aspects of it. Wafer maps describe <em>where</em> defects occur, whereas sensor data helps explain <em>why</em> those defects may have occurred.</p>
-<p>This presentation explains how wafer map pixels are generated from physical wafers, how process sensors operate in semiconductor manufacturing, and how these two data modalities complement each other in manufacturing analytics.</p>
+<section id="model-architectures" class="level2">
+<h2 class="anchored" data-anchor-id="model-architectures">Model Architectures</h2>
+<section id="phase-1-multi-label-classification-8-defect-types" class="level3">
+<h3 class="anchored" data-anchor-id="phase-1-multi-label-classification-8-defect-types">Phase 1 — Multi-Label Classification (8 defect types)</h3>
+<pre class="mermaid"><code>flowchart LR
+    subgraph CNN ["Custom CNN (424K params)"]
+        direction LR
+        I1[Input&lt;br/&gt;52x52x3] --&gt; C1[Conv2D 32&lt;br/&gt;+BN+ReLU&lt;br/&gt;+MaxPool]
+        C1 --&gt; C2[Conv2D 64&lt;br/&gt;+BN+ReLU&lt;br/&gt;+MaxPool]
+        C2 --&gt; C3[Conv2D 128&lt;br/&gt;+BN+ReLU&lt;br/&gt;+MaxPool]
+        C3 --&gt; C4[Conv2D 256&lt;br/&gt;+BN+ReLU&lt;br/&gt;+MaxPool]
+        C4 --&gt; GAP1[GlobalAvgPool]
+        GAP1 --&gt; D1[Dense 128]
+        D1 --&gt; DR1[Dropout 0.5]
+        DR1 --&gt; O1[Dense 8&lt;br/&gt;sigmoid]
+    end</code></pre>
+<pre class="mermaid"><code>flowchart LR
+    subgraph TL ["MobileNetV2 Transfer Learning (2.6M params)"]
+        direction LR
+        I2[Input&lt;br/&gt;52x52x4] --&gt; P[Conv2D 1x1&lt;br/&gt;Project → 3ch]
+        P --&gt; R[Resize&lt;br/&gt;→ 224x224]
+        R --&gt; MN[MobileNetV2&lt;br/&gt;Frozen ImageNet&lt;br/&gt;backbone]
+        MN --&gt; GAP2[GlobalAvgPool]
+        GAP2 --&gt; D2[Dense 128]
+        D2 --&gt; DR2[Dropout 0.5]
+        DR2 --&gt; O2[Dense 8&lt;br/&gt;sigmoid]
+    end</code></pre>
 </section>
-<section id="die-level-electrical-testing" class="level2">
-<h2 class="anchored" data-anchor-id="die-level-electrical-testing">Die-Level Electrical Testing</h2>
-<p>Before a wafer is cut into individual chips, it undergoes <strong>die-level electrical testing</strong>, commonly referred to as <strong>wafer probe testing</strong>.</p>
-<p>During this stage: - A probe card makes physical contact with each die on the wafer - Electrical characteristics such as continuity, leakage current, and voltage thresholds are measured - Each die is classified as passing, failing, or untested</p>
-<p>The results of this testing stage provide the raw information used to construct wafer maps.</p>
+<section id="phase-2-multi-class-classification-38-patterns" class="level3">
+<h3 class="anchored" data-anchor-id="phase-2-multi-class-classification-38-patterns">Phase 2 — Multi-Class Classification (38 patterns)</h3>
+<p>Reuses Phase 1 convolutional backbones as frozen feature extractors with a new classification head.</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph P2 ["Phase 2 Model (both variants)"]
+        direction LR
+        I3[Input&lt;br/&gt;52x52x3] --&gt; BB[Phase 1 Backbone&lt;br/&gt;Frozen conv layers]
+        BB --&gt; D3[Dense 128 + ReLU]
+        D3 --&gt; DR3[Dropout]
+        DR3 --&gt; O3[Dense 38&lt;br/&gt;softmax]
+    end</code></pre>
+<p><strong>Two-stage training:</strong> 1. <strong>Stage A</strong> — Head-only (backbone frozen), lr=1e-3, ~30 epochs 2. <strong>Stage B</strong> — Unfreeze last 2 conv blocks, fine-tune end-to-end, lr=1e-5, ~30 epochs</p>
 </section>
-<section id="what-is-a-wafer-map" class="level2">
-<h2 class="anchored" data-anchor-id="what-is-a-wafer-map">What Is a Wafer Map?</h2>
-<p>A <strong>wafer map</strong> is a two-dimensional grid representation that preserves the physical layout of dies on a wafer.</p>
-<ul>
-<li>Each grid cell corresponds to a single die</li>
-<li>The spatial arrangement reflects the physical location of dies on the wafer</li>
-<li>The circular shape of the wafer naturally emerges from the grid structure</li>
-</ul>
-<p>Wafer maps allow engineers to visually inspect defect distributions and identify spatial patterns that are difficult to detect using tabular data alone.</p>
 </section>
-<section id="how-wafer-map-pixels-are-generated" class="level2">
-<h2 class="anchored" data-anchor-id="how-wafer-map-pixels-are-generated">How Wafer Map Pixels Are Generated</h2>
-<p>In wafer maps, a <strong>pixel does not represent light intensity</strong>, as in conventional digital images.</p>
-<p>Instead: - Each pixel encodes the <strong>electrical test outcome of a single die</strong> - Pixel values are discrete and symbolic</p>
-<p>Typical encoding: - <code>0</code> → No die or untested location<br>
-- <code>1</code> → Die passed electrical test<br>
-- <code>2</code> → Die failed electrical test</p>
-<p>Thus, each pixel corresponds directly to a physical die on the wafer.</p>
-</section>
-<section id="spatial-defect-patterns" class="level2">
-<h2 class="anchored" data-anchor-id="spatial-defect-patterns">Spatial Defect Patterns</h2>
-<p>Because dies are arranged spatially across the wafer surface, defects often form recognizable geometric patterns:</p>
-<ul>
-<li><strong>Center defects</strong> — commonly associated with lithography focus or exposure issues<br>
-</li>
-<li><strong>Edge-ring defects</strong> — linked to temperature gradients or etching non-uniformity<br>
-</li>
-<li><strong>Scratch defects</strong> — caused by mechanical handling or tool contact<br>
-</li>
-<li><strong>Random defects</strong> — typically resulting from particle contamination</li>
-</ul>
-<p>These spatial regularities make wafer maps well suited for image-based machine learning models such as convolutional neural networks (CNNs).</p>
-</section>
-<section id="process-sensors-in-semiconductor-manufacturing" class="level2">
-<h2 class="anchored" data-anchor-id="process-sensors-in-semiconductor-manufacturing">Process Sensors in Semiconductor Manufacturing</h2>
-<p>Unlike wafer maps, which are generated after fabrication, <strong>process sensors operate during fabrication</strong>.</p>
-<p>Sensors are embedded within manufacturing tools such as etchers, deposition chambers, and lithography systems, and they monitor: - Temperature - Pressure and vacuum levels - Gas flow rates - Plasma density - Radio-frequency (RF) power - Chemical concentrations - Tool health and calibration indicators</p>
-<p>These sensors provide continuous insight into the conditions under which wafers are manufactured.</p>
-</section>
-<section id="characteristics-of-sensor-data" class="level2">
-<h2 class="anchored" data-anchor-id="characteristics-of-sensor-data">Characteristics of Sensor Data</h2>
-<p>Process sensor data differs fundamentally from wafer map data:</p>
-<ul>
-<li>Tabular structure (rows × columns)</li>
-<li>Continuous numeric values</li>
-<li>Time-dependent measurements</li>
-<li>No spatial information</li>
-</ul>
-<p>In datasets such as SECOM: - Each row represents a production instance (e.g., a wafer or manufacturing run) - Each column represents an anonymized sensor measurement - Sensor names are generic (e.g., <code>sensor_0</code>, <code>sensor_1</code>, etc.)</p>
-</section>
-<section id="wafer-maps-vs-process-sensors" class="level2">
-<h2 class="anchored" data-anchor-id="wafer-maps-vs-process-sensors">Wafer Maps vs Process Sensors</h2>
+<section id="training-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="training-configuration">Training Configuration</h2>
 <table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
 <thead>
 <tr class="header">
-<th>Aspect</th>
-<th>Wafer Maps</th>
-<th>Process Sensors</th>
+<th>Setting</th>
+<th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Data structure</td>
-<td>Image (2D grid)</td>
-<td>Tabular</td>
+<td>Loss (Phase 1)</td>
+<td>Binary Focal Loss (gamma=2.0, per-label weights)</td>
 </tr>
 <tr class="even">
-<td>Resolution</td>
-<td>Die-level (spatial)</td>
-<td>Tool-level (global)</td>
+<td>Loss (Phase 2)</td>
+<td>Sparse Categorical Crossentropy + class weights</td>
 </tr>
 <tr class="odd">
-<td>Timing</td>
-<td>Post-fabrication</td>
-<td>During fabrication</td>
+<td>Optimizer</td>
+<td>Adam (lr=1e-3)</td>
 </tr>
 <tr class="even">
-<td>Primary insight</td>
-<td>Defect location</td>
-<td>Process conditions</td>
+<td>Callbacks</td>
+<td>ReduceLROnPlateau (patience=5), EarlyStopping (patience=10)</td>
 </tr>
 <tr class="odd">
-<td>Key question answered</td>
-<td>Where defects occur</td>
-<td>Why defects may occur</td>
+<td>Max Epochs</td>
+<td>100 (Phase 1), 30+30 (Phase 2 stages A+B)</td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="why-both-data-sources-matter" class="level2">
-<h2 class="anchored" data-anchor-id="why-both-data-sources-matter">Why Both Data Sources Matter</h2>
-<p>In real semiconductor manufacturing environments:</p>
-<ul>
-<li>Sensors detect abnormal process behavior during fabrication</li>
-<li>Wafer maps reveal how those abnormalities manifest spatially across the wafer</li>
-<li>Engineers combine both perspectives to identify root causes and improve yield</li>
-</ul>
-<p>This combined view enables: - More accurate defect detection - Faster root-cause analysis - Data-driven process optimization</p>
+<section id="results-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="results-comparison">Results Comparison</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Model</th>
+<th>Macro F1</th>
+<th>Weighted F1</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Phase 1 — Custom CNN (8-label)</strong></td>
+<td><strong>0.9779</strong></td>
+<td><strong>0.9905</strong></td>
+</tr>
+<tr class="even">
+<td>Phase 1 — MobileNetV2 (8-label)</td>
+<td>0.8998</td>
+<td>0.8847</td>
+</tr>
+<tr class="odd">
+<td>Phase 2 — Custom CNN (38-class)</td>
+<td>0.9736</td>
+<td>0.9735</td>
+</tr>
+<tr class="even">
+<td>Phase 2 — MobileNetV2 (38-class)</td>
+<td>0.9667</td>
+<td>0.9658</td>
+</tr>
+</tbody>
+</table>
+<section id="phase-1-per-label-f1-8-base-defect-types" class="level3">
+<h3 class="anchored" data-anchor-id="phase-1-per-label-f1-8-base-defect-types">Phase 1 — Per-Label F1 (8 base defect types)</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Defect Type</th>
+<th>Custom CNN</th>
+<th>MobileNetV2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Center</td>
+<td>1.00</td>
+<td>0.97</td>
+</tr>
+<tr class="even">
+<td>Donut</td>
+<td>1.00</td>
+<td>1.00</td>
+</tr>
+<tr class="odd">
+<td>Edge_Loc</td>
+<td>0.99</td>
+<td>0.75</td>
+</tr>
+<tr class="even">
+<td>Edge_Ring</td>
+<td>0.99</td>
+<td>0.88</td>
+</tr>
+<tr class="odd">
+<td>Loc</td>
+<td>0.99</td>
+<td>0.89</td>
+</tr>
+<tr class="even">
+<td>Near_Full</td>
+<td>0.90</td>
+<td>0.88</td>
+</tr>
+<tr class="odd">
+<td>Scratch</td>
+<td>0.98</td>
+<td>0.84</td>
+</tr>
+<tr class="even">
+<td>Random</td>
+<td>0.97</td>
+<td>0.99</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="example-wafer-map-insight-where-defects-occur" class="level2">
-<h2 class="anchored" data-anchor-id="example-wafer-map-insight-where-defects-occur">Example: Wafer Map Insight (Where Defects Occur)</h2>
-<p><strong>What we observe</strong></p>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
 <ul>
-<li>Many failed dies form a ring near the wafer edge</li>
-<li>The pattern is consistent across multiple wafers</li>
-</ul>
-<p><strong>What this tells us</strong></p>
-<ul>
-<li>The problem is spatial, not random</li>
-<li>Defects are linked to wafer position</li>
-</ul>
-<p><strong>Conclusion</strong> - The issue likely comes from a process that affects wafer edges - Examples: uneven heating or etching near the boundary</p>
-</section>
-<section id="example-sensor-data-insight-why-defects-occur" class="level2">
-<h2 class="anchored" data-anchor-id="example-sensor-data-insight-why-defects-occur">Example: Sensor Data Insight (Why Defects Occur)</h2>
-<p><strong>What we observe</strong></p>
-<ul>
-<li>Temperature sensors show higher values near the end of the process</li>
-<li>Gas flow readings fluctuate outside normal ranges</li>
-</ul>
-<p><strong>What this tells us</strong></p>
-<ul>
-<li>The manufacturing process was unstable</li>
-<li>Tool conditions drifted during production</li>
-</ul>
-<p><strong>Conclusion</strong></p>
-<ul>
-<li>Abnormal process conditions caused the defects</li>
-<li>These sensor signals explain why the wafer map shows failures</li>
-</ul>
-</section>
-<section id="key-takeaways" class="level2">
-<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
-<ul>
-<li>Wafer map pixels represent die-level electrical test outcomes, not optical images</li>
-<li>Each pixel corresponds to a physical die on the wafer</li>
-<li>Process sensors capture fabrication conditions in real time</li>
-<li>Wafer maps show <em>where</em> defects occur</li>
-<li>Sensor data helps explain <em>why</em> defects occur</li>
-<li>Together, they provide a comprehensive view of semiconductor manufacturing quality</li>
-</ul>
-</section>
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<ul>
-<li><p>Kyeong, S., Kim, H., &amp; Kim, S. (2020). Classification of wafer map defects based on deep learning methods with a small amount of data. IEEE Access, 8, 21796–21806. https://www.researchgate.net/publication/339903705</p></li>
-<li><p>Li, Y., Zhang, X., &amp; Wang, J. (2024). Deep learning approaches for wafer defect pattern recognition. arXiv Preprint. https://arxiv.org/html/2411.11029v1</p></li>
-<li><p>JMP Community. (2021). How to make a wafer map in JMP in under 30 seconds. https://community.jmp.com/t5/JMPer-Cable/How-to-make-a-wafer-map-in-JMP-in-under-30-seconds/ba-p/348607</p></li>
-<li><p>MathWorks. (n.d.). Classify defects on wafer maps using deep learning. https://www.mathworks.com/help/vision/ug/classify-defects-on-wafer-maps-using-deep-learning.html</p></li>
-<li><p>PDF.com. (n.d.). Understanding semiconductor data visualization with wafer maps: An introduction. https://www.pdf.com/understanding-semiconductor-data-visualization-with-wafer-maps-an-introduction/</p></li>
-<li><p>Wikipedia contributors. (n.d.). Substrate mapping. https://en.wikipedia.org/wiki/Substrate_mapping</p></li>
+<li>The <strong>Custom CNN consistently outperforms MobileNetV2</strong> across both phases, likely because wafer map patterns (discrete categorical pixels) differ significantly from natural images that ImageNet features were trained on.</li>
+<li>The lightweight Custom CNN (424K params) beats MobileNetV2 (2.6M params) — <strong>6x fewer parameters, better results</strong>.</li>
+<li>Phase 2 models maintain strong performance when scaling from 8 labels to 38 classes, with the Custom CNN backbone achieving 0.97 Macro F1 on all 38 defect patterns.</li>
 </ul>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
