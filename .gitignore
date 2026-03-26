@@ -81,6 +81,8 @@ data/mixedtype-wafer-defect-datasets
 data/secom
 /.quarto/
 **/*.quarto_ipynb
+*/docs/
+.Rhistory
 docs/
 **/slides_files/
 **/training_artifacts/

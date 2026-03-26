@@ -2,7 +2,6 @@ project:
   type: website
   output-dir: docs
   render:
-    - "!wafer_images/architecture.md"
     - "**/*.qmd"
     - "**/*.ipynb"
 
