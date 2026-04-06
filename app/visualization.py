@@ -53,7 +53,7 @@ def render_confidence_chart(probabilities: np.ndarray, top_n: int = 5) -> plt.Fi
     ax.set_facecolor(BG_COLOR)
 
     # Top prediction in green, rest in blue
-    colors = ["#4CAF50" if i == 0 else "#2196F3" for i in range(top_n)]
+    colors = ["#92d400" if i == 0 else "#00a1de" for i in range(top_n)]
 
     # Plot in reverse so highest is at top
     bars = ax.barh(range(top_n), top_probs[::-1], color=colors[::-1], height=0.6)
