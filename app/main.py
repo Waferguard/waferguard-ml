@@ -155,7 +155,8 @@ SIDEBAR_HERO_HTML = """
 with st.sidebar:
     # Sidebar hero card with glow effect
     _sb_html = (
-        SIDEBAR_HERO_HTML.replace("SIDEBAR_CARD_BG", t["bg2"])
+        SIDEBAR_HERO_HTML
+        .replace("SIDEBAR_CARD_BG", t["bg2"])
         .replace("SIDEBAR_LOGO_COLOR", t["logo_color"])
         .replace("SIDEBAR_TEXT_COLOR", t["text"])
         .replace("SIDEBAR_MUTED_COLOR", t["text_muted"])
@@ -186,17 +187,15 @@ with st.sidebar:
     st.markdown(
         f'<span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Size:</span> {info["size"]}'
         f' &nbsp;|&nbsp; <span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Params:</span>'
-        f' {info["params"]}',
+        f" {info['params']}",
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Macro F1:</span>'
-        f' {info["macro_f1"]}',
+        f'<span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Macro F1:</span> {info["macro_f1"]}',
         unsafe_allow_html=True,
     )
     st.markdown(
-        f'<span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Weighted F1:</span>'
-        f' {info["weighted_f1"]}',
+        f'<span style="color: #92d400; font-weight: 600; font-size: 0.9rem;">Weighted F1:</span> {info["weighted_f1"]}',
         unsafe_allow_html=True,
     )
     st.markdown(
@@ -534,7 +533,8 @@ _HERO_TEMPLATE = """
 def build_hero_html(theme):
     """Build hero HTML string adapted to the current theme."""
     return (
-        _HERO_TEMPLATE.replace("THEME_BG", theme["bg"])
+        _HERO_TEMPLATE
+        .replace("THEME_BG", theme["bg"])
         .replace("THEME_CARD", theme["card"])
         .replace("THEME_TEXT_MUTED", theme["text_muted"])
         .replace("THEME_TEXT", theme["text"])
