@@ -25,3 +25,4 @@
 
 - [Project Blueprint](blueprint.html)
 - [Wafer Maps & Sensors Research](slides/wafer-map-pixel/KAN_46.html)
+- [Model Architecture](wafer_images/architecture.html)
