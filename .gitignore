@@ -86,3 +86,5 @@ data/secom
 docs/
 **/slides_files/
 **/training_artifacts/
+requirements.txt
+reports_LOT_001/refactor_demo/batch_summary_LOT_001.json
