@@ -1,7 +1,9 @@
 """Financial impact library extracted from waferguard_financial_impact.ipynb.
 
-Provides functions to load artifacts, run inference, merge predictions,
+Provides pure financial analysis functions: merge predictions, decode labels,
 build batch summaries, compute financial metrics, and save reports.
+
+Fully decoupled from inference and artifact loading (Streamlit-compatible).
 """
 from __future__ import annotations
 
@@ -13,85 +15,56 @@ import pandas as pd
 
 # --- Financial mapping (copied from notebook) ---------------------------------
 FINANCIAL_PARAMS: dict[str, dict] = {
-    "00000000": dict(
-        repair=0, replace=0, dt=0, ylo=0.00, yhi=0.00, priority=5, risk="Normal",
-        process="N/A", action="No action required — wafer passes electrical test",
-    ),
-    "10000000": dict(
-        repair=275_000, replace=6_000_000, dt=2_050_000, ylo=0.10, yhi=0.40,
-        priority=3, risk="High", process="Deposition / Plasma Process",
-        action="Chamber clean & kit replace; RF/temp recalibration; requalification metrology",
-    ),
-    "01000000": dict(
-        repair=130_000, replace=5_250_000, dt=550_000, ylo=0.15, yhi=0.50,
-        priority=4, risk="High", process="CMP (primary) / Lithography Track (secondary)",
-        action="CMP: replace pad & slurry, clean heads; Litho track: chemistry dump/refresh",
-    ),
-    "00100000": dict(
-        repair=110_000, replace=6_000_000, dt=550_000, ylo=0.01, yhi=0.10,
-        priority=5, risk="Medium", process="Diffusion / Thermal Processing",
-        action="Furnace zone temp recalibration; thermocouple/lamp replacement; requalification",
-    ),
-    "00010000": dict(
-        repair=255_000, replace=12_500_000, dt=2_250_000, ylo=0.00, yhi=0.15,
-        priority=3, risk="High", process="Plasma Etch",
-        action="Replace focus ring / edge hardware; chamber clean; RF recalibration",
-    ),
-    "00001000": dict(
-        repair=155_000, replace=8_500_000, dt=2_050_000, ylo=0.01, yhi=0.10,
-        priority=5, risk="Medium", process="Tool-specific (single chamber / handling subsystem)",
-        action="Robot vibration check; chamber wall inspection; targeted chamber clean",
-    ),
-    "00000100": dict(
-        repair=525_000, replace=8_500_000, dt=2_450_000, ylo=0.50, yhi=1.00,
-        priority=1, risk="Critical", process="Major Process Excursion — Containment First",
-        action="IMMEDIATE: lot hold + tool stop; engineering investigation; full requalification",
-    ),
-    "00000010": dict(
-        repair=77_500, replace=5_250_000, dt=550_000, ylo=0.05, yhi=0.50,
-        priority=2, risk="Critical", process="Wafer Handling Path / CMP Contact",
-        action="Contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes",
-    ),
-    "00000001": dict(
-        repair=130_000, replace=None, dt=2_050_000, ylo=0.01, yhi=0.20,
-        priority=5, risk="Medium", process="Environment / Broad Contamination Control",
-        action="FOUP/carrier cleaning; filter inspection; load lock particle monitoring",
-    ),
+    "00000000": {
+        "repair": 0, "replace": 0, "dt": 0, "ylo": 0.00, "yhi": 0.00, "priority": 5, "risk": "Normal",
+        "process": "N/A", "action": "No action required — wafer passes electrical test",
+    },
+    "10000000": {
+        "repair": 275_000, "replace": 6_000_000, "dt": 2_050_000, "ylo": 0.10, "yhi": 0.40,
+        "priority": 3, "risk": "High", "process": "Deposition / Plasma Process",
+        "action": "Chamber clean & kit replace; RF/temp recalibration; requalification metrology",
+    },
+    "01000000": {
+        "repair": 130_000, "replace": 5_250_000, "dt": 550_000, "ylo": 0.15, "yhi": 0.50,
+        "priority": 4, "risk": "High", "process": "CMP (primary) / Lithography Track (secondary)",
+        "action": "CMP: replace pad & slurry, clean heads; Litho track: chemistry dump/refresh",
+    },
+    "00100000": {
+        "repair": 110_000, "replace": 6_000_000, "dt": 550_000, "ylo": 0.01, "yhi": 0.10,
+        "priority": 5, "risk": "Medium", "process": "Diffusion / Thermal Processing",
+        "action": "Furnace zone temp recalibration; thermocouple/lamp replacement; requalification",
+    },
+    "00010000": {
+        "repair": 255_000, "replace": 12_500_000, "dt": 2_250_000, "ylo": 0.00, "yhi": 0.15,
+        "priority": 3, "risk": "High", "process": "Plasma Etch",
+        "action": "Replace focus ring / edge hardware; chamber clean; RF recalibration",
+    },
+    "00001000": {
+        "repair": 155_000, "replace": 8_500_000, "dt": 2_050_000, "ylo": 0.01, "yhi": 0.10,
+        "priority": 5, "risk": "Medium", "process": "Tool-specific (single chamber / handling subsystem)",
+        "action": "Robot vibration check; chamber wall inspection; targeted chamber clean",
+    },
+    "00000100": {
+        "repair": 525_000, "replace": 8_500_000, "dt": 2_450_000, "ylo": 0.50, "yhi": 1.00,
+        "priority": 1, "risk": "Critical", "process": "Major Process Excursion — Containment First",
+        "action": "IMMEDIATE: lot hold + tool stop; engineering investigation; full requalification",
+    },
+    "00000010": {
+        "repair": 77_500, "replace": 5_250_000, "dt": 550_000, "ylo": 0.05, "yhi": 0.50,
+        "priority": 2, "risk": "Critical", "process": "Wafer Handling Path / CMP Contact",
+        "action": "Contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes",
+    },
+    "00000001": {
+        "repair": 130_000, "replace": None, "dt": 2_050_000, "ylo": 0.01, "yhi": 0.20,
+        "priority": 5, "risk": "Medium", "process": "Environment / Broad Contamination Control",
+        "action": "FOUP/carrier cleaning; filter inspection; load lock particle monitoring",
+    },
 }
 
 BIT_TO_SINGLE = {
     7: "10000000", 6: "01000000", 5: "00100000", 4: "00010000",
     3: "00001000", 2: "00000100", 1: "00000010", 0: "00000001",
 }
-
-
-def load_artifacts(artifact_dir: str) -> dict:
-    """Load artifacts.pkl from artifact_dir and return dict with keys.
-
-    Expected keys: X_test (optional), y_class_test (optional), label_mapping,
-    pattern_to_id, id_to_pattern.
-    """
-    import pickle
-
-    path = f"{artifact_dir}/artifacts.pkl"
-    with open(path, "rb") as f:
-        artifacts = pickle.load(f)
-    return artifacts
-
-
-def run_inference(model_cnn_path: str, model_tl_path: str, X_batch: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
-    """Load models and run inference on X_batch.
-
-    Models are loaded inside the function to avoid heavy imports at module import time.
-    Returns (pred_cnn, pred_tl) raw prediction arrays.
-    """
-    import tensorflow as tf
-
-    model_p2_cnn = tf.keras.models.load_model(model_cnn_path)
-    model_p2_tl = tf.keras.models.load_model(model_tl_path)
-    pred_cnn = model_p2_cnn.predict(X_batch, verbose=0)
-    pred_tl = model_p2_tl.predict(X_batch, verbose=0)
-    return pred_cnn, pred_tl
 
 
 def merge_predictions(pred_cnn: np.ndarray, pred_tl: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
@@ -185,14 +158,14 @@ def compute_financials(df_batch: pd.DataFrame, config: dict, financial_params: d
         params = get_params(binary_label)
         y_mid = (params["ylo"] + params["yhi"]) / 2
         freq = float(batch_row.get("batch_freq", 0.0))
-        WPH = config.get("WPH", 100)
+        wph = config.get("WPH", 100)
         value_per_wafer = config.get("VALUE_PER_WAFER", 5_000)
-        PLANNING_HORIZON = config.get("PLANNING_HORIZON", 30)
-        REPAIR_HOURS = config.get("REPAIR_HOURS", 8)
-        daily_loss = freq * y_mid * WPH * value_per_wafer * 24
+        planning_horizon = config.get("PLANNING_HORIZON", 30)
+        repair_hours = config.get("REPAIR_HOURS", 8)
+        daily_loss = freq * y_mid * wph * value_per_wafer * 24
         break_even = (params["repair"] / daily_loss) if daily_loss > 0 else 9_999
-        avoided = daily_loss * PLANNING_HORIZON
-        dt_cost = params["dt"] * REPAIR_HOURS
+        avoided = daily_loss * planning_horizon
+        dt_cost = params["dt"] * repair_hours
         evoa = avoided - params["repair"] - dt_cost
         p_score = daily_loss * (1 / params["priority"]) if params["priority"] > 0 else 0
         rows.append({
@@ -203,7 +176,7 @@ def compute_financials(df_batch: pd.DataFrame, config: dict, financial_params: d
             "avg_confidence": batch_row.get("avg_confidence", 0.0),
             "triage_priority": params["priority"],
             "risk_level": params["risk"],
-            "yield_range": f"{int(params['ylo'] * 100)}%–{int(params['yhi'] * 100)}%",
+            "yield_range": f"{int(params['ylo'] * 100)}%-{int(params['yhi'] * 100)}%",
             "yield_mid": round(y_mid, 3),
             "repair_cost": params["repair"],
             "replacement_cost": params.get("replace"),
