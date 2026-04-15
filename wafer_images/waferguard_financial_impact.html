@@ -164,12 +164,12 @@ It takes the trained models and produces a <strong>ranked financial impact repor
 </div>
 <div id="Jpce7pQ3QrQg" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Configuration: Batch settings and financial assumptions ──────────────────</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>    <span class="co"># Production lot identifier</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="fl">0.70</span>        <span class="co"># Flag predictions below this for manual review</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="dv">100</span>          <span class="co"># Wafers per hour through affected tool</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="dv">5_000</span>        <span class="co"># USD per wafer</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="dv">8</span>            <span class="co"># Estimated downtime hours per repair event</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="dv">30</span>           <span class="co"># Days used for EVoA calculation</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>  <span class="co"># Production lot identifier</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="fl">0.70</span>  <span class="co"># Flag predictions below this for manual review</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Wafers per hour through affected tool</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="dv">5_000</span>  <span class="co"># USD per wafer</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="dv">8</span>  <span class="co"># Estimated downtime hours per repair event</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="dv">30</span>  <span class="co"># Days used for EVoA calculation</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✓ Configuration set"</span>)</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Batch ID         : </span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -297,46 +297,49 @@ Set configuration above, then run this cell to generate reports.</p>
 <span id="cb6-103"><a href="#cb6-103" aria-hidden="true" tabindex="-1"></a>    PLANNING_HORIZON <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"PLANNING_HORIZON"</span>, <span class="dv">30</span>)</span>
 <span id="cb6-104"><a href="#cb6-104" aria-hidden="true" tabindex="-1"></a>    CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"CONFIDENCE_THRESHOLD"</span>, <span class="fl">0.7</span>)</span>
 <span id="cb6-105"><a href="#cb6-105" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> {</span>
-<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>        <span class="st">"WPH"</span>: WPH, <span class="st">"VALUE_PER_WAFER"</span>: VALUE_PER_WAFER,</span>
-<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>        <span class="st">"REPAIR_HOURS"</span>: REPAIR_HOURS, <span class="st">"PLANNING_HORIZON"</span>: PLANNING_HORIZON,</span>
-<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BATCH_ID"</span>: BATCH_ID, <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
-<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a>        <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> CONFIDENCE_THRESHOLD).<span class="bu">sum</span>()),</span>
-<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a>    df_financial2, summary2 <span class="op">=</span> wg_fin.compute_financials(df_batch2, config)</span>
-<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>    <span class="co"># artifacts present: use them directly</span></span>
-<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>    X_batch <span class="op">=</span> artifacts.get(<span class="st">"X_test"</span>)</span>
-<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> X_batch <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Artifacts did not contain X_test; aborting real run."</span>)</span>
-<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">SystemExit</span></span>
-<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a>    model_cnn_path <span class="op">=</span> os.path.join(repo_root, <span class="st">"wafer_images"</span>, <span class="st">"phase2_models"</span>, <span class="st">"model_p2_cnn.keras"</span>)</span>
-<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a>    model_tl_path <span class="op">=</span> os.path.join(repo_root, <span class="st">"wafer_images"</span>, <span class="st">"phase2_models"</span>, <span class="st">"model_p2_tl.keras"</span>)</span>
-<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>    pred_cnn, pred_tl <span class="op">=</span> wg_fin.run_inference(model_cnn_path, model_tl_path, X_batch)</span>
-<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>    class_ids, confidences, use_cnn <span class="op">=</span> wg_fin.merge_predictions(pred_cnn, pred_tl)</span>
-<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a>    id_to_binary <span class="op">=</span> artifacts.get(<span class="st">"id_to_binary"</span>, {})</span>
-<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>    id_to_pattern <span class="op">=</span> artifacts.get(<span class="st">"id_to_pattern"</span>, {})</span>
-<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>    binary_labels, pattern_names <span class="op">=</span> wg_fin.decode_labels(class_ids, id_to_binary, id_to_pattern)</span>
-<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>    df_batch2 <span class="op">=</span> wg_fin.build_batch_df(binary_labels, confidences, artifacts.get(<span class="st">"label_mapping"</span>, {}))</span>
-<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> {</span>
-<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>        <span class="st">"WPH"</span>: <span class="bu">globals</span>().get(<span class="st">"WPH"</span>, <span class="dv">100</span>),</span>
-<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>        <span class="st">"VALUE_PER_WAFER"</span>: <span class="bu">globals</span>().get(<span class="st">"VALUE_PER_WAFER"</span>, <span class="dv">5000</span>),</span>
-<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>        <span class="st">"REPAIR_HOURS"</span>: <span class="bu">globals</span>().get(<span class="st">"REPAIR_HOURS"</span>, <span class="dv">8</span>),</span>
-<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>        <span class="st">"PLANNING_HORIZON"</span>: <span class="bu">globals</span>().get(<span class="st">"PLANNING_HORIZON"</span>, <span class="dv">30</span>),</span>
-<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BATCH_ID"</span>: <span class="bu">globals</span>().get(<span class="st">"BATCH_ID"</span>, <span class="st">"LOT_001"</span>),</span>
-<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
-<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>        <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> <span class="bu">globals</span>().get(<span class="st">"CONFIDENCE_THRESHOLD"</span>, <span class="fl">0.7</span>)).<span class="bu">sum</span>()),</span>
-<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>    df_financial2, summary2 <span class="op">=</span> wg_fin.compute_financials(df_batch2, config)</span>
-<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview and save</span></span>
-<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial preview (top 5) ---"</span>)</span>
-<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial2.head(<span class="dv">5</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Summary payload (truncated) ---"</span>)</span>
-<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(summary2, indent<span class="op">=</span><span class="dv">2</span>)[:<span class="dv">1000</span>])</span>
-<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a>outdir_demo <span class="op">=</span> os.path.join(repo_root, <span class="ss">f"reports_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span>, <span class="st">"refactor_demo"</span>)</span>
-<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a>wg_fin.save_reports(df_batch2, df_financial2, summary2, outdir_demo, BATCH_ID)</span>
-<span id="cb6-145"><a href="#cb6-145" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved refactor reports →"</span>, outdir_demo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-106"><a href="#cb6-106" aria-hidden="true" tabindex="-1"></a>        <span class="st">"WPH"</span>: WPH,</span>
+<span id="cb6-107"><a href="#cb6-107" aria-hidden="true" tabindex="-1"></a>        <span class="st">"VALUE_PER_WAFER"</span>: VALUE_PER_WAFER,</span>
+<span id="cb6-108"><a href="#cb6-108" aria-hidden="true" tabindex="-1"></a>        <span class="st">"REPAIR_HOURS"</span>: REPAIR_HOURS,</span>
+<span id="cb6-109"><a href="#cb6-109" aria-hidden="true" tabindex="-1"></a>        <span class="st">"PLANNING_HORIZON"</span>: PLANNING_HORIZON,</span>
+<span id="cb6-110"><a href="#cb6-110" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BATCH_ID"</span>: BATCH_ID,</span>
+<span id="cb6-111"><a href="#cb6-111" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
+<span id="cb6-112"><a href="#cb6-112" aria-hidden="true" tabindex="-1"></a>        <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> CONFIDENCE_THRESHOLD).<span class="bu">sum</span>()),</span>
+<span id="cb6-113"><a href="#cb6-113" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-114"><a href="#cb6-114" aria-hidden="true" tabindex="-1"></a>    df_financial2, summary2 <span class="op">=</span> wg_fin.compute_financials(df_batch2, config)</span>
+<span id="cb6-115"><a href="#cb6-115" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb6-116"><a href="#cb6-116" aria-hidden="true" tabindex="-1"></a>    <span class="co"># artifacts present: use them directly</span></span>
+<span id="cb6-117"><a href="#cb6-117" aria-hidden="true" tabindex="-1"></a>    X_batch <span class="op">=</span> artifacts.get(<span class="st">"X_test"</span>)</span>
+<span id="cb6-118"><a href="#cb6-118" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> X_batch <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb6-119"><a href="#cb6-119" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"Artifacts did not contain X_test; aborting real run."</span>)</span>
+<span id="cb6-120"><a href="#cb6-120" aria-hidden="true" tabindex="-1"></a>        <span class="cf">raise</span> <span class="pp">SystemExit</span></span>
+<span id="cb6-121"><a href="#cb6-121" aria-hidden="true" tabindex="-1"></a>    model_cnn_path <span class="op">=</span> os.path.join(repo_root, <span class="st">"wafer_images"</span>, <span class="st">"phase2_models"</span>, <span class="st">"model_p2_cnn.keras"</span>)</span>
+<span id="cb6-122"><a href="#cb6-122" aria-hidden="true" tabindex="-1"></a>    model_tl_path <span class="op">=</span> os.path.join(repo_root, <span class="st">"wafer_images"</span>, <span class="st">"phase2_models"</span>, <span class="st">"model_p2_tl.keras"</span>)</span>
+<span id="cb6-123"><a href="#cb6-123" aria-hidden="true" tabindex="-1"></a>    pred_cnn, pred_tl <span class="op">=</span> wg_fin.run_inference(model_cnn_path, model_tl_path, X_batch)</span>
+<span id="cb6-124"><a href="#cb6-124" aria-hidden="true" tabindex="-1"></a>    class_ids, confidences, use_cnn <span class="op">=</span> wg_fin.merge_predictions(pred_cnn, pred_tl)</span>
+<span id="cb6-125"><a href="#cb6-125" aria-hidden="true" tabindex="-1"></a>    id_to_binary <span class="op">=</span> artifacts.get(<span class="st">"id_to_binary"</span>, {})</span>
+<span id="cb6-126"><a href="#cb6-126" aria-hidden="true" tabindex="-1"></a>    id_to_pattern <span class="op">=</span> artifacts.get(<span class="st">"id_to_pattern"</span>, {})</span>
+<span id="cb6-127"><a href="#cb6-127" aria-hidden="true" tabindex="-1"></a>    binary_labels, pattern_names <span class="op">=</span> wg_fin.decode_labels(class_ids, id_to_binary, id_to_pattern)</span>
+<span id="cb6-128"><a href="#cb6-128" aria-hidden="true" tabindex="-1"></a>    df_batch2 <span class="op">=</span> wg_fin.build_batch_df(binary_labels, confidences, artifacts.get(<span class="st">"label_mapping"</span>, {}))</span>
+<span id="cb6-129"><a href="#cb6-129" aria-hidden="true" tabindex="-1"></a>    config <span class="op">=</span> {</span>
+<span id="cb6-130"><a href="#cb6-130" aria-hidden="true" tabindex="-1"></a>        <span class="st">"WPH"</span>: <span class="bu">globals</span>().get(<span class="st">"WPH"</span>, <span class="dv">100</span>),</span>
+<span id="cb6-131"><a href="#cb6-131" aria-hidden="true" tabindex="-1"></a>        <span class="st">"VALUE_PER_WAFER"</span>: <span class="bu">globals</span>().get(<span class="st">"VALUE_PER_WAFER"</span>, <span class="dv">5000</span>),</span>
+<span id="cb6-132"><a href="#cb6-132" aria-hidden="true" tabindex="-1"></a>        <span class="st">"REPAIR_HOURS"</span>: <span class="bu">globals</span>().get(<span class="st">"REPAIR_HOURS"</span>, <span class="dv">8</span>),</span>
+<span id="cb6-133"><a href="#cb6-133" aria-hidden="true" tabindex="-1"></a>        <span class="st">"PLANNING_HORIZON"</span>: <span class="bu">globals</span>().get(<span class="st">"PLANNING_HORIZON"</span>, <span class="dv">30</span>),</span>
+<span id="cb6-134"><a href="#cb6-134" aria-hidden="true" tabindex="-1"></a>        <span class="st">"BATCH_ID"</span>: <span class="bu">globals</span>().get(<span class="st">"BATCH_ID"</span>, <span class="st">"LOT_001"</span>),</span>
+<span id="cb6-135"><a href="#cb6-135" aria-hidden="true" tabindex="-1"></a>        <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
+<span id="cb6-136"><a href="#cb6-136" aria-hidden="true" tabindex="-1"></a>        <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> <span class="bu">globals</span>().get(<span class="st">"CONFIDENCE_THRESHOLD"</span>, <span class="fl">0.7</span>)).<span class="bu">sum</span>()),</span>
+<span id="cb6-137"><a href="#cb6-137" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-138"><a href="#cb6-138" aria-hidden="true" tabindex="-1"></a>    df_financial2, summary2 <span class="op">=</span> wg_fin.compute_financials(df_batch2, config)</span>
+<span id="cb6-139"><a href="#cb6-139" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-140"><a href="#cb6-140" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview and save</span></span>
+<span id="cb6-141"><a href="#cb6-141" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial preview (top 5) ---"</span>)</span>
+<span id="cb6-142"><a href="#cb6-142" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial2.head(<span class="dv">5</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb6-143"><a href="#cb6-143" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb6-144"><a href="#cb6-144" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Summary payload (truncated) ---"</span>)</span>
+<span id="cb6-145"><a href="#cb6-145" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(summary2, indent<span class="op">=</span><span class="dv">2</span>)[:<span class="dv">1000</span>])</span>
+<span id="cb6-146"><a href="#cb6-146" aria-hidden="true" tabindex="-1"></a>outdir_demo <span class="op">=</span> os.path.join(repo_root, <span class="ss">f"reports_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span>, <span class="st">"refactor_demo"</span>)</span>
+<span id="cb6-147"><a href="#cb6-147" aria-hidden="true" tabindex="-1"></a>wg_fin.save_reports(df_batch2, df_financial2, summary2, outdir_demo, BATCH_ID)</span>
+<span id="cb6-148"><a href="#cb6-148" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved refactor reports →"</span>, outdir_demo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Using repo_root: /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml
 models_dir= /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/wafer_images/phase2_models
