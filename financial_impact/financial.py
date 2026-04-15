@@ -5,6 +5,7 @@ build batch summaries, compute financial metrics, and save reports.
 
 Fully decoupled from inference and artifact loading (Streamlit-compatible).
 """
+
 from __future__ import annotations
 
 import json
@@ -16,54 +17,115 @@ import pandas as pd
 # --- Financial mapping (copied from notebook) ---------------------------------
 FINANCIAL_PARAMS: dict[str, dict] = {
     "00000000": {
-        "repair": 0, "replace": 0, "dt": 0, "ylo": 0.00, "yhi": 0.00, "priority": 5, "risk": "Normal",
-        "process": "N/A", "action": "No action required — wafer passes electrical test",
+        "repair": 0,
+        "replace": 0,
+        "dt": 0,
+        "ylo": 0.00,
+        "yhi": 0.00,
+        "priority": 5,
+        "risk": "Normal",
+        "process": "N/A",
+        "action": "No action required — wafer passes electrical test",
     },
     "10000000": {
-        "repair": 275_000, "replace": 6_000_000, "dt": 2_050_000, "ylo": 0.10, "yhi": 0.40,
-        "priority": 3, "risk": "High", "process": "Deposition / Plasma Process",
+        "repair": 275_000,
+        "replace": 6_000_000,
+        "dt": 2_050_000,
+        "ylo": 0.10,
+        "yhi": 0.40,
+        "priority": 3,
+        "risk": "High",
+        "process": "Deposition / Plasma Process",
         "action": "Chamber clean & kit replace; RF/temp recalibration; requalification metrology",
     },
     "01000000": {
-        "repair": 130_000, "replace": 5_250_000, "dt": 550_000, "ylo": 0.15, "yhi": 0.50,
-        "priority": 4, "risk": "High", "process": "CMP (primary) / Lithography Track (secondary)",
+        "repair": 130_000,
+        "replace": 5_250_000,
+        "dt": 550_000,
+        "ylo": 0.15,
+        "yhi": 0.50,
+        "priority": 4,
+        "risk": "High",
+        "process": "CMP (primary) / Lithography Track (secondary)",
         "action": "CMP: replace pad & slurry, clean heads; Litho track: chemistry dump/refresh",
     },
     "00100000": {
-        "repair": 110_000, "replace": 6_000_000, "dt": 550_000, "ylo": 0.01, "yhi": 0.10,
-        "priority": 5, "risk": "Medium", "process": "Diffusion / Thermal Processing",
+        "repair": 110_000,
+        "replace": 6_000_000,
+        "dt": 550_000,
+        "ylo": 0.01,
+        "yhi": 0.10,
+        "priority": 5,
+        "risk": "Medium",
+        "process": "Diffusion / Thermal Processing",
         "action": "Furnace zone temp recalibration; thermocouple/lamp replacement; requalification",
     },
     "00010000": {
-        "repair": 255_000, "replace": 12_500_000, "dt": 2_250_000, "ylo": 0.00, "yhi": 0.15,
-        "priority": 3, "risk": "High", "process": "Plasma Etch",
+        "repair": 255_000,
+        "replace": 12_500_000,
+        "dt": 2_250_000,
+        "ylo": 0.00,
+        "yhi": 0.15,
+        "priority": 3,
+        "risk": "High",
+        "process": "Plasma Etch",
         "action": "Replace focus ring / edge hardware; chamber clean; RF recalibration",
     },
     "00001000": {
-        "repair": 155_000, "replace": 8_500_000, "dt": 2_050_000, "ylo": 0.01, "yhi": 0.10,
-        "priority": 5, "risk": "Medium", "process": "Tool-specific (single chamber / handling subsystem)",
+        "repair": 155_000,
+        "replace": 8_500_000,
+        "dt": 2_050_000,
+        "ylo": 0.01,
+        "yhi": 0.10,
+        "priority": 5,
+        "risk": "Medium",
+        "process": "Tool-specific (single chamber / handling subsystem)",
         "action": "Robot vibration check; chamber wall inspection; targeted chamber clean",
     },
     "00000100": {
-        "repair": 525_000, "replace": 8_500_000, "dt": 2_450_000, "ylo": 0.50, "yhi": 1.00,
-        "priority": 1, "risk": "Critical", "process": "Major Process Excursion — Containment First",
+        "repair": 525_000,
+        "replace": 8_500_000,
+        "dt": 2_450_000,
+        "ylo": 0.50,
+        "yhi": 1.00,
+        "priority": 1,
+        "risk": "Critical",
+        "process": "Major Process Excursion — Containment First",
         "action": "IMMEDIATE: lot hold + tool stop; engineering investigation; full requalification",
     },
     "00000010": {
-        "repair": 77_500, "replace": 5_250_000, "dt": 550_000, "ylo": 0.05, "yhi": 0.50,
-        "priority": 2, "risk": "Critical", "process": "Wafer Handling Path / CMP Contact",
+        "repair": 77_500,
+        "replace": 5_250_000,
+        "dt": 550_000,
+        "ylo": 0.05,
+        "yhi": 0.50,
+        "priority": 2,
+        "risk": "Critical",
+        "process": "Wafer Handling Path / CMP Contact",
         "action": "Contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes",
     },
     "00000001": {
-        "repair": 130_000, "replace": None, "dt": 2_050_000, "ylo": 0.01, "yhi": 0.20,
-        "priority": 5, "risk": "Medium", "process": "Environment / Broad Contamination Control",
+        "repair": 130_000,
+        "replace": None,
+        "dt": 2_050_000,
+        "ylo": 0.01,
+        "yhi": 0.20,
+        "priority": 5,
+        "risk": "Medium",
+        "process": "Environment / Broad Contamination Control",
         "action": "FOUP/carrier cleaning; filter inspection; load lock particle monitoring",
     },
 }
 
 BIT_TO_SINGLE = {
-    7: "10000000", 6: "01000000", 5: "00100000", 4: "00010000",
-    3: "00001000", 2: "00000100", 1: "00000010", 0: "00000001",
+    7: "10000000",
+    6: "01000000",
+    5: "00100000",
+    4: "00010000",
+    3: "00001000",
+    2: "00000100",
+    1: "00000010",
+    0: "00000001",
 }
 
 
@@ -82,7 +144,9 @@ def merge_predictions(pred_cnn: np.ndarray, pred_tl: np.ndarray) -> tuple[np.nda
     return class_ids, confidences, use_cnn
 
 
-def decode_labels(class_ids: np.ndarray, id_to_binary: dict[int, str], id_to_pattern: dict[int, str]) -> tuple[list[str], list[str]]:
+def decode_labels(
+    class_ids: np.ndarray, id_to_binary: dict[int, str], id_to_pattern: dict[int, str]
+) -> tuple[list[str], list[str]]:
     """Decode integer class IDs to binary label strings and human pattern names."""
     binary_labels = [id_to_binary.get(int(cid), "00000000") for cid in class_ids]
     pattern_names = [id_to_pattern.get(int(cid), "Unknown") for cid in class_ids]
@@ -118,7 +182,11 @@ def build_batch_df(binary_labels: list[str], confidences: np.ndarray, label_mapp
 
 def decompose(binary_label: str) -> list[str]:
     """Return list of single-defect binary labels present in a combo."""
-    return [BIT_TO_SINGLE[bit] for bit in range(7, -1, -1) if binary_label[7 - bit] == "1" and BIT_TO_SINGLE[bit] in FINANCIAL_PARAMS]
+    return [
+        BIT_TO_SINGLE[bit]
+        for bit in range(7, -1, -1)
+        if binary_label[7 - bit] == "1" and BIT_TO_SINGLE[bit] in FINANCIAL_PARAMS
+    ]
 
 
 def get_params(binary_label: str) -> dict:
@@ -139,13 +207,27 @@ def get_params(binary_label: str) -> dict:
     yhi = min(round(yhis[0] + 0.5 * sum(yhis[1:]), 3), 1.0)
     priority = min(d["priority"] for d in ds)
     risks = [d["risk"] for d in ds]
-    risk = ("Critical" if "Critical" in risks else "High" if "High" in risks else "Medium")
+    risk = "Critical" if "Critical" in risks else "High" if "High" in risks else "Medium"
     process = " + ".join(dict.fromkeys(d["process"].split(" (")[0].split(" /")[0] for d in ds))
-    action = (f"Address priority-{priority} component first. " + "; then ".join(d["action"].split(";")[0] for d in sorted(ds, key=lambda x: x["priority"])))
-    return {"repair": repair, "replace": replace, "dt": dt, "ylo": ylo, "yhi": yhi, "priority": priority, "risk": risk, "process": process, "action": action}
+    action = f"Address priority-{priority} component first. " + "; then ".join(
+        d["action"].split(";")[0] for d in sorted(ds, key=lambda x: x["priority"])
+    )
+    return {
+        "repair": repair,
+        "replace": replace,
+        "dt": dt,
+        "ylo": ylo,
+        "yhi": yhi,
+        "priority": priority,
+        "risk": risk,
+        "process": process,
+        "action": action,
+    }
 
 
-def compute_financials(df_batch: pd.DataFrame, config: dict, financial_params: dict | None = None) -> tuple[pd.DataFrame, dict]:
+def compute_financials(
+    df_batch: pd.DataFrame, config: dict, financial_params: dict | None = None
+) -> tuple[pd.DataFrame, dict]:
     """Compute financial metrics for each pattern and return DataFrame + summary payload.
 
     Config keys needed: WPH, VALUE_PER_WAFER, REPAIR_HOURS, PLANNING_HORIZON, BATCH_ID, CONFIDENCE_THRESHOLD
@@ -191,10 +273,16 @@ def compute_financials(df_batch: pd.DataFrame, config: dict, financial_params: d
     df_financial = pd.DataFrame(rows).sort_values("priority_score", ascending=False).reset_index(drop=True)
     # summary payload
     total_daily_loss = float(df_financial["weighted_daily_loss"].sum()) if not df_financial.empty else 0.0
-    defective_wafers = int(df_batch.loc[df_batch["binary_label"] != "00000000", "count"].sum()) if not df_batch.empty else 0
+    defective_wafers = (
+        int(df_batch.loc[df_batch["binary_label"] != "00000000", "count"].sum()) if not df_batch.empty else 0
+    )
     total_wafers = int(config.get("total_wafers", df_batch["count"].sum() if not df_batch.empty else 0))
     low_conf_count = int(config.get("low_conf_count", 0))
-    top_action = df_financial[df_financial["risk_level"] != "Normal"].iloc[0]["repair_action"] if not df_financial[df_financial["risk_level"] != "Normal"].empty else "None"
+    top_action = (
+        df_financial[df_financial["risk_level"] != "Normal"].iloc[0]["repair_action"]
+        if not df_financial[df_financial["risk_level"] != "Normal"].empty
+        else "None"
+    )
     summary_payload = {
         "batch_id": config.get("BATCH_ID", ""),
         "total_wafers": total_wafers,
@@ -202,21 +290,28 @@ def compute_financials(df_batch: pd.DataFrame, config: dict, financial_params: d
         "defect_rate": round(defective_wafers / total_wafers, 4) if total_wafers > 0 else 0.0,
         "avg_confidence": round(float(df_batch["avg_confidence"].mean()) if not df_batch.empty else 0.0, 4),
         "low_conf_count": low_conf_count,
-        "dominant_pattern": df_batch[df_batch["binary_label"] != "00000000"].iloc[0]["binary_label"] if not df_batch[df_batch["binary_label"] != "00000000"].empty else "N/A",
+        "dominant_pattern": df_batch[df_batch["binary_label"] != "00000000"].iloc[0]["binary_label"]
+        if not df_batch[df_batch["binary_label"] != "00000000"].empty
+        else "N/A",
         "total_daily_loss": round(total_daily_loss, 2),
         "top_action": top_action,
-        "patterns": {row["binary_label"]: {
-            "pattern_name": row["pattern_name"],
-            "count": int(row["count"]),
-            "batch_pct": float(row["batch_pct"]),
-            "weighted_daily_loss": float(row["weighted_daily_loss"]),
-            "priority_score": float(row["priority_score"]),
-        } for _, row in df_financial.iterrows()},
+        "patterns": {
+            row["binary_label"]: {
+                "pattern_name": row["pattern_name"],
+                "count": int(row["count"]),
+                "batch_pct": float(row["batch_pct"]),
+                "weighted_daily_loss": float(row["weighted_daily_loss"]),
+                "priority_score": float(row["priority_score"]),
+            }
+            for _, row in df_financial.iterrows()
+        },
     }
     return df_financial, summary_payload
 
 
-def save_reports(df_batch: pd.DataFrame, df_financial: pd.DataFrame, summary_payload: dict, outdir: str, batch_id: str) -> tuple[str, str, str]:
+def save_reports(
+    df_batch: pd.DataFrame, df_financial: pd.DataFrame, summary_payload: dict, outdir: str, batch_id: str
+) -> tuple[str, str, str]:
     """Save CSV and JSON reports to outdir. Returns (csv_path, freq_path, json_path)."""
     import os
 
