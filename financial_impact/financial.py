@@ -54,9 +54,21 @@ def _load_financial_params(path: Path = _EXCEL_PATH) -> dict[str, dict]:
     """Load FINANCIAL_PARAMS from the Excel mapping table."""
     df = pd.read_excel(path, sheet_name="Defect Financial Mapping", header=2)
     df.columns = [
-        "binary_label", "pattern_id", "pattern_name", "mix_type",
-        "process", "tool", "root_cause", "yield_range",
-        "repair", "replace", "dt", "priority", "risk", "action", "notes",
+        "binary_label",
+        "pattern_id",
+        "pattern_name",
+        "mix_type",
+        "process",
+        "tool",
+        "root_cause",
+        "yield_range",
+        "repair",
+        "replace",
+        "dt",
+        "priority",
+        "risk",
+        "action",
+        "notes",
     ]
     df = df[df["binary_label"].astype(str).str.match(r"^[01]{8}$")].copy()
 
@@ -68,15 +80,15 @@ def _load_financial_params(path: Path = _EXCEL_PATH) -> dict[str, dict]:
         process = str(row["process"])
         action = str(row["action"])
         result[lbl] = {
-            "repair":   _int_val(row["repair"]),
-            "replace":  _replace_val(row["replace"]),
-            "dt":       _int_val(row["dt"]),
-            "ylo":      ylo,
-            "yhi":      yhi,
+            "repair": _int_val(row["repair"]),
+            "replace": _replace_val(row["replace"]),
+            "dt": _int_val(row["dt"]),
+            "ylo": ylo,
+            "yhi": yhi,
             "priority": _int_val(row["priority"], default=5),
-            "risk":     risk if risk != "nan" else "Normal",
-            "process":  process if process != "nan" else "N/A",
-            "action":   action if action != "nan" else "No action required",
+            "risk": risk if risk != "nan" else "Normal",
+            "process": process if process != "nan" else "N/A",
+            "action": action if action != "nan" else "No action required",
         }
     return result
 
