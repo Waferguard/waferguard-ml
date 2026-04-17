@@ -4,118 +4,84 @@ Provides pure financial analysis functions: merge predictions, decode labels,
 build batch summaries, compute financial metrics, and save reports.
 
 Fully decoupled from inference and artifact loading (Streamlit-compatible).
+Financial parameters are loaded from data/Defect_Financial_Mapping.xlsx so
+updates to the mapping table take effect without touching source code.
 """
 
 from __future__ import annotations
 
 import json
-from collections import Counter
+from collections import Counter, defaultdict
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-# --- Financial mapping (copied from notebook) ---------------------------------
-FINANCIAL_PARAMS: dict[str, dict] = {
-    "00000000": {
-        "repair": 0,
-        "replace": 0,
-        "dt": 0,
-        "ylo": 0.00,
-        "yhi": 0.00,
-        "priority": 5,
-        "risk": "Normal",
-        "process": "N/A",
-        "action": "No action required — wafer passes electrical test",
-    },
-    "10000000": {
-        "repair": 275_000,
-        "replace": 6_000_000,
-        "dt": 2_050_000,
-        "ylo": 0.10,
-        "yhi": 0.40,
-        "priority": 3,
-        "risk": "High",
-        "process": "Deposition / Plasma Process",
-        "action": "Chamber clean & kit replace; RF/temp recalibration; requalification metrology",
-    },
-    "01000000": {
-        "repair": 130_000,
-        "replace": 5_250_000,
-        "dt": 550_000,
-        "ylo": 0.15,
-        "yhi": 0.50,
-        "priority": 4,
-        "risk": "High",
-        "process": "CMP (primary) / Lithography Track (secondary)",
-        "action": "CMP: replace pad & slurry, clean heads; Litho track: chemistry dump/refresh",
-    },
-    "00100000": {
-        "repair": 110_000,
-        "replace": 6_000_000,
-        "dt": 550_000,
-        "ylo": 0.01,
-        "yhi": 0.10,
-        "priority": 5,
-        "risk": "Medium",
-        "process": "Diffusion / Thermal Processing",
-        "action": "Furnace zone temp recalibration; thermocouple/lamp replacement; requalification",
-    },
-    "00010000": {
-        "repair": 255_000,
-        "replace": 12_500_000,
-        "dt": 2_250_000,
-        "ylo": 0.00,
-        "yhi": 0.15,
-        "priority": 3,
-        "risk": "High",
-        "process": "Plasma Etch",
-        "action": "Replace focus ring / edge hardware; chamber clean; RF recalibration",
-    },
-    "00001000": {
-        "repair": 155_000,
-        "replace": 8_500_000,
-        "dt": 2_050_000,
-        "ylo": 0.01,
-        "yhi": 0.10,
-        "priority": 5,
-        "risk": "Medium",
-        "process": "Tool-specific (single chamber / handling subsystem)",
-        "action": "Robot vibration check; chamber wall inspection; targeted chamber clean",
-    },
-    "00000100": {
-        "repair": 525_000,
-        "replace": 8_500_000,
-        "dt": 2_450_000,
-        "ylo": 0.50,
-        "yhi": 1.00,
-        "priority": 1,
-        "risk": "Critical",
-        "process": "Major Process Excursion — Containment First",
-        "action": "IMMEDIATE: lot hold + tool stop; engineering investigation; full requalification",
-    },
-    "00000010": {
-        "repair": 77_500,
-        "replace": 5_250_000,
-        "dt": 550_000,
-        "ylo": 0.05,
-        "yhi": 0.50,
-        "priority": 2,
-        "risk": "Critical",
-        "process": "Wafer Handling Path / CMP Contact",
-        "action": "Contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes",
-    },
-    "00000001": {
-        "repair": 130_000,
-        "replace": None,
-        "dt": 2_050_000,
-        "ylo": 0.01,
-        "yhi": 0.20,
-        "priority": 5,
-        "risk": "Medium",
-        "process": "Environment / Broad Contamination Control",
-        "action": "FOUP/carrier cleaning; filter inspection; load lock particle monitoring",
-    },
-}
+# ---------------------------------------------------------------------------
+# Financial parameter loading from Excel
+# ---------------------------------------------------------------------------
+
+_EXCEL_PATH = Path(__file__).parent.parent / "data" / "Defect_Financial_Mapping.xlsx"
+
+
+def _parse_yield_range(value: object) -> tuple[float, float]:
+    """Parse '10%-40%' style strings into (ylo, yhi) fractions."""
+    s = str(value).replace("%", "").replace("\u2013", "-").replace("\u2014", "-")
+    if "-" in s:
+        lo, hi = s.split("-", 1)
+        return float(lo) / 100, float(hi) / 100
+    v = float(s) / 100
+    return v, v
+
+
+def _int_val(val: object, default: int = 0) -> int:
+    s = str(val).strip()
+    if s in ("\u2014", "\u2013", "-", "nan", ""):
+        return default
+    try:
+        return int(float(s.replace(",", "")))
+    except ValueError:
+        return default
+
+
+def _replace_val(val: object) -> int | None:
+    if pd.isna(val):
+        return None
+    return _int_val(val)
+
+
+def _load_financial_params(path: Path = _EXCEL_PATH) -> dict[str, dict]:
+    """Load FINANCIAL_PARAMS from the Excel mapping table."""
+    df = pd.read_excel(path, sheet_name="Defect Financial Mapping", header=2)
+    df.columns = [
+        "binary_label", "pattern_id", "pattern_name", "mix_type",
+        "process", "tool", "root_cause", "yield_range",
+        "repair", "replace", "dt", "priority", "risk", "action", "notes",
+    ]
+    df = df[df["binary_label"].astype(str).str.match(r"^[01]{8}$")].copy()
+
+    result: dict[str, dict] = {}
+    for _, row in df.iterrows():
+        lbl = str(row["binary_label"])
+        ylo, yhi = _parse_yield_range(row["yield_range"])
+        risk = str(row["risk"])
+        process = str(row["process"])
+        action = str(row["action"])
+        result[lbl] = {
+            "repair":   _int_val(row["repair"]),
+            "replace":  _replace_val(row["replace"]),
+            "dt":       _int_val(row["dt"]),
+            "ylo":      ylo,
+            "yhi":      yhi,
+            "priority": _int_val(row["priority"], default=5),
+            "risk":     risk if risk != "nan" else "Normal",
+            "process":  process if process != "nan" else "N/A",
+            "action":   action if action != "nan" else "No action required",
+        }
+    return result
+
+
+FINANCIAL_PARAMS: dict[str, dict] = _load_financial_params()
 
 BIT_TO_SINGLE = {
     7: "10000000",
@@ -129,19 +95,23 @@ BIT_TO_SINGLE = {
 }
 
 
-def merge_predictions(pred_cnn: np.ndarray, pred_tl: np.ndarray) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Merge two model prediction matrices by taking higher-confidence per sample.
+# ---------------------------------------------------------------------------
+# Core analysis functions
+# ---------------------------------------------------------------------------
 
-    Returns (class_ids, confidences, use_cnn_mask).
+
+def get_predictions(predictions: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """Extract class IDs and confidences from a single model's prediction matrix.
+
+    Args:
+        predictions: probability array of shape (N, num_classes) from the user-selected model.
+
+    Returns (class_ids, confidences).
+
     """
-    cnn_class_ids = pred_cnn.argmax(axis=1)
-    tl_class_ids = pred_tl.argmax(axis=1)
-    cnn_confidences = pred_cnn.max(axis=1)
-    tl_confidences = pred_tl.max(axis=1)
-    use_cnn = cnn_confidences >= tl_confidences
-    class_ids = np.where(use_cnn, cnn_class_ids, tl_class_ids)
-    confidences = np.where(use_cnn, cnn_confidences, tl_confidences)
-    return class_ids, confidences, use_cnn
+    class_ids = predictions.argmax(axis=1)
+    confidences = predictions.max(axis=1)
+    return class_ids, confidences
 
 
 def decode_labels(
@@ -160,12 +130,15 @@ def build_batch_df(binary_labels: list[str], confidences: np.ndarray, label_mapp
     avg_confidence, min_confidence, max_confidence
     """
     total_wafers = len(binary_labels)
-    pattern_counts = Counter(binary_labels)
+    # Single pass: collect confidences per label
+    label_to_confs: dict[str, list[float]] = defaultdict(list)
+    for lbl, conf in zip(binary_labels, confidences, strict=True):
+        label_to_confs[lbl].append(float(conf))
     batch_rows = []
-    for binary_label, count in sorted(pattern_counts.items(), key=lambda x: -x[1]):
+    for binary_label, count in sorted(Counter(binary_labels).items(), key=lambda x: -x[1]):
         name = label_mapping.get(binary_label, "Unknown")
         freq = count / total_wafers if total_wafers > 0 else 0.0
-        confs_this = [float(confidences[i]) for i, lbl in enumerate(binary_labels) if lbl == binary_label]
+        confs_this = label_to_confs[binary_label]
         batch_rows.append({
             "binary_label": binary_label,
             "pattern_name": name,
@@ -176,8 +149,7 @@ def build_batch_df(binary_labels: list[str], confidences: np.ndarray, label_mapp
             "min_confidence": round(float(np.min(confs_this)) if confs_this else 0.0, 4),
             "max_confidence": round(float(np.max(confs_this)) if confs_this else 0.0, 4),
         })
-    df_batch = pd.DataFrame(batch_rows)
-    return df_batch
+    return pd.DataFrame(batch_rows)
 
 
 def decompose(binary_label: str) -> list[str]:
@@ -189,14 +161,18 @@ def decompose(binary_label: str) -> list[str]:
     ]
 
 
-def get_params(binary_label: str) -> dict:
+def get_params(binary_label: str, financial_params: dict | None = None) -> dict:
     """Look up financial params for any pattern. Aggregates multi-defect combos."""
-    if binary_label in FINANCIAL_PARAMS:
-        return FINANCIAL_PARAMS[binary_label]
+    if financial_params is None:
+        financial_params = FINANCIAL_PARAMS
+    if binary_label in financial_params:
+        return financial_params[binary_label]
     components = decompose(binary_label)
     if not components:
-        return FINANCIAL_PARAMS["00000000"]
-    ds = [FINANCIAL_PARAMS[c] for c in components]
+        return financial_params["00000000"]
+    ds = [financial_params[c] for c in components if c in financial_params]
+    if not ds:
+        return financial_params["00000000"]
     repair = sum(d["repair"] for d in ds)
     replaces = [d["replace"] for d in ds if d.get("replace")]
     replace = sum(replaces) if replaces else None
@@ -237,7 +213,7 @@ def compute_financials(
     rows = []
     for _, batch_row in df_batch.iterrows():
         binary_label = batch_row["binary_label"]
-        params = get_params(binary_label)
+        params = get_params(binary_label, financial_params)
         y_mid = (params["ylo"] + params["yhi"]) / 2
         freq = float(batch_row.get("batch_freq", 0.0))
         wph = config.get("WPH", 100)
@@ -271,7 +247,6 @@ def compute_financials(
             "repair_action": params["action"],
         })
     df_financial = pd.DataFrame(rows).sort_values("priority_score", ascending=False).reset_index(drop=True)
-    # summary payload
     total_daily_loss = float(df_financial["weighted_daily_loss"].sum()) if not df_financial.empty else 0.0
     defective_wafers = (
         int(df_batch.loc[df_batch["binary_label"] != "00000000", "count"].sum()) if not df_batch.empty else 0
@@ -313,14 +288,13 @@ def save_reports(
     df_batch: pd.DataFrame, df_financial: pd.DataFrame, summary_payload: dict, outdir: str, batch_id: str
 ) -> tuple[str, str, str]:
     """Save CSV and JSON reports to outdir. Returns (csv_path, freq_path, json_path)."""
-    import os
-
-    os.makedirs(outdir, exist_ok=True)
-    csv_path = f"{outdir}/financial_report_{batch_id}.csv"
-    freq_path = f"{outdir}/batch_frequency_{batch_id}.csv"
-    json_path = f"{outdir}/batch_summary_{batch_id}.json"
+    out = Path(outdir)
+    out.mkdir(parents=True, exist_ok=True)
+    csv_path = out / f"financial_report_{batch_id}.csv"
+    freq_path = out / f"batch_frequency_{batch_id}.csv"
+    json_path = out / f"batch_summary_{batch_id}.json"
     df_financial.to_csv(csv_path, index=False)
     df_batch.to_csv(freq_path, index=False)
     with open(json_path, "w") as f:
         json.dump(summary_payload, f, indent=2)
-    return csv_path, freq_path, json_path
+    return str(csv_path), str(freq_path), str(json_path)
