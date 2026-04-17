@@ -164,13 +164,13 @@ It takes the trained models and produces a <strong>ranked financial impact repor
 </div>
 <div id="Jpce7pQ3QrQg" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Configuration: Batch settings and financial assumptions ──────────────────</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>            <span class="co"># Production lot identifier</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="st">"cnn"</span>          <span class="co"># Which model to use: "cnn" or "tl"</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="fl">0.70</span>     <span class="co"># Flag predictions below this for manual review</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="dv">100</span>                       <span class="co"># Wafers per hour through affected tool</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="dv">5_000</span>         <span class="co"># USD per wafer</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="dv">8</span>                <span class="co"># Estimated downtime hours per repair event</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="dv">30</span>           <span class="co"># Days used for EVoA calculation</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>  <span class="co"># Production lot identifier</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="st">"cnn"</span>  <span class="co"># Which model to use: "cnn" or "tl"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="fl">0.70</span>  <span class="co"># Flag predictions below this for manual review</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="dv">100</span>  <span class="co"># Wafers per hour through affected tool</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="dv">5_000</span>  <span class="co"># USD per wafer</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="dv">8</span>  <span class="co"># Estimated downtime hours per repair event</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="dv">30</span>  <span class="co"># Days used for EVoA calculation</span></span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"✓ Configuration set"</span>)</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"  Batch ID         : </span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span>)</span>
