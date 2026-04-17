@@ -10,6 +10,9 @@
 
 ## Sprint 2 (Model Building)
 - [Sprint 2 Model Building](slides/Sprint-2-Model/Sprint_2_Model.html)
+
+## Sprint 3 (Technical Solution)
+- [Sprint 3 Technical Solution](slides/Sprint-3/Sprint_3_Presentation.html)
   
 # 📓 Notebooks
 
