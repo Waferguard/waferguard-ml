@@ -2,7 +2,9 @@
 
 from financial_impact import financial, inference
 from financial_impact.financial import (
+    build_base_anomaly_df,
     build_batch_df,
+    compute_action_table,
     compute_financials,
     decode_labels,
     get_predictions,
@@ -10,7 +12,9 @@ from financial_impact.financial import (
 )
 
 __all__ = [
+    "build_base_anomaly_df",
     "build_batch_df",
+    "compute_action_table",
     "compute_financials",
     "decode_labels",
     "financial",

@@ -164,6 +164,56 @@ def build_batch_df(binary_labels: list[str], confidences: np.ndarray, label_mapp
     return pd.DataFrame(batch_rows)
 
 
+def build_base_anomaly_df(
+    binary_labels: list[str],
+    confidences: np.ndarray,
+    label_mapping: dict[str, str],
+    financial_params: dict | None = None,
+) -> pd.DataFrame:
+    """Build a batch summary decomposed to the 8 base anomaly types.
+
+    Each wafer detection is decomposed into its constituent base anomalies.
+    A wafer classified as 'Donut+Edge_Loc+Scratch' contributes +1 count to
+    each of Donut, Edge_Loc, and Scratch independently.
+
+    Normal wafers (00000000) contribute no count to any base anomaly.
+    All 8 base anomaly types are always present in the output (count may be 0).
+
+    Returns a DataFrame with the same schema as build_batch_df.
+
+    """
+    if financial_params is None:
+        financial_params = FINANCIAL_PARAMS
+
+    total_wafers = len(binary_labels)
+    base_confs: dict[str, list[float]] = defaultdict(list)
+
+    for lbl, conf in zip(binary_labels, confidences, strict=True):
+        for base in decompose(lbl):
+            base_confs[base].append(float(conf))
+
+    all_bases = sorted(lbl for lbl in financial_params if lbl != "00000000" and lbl.count("1") == 1)
+
+    rows = []
+    for base in all_bases:
+        name = label_mapping.get(base, "Unknown")
+        confs = base_confs.get(base, [])
+        count = len(confs)
+        freq = count / total_wafers if total_wafers > 0 else 0.0
+        rows.append({
+            "binary_label": base,
+            "pattern_name": name,
+            "count": count,
+            "batch_freq": round(freq, 6),
+            "batch_pct": round(freq * 100, 2),
+            "avg_confidence": round(float(np.mean(confs)) if confs else 0.0, 4),
+            "min_confidence": round(float(np.min(confs)) if confs else 0.0, 4),
+            "max_confidence": round(float(np.max(confs)) if confs else 0.0, 4),
+        })
+
+    return pd.DataFrame(rows).sort_values("count", ascending=False).reset_index(drop=True)
+
+
 def decompose(binary_label: str) -> list[str]:
     """Return list of single-defect binary labels present in a combo."""
     return [
@@ -171,6 +221,25 @@ def decompose(binary_label: str) -> list[str]:
         for bit in range(7, -1, -1)
         if binary_label[7 - bit] == "1" and BIT_TO_SINGLE[bit] in FINANCIAL_PARAMS
     ]
+
+
+def _get_action_to_singles(financial_params: dict) -> dict[str, dict]:
+    """Map each unique base repair action to its single-defect pattern metadata."""
+    action_map: dict[str, dict] = {}
+    for lbl, params in financial_params.items():
+        if lbl == "00000000" or lbl.count("1") != 1:
+            continue
+        for act in (a.strip() for a in params["action"].split(";") if a.strip()):
+            if act not in action_map:
+                action_map[act] = {
+                    "singles": [],
+                    "process": params["process"],
+                    "risk": params["risk"],
+                    "priority": params["priority"],
+                    "repair": params["repair"],
+                }
+            action_map[act]["singles"].append(lbl)
+    return action_map
 
 
 def get_params(binary_label: str, financial_params: dict | None = None) -> dict:
@@ -246,8 +315,7 @@ def compute_financials(
             "avg_confidence": batch_row.get("avg_confidence", 0.0),
             "triage_priority": params["priority"],
             "risk_level": params["risk"],
-            "yield_range": f"{int(params['ylo'] * 100)}%-{int(params['yhi'] * 100)}%",
-            "yield_mid": round(y_mid, 3),
+            "yield_loss_pct": round(y_mid * 100, 1),
             "repair_cost": params["repair"],
             "replacement_cost": params.get("replace"),
             "downtime_per_hr": params["dt"],
@@ -294,6 +362,81 @@ def compute_financials(
         },
     }
     return df_financial, summary_payload
+
+
+def compute_action_table(df_financial: pd.DataFrame, financial_params: dict | None = None) -> pd.DataFrame:
+    """Build an action-oriented financial table.
+
+    Each row = one repair/maintenance action. For each action, aggregates the
+    financial impact across all 38 patterns it resolves (fully or partially).
+
+    Full resolution: action addresses all root-cause components of the pattern.
+    Partial resolution: action addresses some components; savings are proportional
+    to the fraction of components fixed.
+
+    Args:
+        df_financial: output of compute_financials (pattern-oriented rows).
+        financial_params: optional override; defaults to FINANCIAL_PARAMS.
+
+    Returns:
+        DataFrame sorted by daily_loss_savings descending with columns:
+        repair_action, process_step, risk_level, triage_priority, repair_cost,
+        patterns_fully_resolved, patterns_partially_resolved,
+        daily_loss_savings, break_even_days, evoa_30d.
+
+    """
+    if financial_params is None:
+        financial_params = FINANCIAL_PARAMS
+
+    action_map = _get_action_to_singles(financial_params)
+
+    # Build lookup: binary_label → observed daily loss from this batch
+    fin_lookup: dict[str, float] = {
+        str(row["binary_label"]): float(row["weighted_daily_loss"]) for _, row in df_financial.iterrows()
+    }
+
+    rows = []
+    for action, meta in action_map.items():
+        single_set = set(meta["singles"])
+        fully_resolved: list[str] = []
+        partially_resolved: list[str] = []
+        total_savings = 0.0
+
+        for binary_label, daily_loss in fin_lookup.items():
+            if binary_label == "00000000":
+                continue
+            components = set(decompose(binary_label)) or {binary_label}
+            overlap = components & single_set
+            if not overlap:
+                continue
+            if overlap >= components:
+                fully_resolved.append(binary_label)
+                total_savings += daily_loss
+            else:
+                partially_resolved.append(binary_label)
+                total_savings += daily_loss * len(overlap) / len(components)
+
+        if not fully_resolved and not partially_resolved:
+            continue
+
+        repair = meta["repair"]
+        rows.append({
+            "repair_action": action,
+            "process_step": meta["process"],
+            "risk_level": meta["risk"],
+            "triage_priority": meta["priority"],
+            "repair_cost": repair,
+            "patterns_fully_resolved": len(fully_resolved),
+            "patterns_partially_resolved": len(partially_resolved),
+            "daily_loss_savings": round(total_savings, 2),
+            "break_even_days": round(repair / total_savings, 1) if total_savings > 0 else 9_999,
+            "evoa_30d": round(total_savings * 30 - repair, 2),
+        })
+
+    if not rows:
+        return pd.DataFrame()
+
+    return pd.DataFrame(rows).sort_values("daily_loss_savings", ascending=False).reset_index(drop=True)
 
 
 def save_reports(
