@@ -31,7 +31,7 @@ def run_model(model_path: str, x_batch: np.ndarray) -> np.ndarray:
     Returns probability array of shape (N, num_classes).
 
     """
-    import tensorflow as tf
+    import tensorflow as tf  # pyright: ignore[reportMissingModuleSource]
 
     model = tf.keras.models.load_model(model_path)
     return model.predict(x_batch, verbose=0)
