@@ -14,6 +14,9 @@
 ## Sprint 3 (Technical Solution)
 - [Sprint 3 Technical Solution](slides/Sprint-3/Sprint_3_Presentation.html)
   
+## WaferGuardML (Pitch Deck)
+- [WaferGuardML Pitch Deck](slides/Pitch-Deck/pitch_deck.html)
+
 # 📓 Notebooks
 
 ## Wafer Images (WM811k)
