@@ -149,14 +149,14 @@ It takes the trained models and produces a <strong>ranked financial impact repor
     → Compute weighted daily loss, break-even, EVoA, priority score
     → Ranked repair recommendations</code></pre>
 <hr>
-<div id="2HQLLeciQrQf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-outputid="aba3bb33-f982-4bcc-a40c-eccb2d8bcac4" data-execution_count="1">
+<div id="2HQLLeciQrQf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-outputid="aba3bb33-f982-4bcc-a40c-eccb2d8bcac4" data-execution_count="23">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="Jpce7pQ3QrQg" class="cell" data-execution_count="2">
+<div id="Jpce7pQ3QrQg" class="cell" data-execution_count="24">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Configuration: Batch settings and financial assumptions ──────────────────</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>  <span class="co"># Production lot identifier</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="st">"cnn"</span>  <span class="co"># Which model to use: "cnn" or "tl"</span></span>
@@ -188,130 +188,135 @@ It takes the trained models and produces a <strong>ranked financial impact repor
 <h2 class="anchored" data-anchor-id="production-pipeline-run-refactored-library">Production Pipeline: Run Refactored Library</h2>
 <p>Execute the refactored financial analysis pipeline using the <code>financial_impact.financial</code> library.<br>
 Set configuration above, then run this cell to generate reports.</p>
-<div id="a869792c" class="cell">
+<div id="0f3a0f40" class="cell" data-execution_count="25">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run financial analysis pipeline using trained models + dataset</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> financial</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> inference <span class="im">as</span> wg_inf</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _find_repo_root() <span class="op">-&gt;</span> Path:</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Walk up from cwd until pyproject.toml is found."""</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> Path.cwd()</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">/</span> <span class="st">"pyproject.toml"</span>).exists():</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.parent</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="st">"Could not locate repo root (pyproject.toml not found)"</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> _find_repo_root()</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">str</span>(repo_root) <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(repo_root))</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"repo_root:"</span>, repo_root)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>models_dir <span class="op">=</span> repo_root <span class="op">/</span> <span class="st">"wafer_images"</span> <span class="op">/</span> <span class="st">"phase2_models"</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>label_mapping <span class="op">=</span> {</span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000000"</span>: <span class="st">"Normal"</span>,</span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10000000"</span>: <span class="st">"Center"</span>,</span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01000000"</span>: <span class="st">"Donut"</span>,</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00100000"</span>: <span class="st">"Edge_Loc"</span>,</span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00010000"</span>: <span class="st">"Edge_Ring"</span>,</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00001000"</span>: <span class="st">"Loc"</span>,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000100"</span>: <span class="st">"Near_Full"</span>,</span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000010"</span>: <span class="st">"Scratch"</span>,</span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000001"</span>: <span class="st">"Random"</span>,</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10100000"</span>: <span class="st">"Center+Edge_Loc"</span>,</span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10010000"</span>: <span class="st">"Center+Edge_Ring"</span>,</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10001000"</span>: <span class="st">"Center+Loc"</span>,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10000010"</span>: <span class="st">"Center+Scratch"</span>,</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01100000"</span>: <span class="st">"Donut+Edge_Loc"</span>,</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01010000"</span>: <span class="st">"Donut+Edge_Ring"</span>,</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01001000"</span>: <span class="st">"Donut+Loc"</span>,</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01000010"</span>: <span class="st">"Donut+Scratch"</span>,</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00101000"</span>: <span class="st">"Edge_Loc+Loc"</span>,</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00100010"</span>: <span class="st">"Edge_Loc+Scratch"</span>,</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00011000"</span>: <span class="st">"Edge_Ring+Loc"</span>,</span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00010010"</span>: <span class="st">"Edge_Ring+Scratch"</span>,</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00001010"</span>: <span class="st">"Loc+Scratch"</span>,</span>
-<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10101000"</span>: <span class="st">"Center+Edge_Loc+Loc"</span>,</span>
-<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10100010"</span>: <span class="st">"Center+Edge_Loc+Scratch"</span>,</span>
-<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10011000"</span>: <span class="st">"Center+Edge_Ring+Loc"</span>,</span>
-<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10010010"</span>: <span class="st">"Center+Edge_Ring+Scratch"</span>,</span>
-<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10001010"</span>: <span class="st">"Center+Loc+Scratch"</span>,</span>
-<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01101000"</span>: <span class="st">"Donut+Edge_Loc+Loc"</span>,</span>
-<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01100010"</span>: <span class="st">"Donut+Edge_Loc+Scratch"</span>,</span>
-<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01011000"</span>: <span class="st">"Donut+Edge_Ring+Loc"</span>,</span>
-<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01010010"</span>: <span class="st">"Donut+Edge_Ring+Scratch"</span>,</span>
-<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01001010"</span>: <span class="st">"Donut+Loc+Scratch"</span>,</span>
-<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00101010"</span>: <span class="st">"Edge_Loc+Loc+Scratch"</span>,</span>
-<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00011010"</span>: <span class="st">"Edge_Ring+Loc+Scratch"</span>,</span>
-<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10101010"</span>: <span class="st">"Center+Edge_Loc+Loc+Scratch"</span>,</span>
-<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10011010"</span>: <span class="st">"Center+Edge_Ring+Loc+Scratch"</span>,</span>
-<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01101010"</span>: <span class="st">"Donut+Edge_Loc+Loc+Scratch"</span>,</span>
-<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01011010"</span>: <span class="st">"Donut+Edge_Ring+Loc+Scratch"</span>,</span>
-<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>unique_patterns <span class="op">=</span> <span class="bu">sorted</span>(label_mapping.keys())</span>
-<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>pattern_to_id <span class="op">=</span> {pattern: idx <span class="cf">for</span> idx, pattern <span class="kw">in</span> <span class="bu">enumerate</span>(unique_patterns)}</span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>id_to_pattern <span class="op">=</span> {idx: label_mapping[pattern] <span class="cf">for</span> pattern, idx <span class="kw">in</span> pattern_to_id.items()}</span>
-<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>id_to_binary <span class="op">=</span> {v: k <span class="cf">for</span> k, v <span class="kw">in</span> pattern_to_id.items()}</span>
-<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset</span></span>
-<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> repo_root <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"mixedtype-wafer-defect-datasets"</span> <span class="op">/</span> <span class="st">"Wafer_Map_Datasets.npz"</span></span>
-<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loading dataset from"</span>, data_path)</span>
-<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.load(data_path)</span>
-<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> data[<span class="st">"arr_0"</span>]</span>
-<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> data[<span class="st">"arr_1"</span>]</span>
-<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>images[images <span class="op">==</span> <span class="dv">3</span>] <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>X_all <span class="op">=</span> np.eye(<span class="dv">3</span>, dtype<span class="op">=</span>np.float32)[images.astype(<span class="bu">int</span>)]</span>
-<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>label_str_arr <span class="op">=</span> np.array([<span class="st">""</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">map</span>(<span class="bu">int</span>, row))) <span class="cf">for</span> row <span class="kw">in</span> labels])</span>
-<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>X_batch <span class="op">=</span> X_all</span>
-<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loaded dataset shape:"</span>, X_batch.shape)</span>
-<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Run inference with the selected model</span></span>
-<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"SELECTED_MODEL"</span>, <span class="st">"cnn"</span>)</span>
-<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>model_filename <span class="op">=</span> <span class="st">"model_p2_cnn.keras"</span> <span class="cf">if</span> SELECTED_MODEL <span class="op">==</span> <span class="st">"cnn"</span> <span class="cf">else</span> <span class="st">"model_p2_tl.keras"</span></span>
-<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>model_path <span class="op">=</span> <span class="bu">str</span>(models_dir <span class="op">/</span> model_filename)</span>
-<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Running inference with: </span><span class="sc">{</span>SELECTED_MODEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>model_path<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> wg_inf.run_model(model_path, X_batch)</span>
-<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode + build batch summary</span></span>
-<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>class_ids, confidences <span class="op">=</span> financial.get_predictions(predictions)</span>
-<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>binary_labels, pattern_names <span class="op">=</span> financial.decode_labels(class_ids, id_to_binary, id_to_pattern)</span>
-<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>df_batch2 <span class="op">=</span> financial.build_batch_df(binary_labels, confidences, label_mapping)</span>
-<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a><span class="co"># Financial config</span></span>
-<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"BATCH_ID"</span>, <span class="st">"LOT_001"</span>)</span>
-<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"WPH"</span>, <span class="dv">100</span>)</span>
-<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"VALUE_PER_WAFER"</span>, <span class="dv">5000</span>)</span>
-<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"REPAIR_HOURS"</span>, <span class="dv">8</span>)</span>
-<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"PLANNING_HORIZON"</span>, <span class="dv">30</span>)</span>
-<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"CONFIDENCE_THRESHOLD"</span>, <span class="fl">0.7</span>)</span>
-<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {</span>
-<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>    <span class="st">"WPH"</span>: WPH,</span>
-<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VALUE_PER_WAFER"</span>: VALUE_PER_WAFER,</span>
-<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REPAIR_HOURS"</span>: REPAIR_HOURS,</span>
-<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PLANNING_HORIZON"</span>: PLANNING_HORIZON,</span>
-<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BATCH_ID"</span>: BATCH_ID,</span>
-<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>    <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
-<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>    <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> CONFIDENCE_THRESHOLD).<span class="bu">sum</span>()),</span>
-<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>df_financial2, summary2 <span class="op">=</span> financial.compute_financials(df_batch2, config)</span>
-<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview and save</span></span>
-<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial preview (top 5) ---"</span>)</span>
-<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial2.head(<span class="dv">5</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Summary payload (truncated) ---"</span>)</span>
-<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(summary2, indent<span class="op">=</span><span class="dv">2</span>)[:<span class="dv">1000</span>])</span>
-<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>outdir_demo <span class="op">=</span> <span class="bu">str</span>(repo_root <span class="op">/</span> <span class="ss">f"reports_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span> <span class="op">/</span> <span class="st">"refactor_demo"</span>)</span>
-<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>financial.save_reports(df_batch2, df_financial2, summary2, outdir_demo, BATCH_ID)</span>
-<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved refactor reports →"</span>, outdir_demo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _find_repo_root() <span class="op">-&gt;</span> Path:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Walk up from cwd until pyproject.toml is found."""</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> Path.cwd()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">/</span> <span class="st">"pyproject.toml"</span>).exists():</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.parent</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="st">"Could not locate repo root (pyproject.toml not found)"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> _find_repo_root()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">str</span>(repo_root) <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(repo_root))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"repo_root:"</span>, repo_root)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>repo_root: /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml
-Loading dataset from /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz
+<pre><code>repo_root: /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml</code></pre>
+</div>
+</div>
+<div id="a869792c" class="cell" data-execution_count="26">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now import after sys.path is set</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> financial</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> inference <span class="im">as</span> wg_inf</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>models_dir <span class="op">=</span> repo_root <span class="op">/</span> <span class="st">"wafer_images"</span> <span class="op">/</span> <span class="st">"phase2_models"</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>label_mapping <span class="op">=</span> {</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000000"</span>: <span class="st">"Normal"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10000000"</span>: <span class="st">"Center"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01000000"</span>: <span class="st">"Donut"</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00100000"</span>: <span class="st">"Edge_Loc"</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00010000"</span>: <span class="st">"Edge_Ring"</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00001000"</span>: <span class="st">"Loc"</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000100"</span>: <span class="st">"Near_Full"</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000010"</span>: <span class="st">"Scratch"</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00000001"</span>: <span class="st">"Random"</span>,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10100000"</span>: <span class="st">"Center+Edge_Loc"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10010000"</span>: <span class="st">"Center+Edge_Ring"</span>,</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10001000"</span>: <span class="st">"Center+Loc"</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10000010"</span>: <span class="st">"Center+Scratch"</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01100000"</span>: <span class="st">"Donut+Edge_Loc"</span>,</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01010000"</span>: <span class="st">"Donut+Edge_Ring"</span>,</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01001000"</span>: <span class="st">"Donut+Loc"</span>,</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01000010"</span>: <span class="st">"Donut+Scratch"</span>,</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00101000"</span>: <span class="st">"Edge_Loc+Loc"</span>,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00100010"</span>: <span class="st">"Edge_Loc+Scratch"</span>,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00011000"</span>: <span class="st">"Edge_Ring+Loc"</span>,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00010010"</span>: <span class="st">"Edge_Ring+Scratch"</span>,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00001010"</span>: <span class="st">"Loc+Scratch"</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10101000"</span>: <span class="st">"Center+Edge_Loc+Loc"</span>,</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10100010"</span>: <span class="st">"Center+Edge_Loc+Scratch"</span>,</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10011000"</span>: <span class="st">"Center+Edge_Ring+Loc"</span>,</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10010010"</span>: <span class="st">"Center+Edge_Ring+Scratch"</span>,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10001010"</span>: <span class="st">"Center+Loc+Scratch"</span>,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01101000"</span>: <span class="st">"Donut+Edge_Loc+Loc"</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01100010"</span>: <span class="st">"Donut+Edge_Loc+Scratch"</span>,</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01011000"</span>: <span class="st">"Donut+Edge_Ring+Loc"</span>,</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01010010"</span>: <span class="st">"Donut+Edge_Ring+Scratch"</span>,</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01001010"</span>: <span class="st">"Donut+Loc+Scratch"</span>,</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00101010"</span>: <span class="st">"Edge_Loc+Loc+Scratch"</span>,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>    <span class="st">"00011010"</span>: <span class="st">"Edge_Ring+Loc+Scratch"</span>,</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10101010"</span>: <span class="st">"Center+Edge_Loc+Loc+Scratch"</span>,</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"10011010"</span>: <span class="st">"Center+Edge_Ring+Loc+Scratch"</span>,</span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01101010"</span>: <span class="st">"Donut+Edge_Loc+Loc+Scratch"</span>,</span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>    <span class="st">"01011010"</span>: <span class="st">"Donut+Edge_Ring+Loc+Scratch"</span>,</span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>unique_patterns <span class="op">=</span> <span class="bu">sorted</span>(label_mapping.keys())</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>pattern_to_id <span class="op">=</span> {pattern: idx <span class="cf">for</span> idx, pattern <span class="kw">in</span> <span class="bu">enumerate</span>(unique_patterns)}</span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>id_to_pattern <span class="op">=</span> {idx: label_mapping[pattern] <span class="cf">for</span> pattern, idx <span class="kw">in</span> pattern_to_id.items()}</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>id_to_binary <span class="op">=</span> {v: k <span class="cf">for</span> k, v <span class="kw">in</span> pattern_to_id.items()}</span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Load dataset</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>data_path <span class="op">=</span> repo_root <span class="op">/</span> <span class="st">"data"</span> <span class="op">/</span> <span class="st">"mixedtype-wafer-defect-datasets"</span> <span class="op">/</span> <span class="st">"Wafer_Map_Datasets.npz"</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loading dataset from"</span>, data_path)</span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> np.load(data_path)</span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> data[<span class="st">"arr_0"</span>]</span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> data[<span class="st">"arr_1"</span>]</span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a>images[images <span class="op">==</span> <span class="dv">3</span>] <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a>X_all <span class="op">=</span> np.eye(<span class="dv">3</span>, dtype<span class="op">=</span>np.float32)[images.astype(<span class="bu">int</span>)]</span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a>label_str_arr <span class="op">=</span> np.array([<span class="st">""</span>.join(<span class="bu">map</span>(<span class="bu">str</span>, <span class="bu">map</span>(<span class="bu">int</span>, row))) <span class="cf">for</span> row <span class="kw">in</span> labels])</span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a>X_batch <span class="op">=</span> X_all</span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Loaded dataset shape:"</span>, X_batch.shape)</span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a><span class="co"># Run inference with the selected model</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"SELECTED_MODEL"</span>, <span class="st">"cnn"</span>)</span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a>model_filename <span class="op">=</span> <span class="st">"model_p2_cnn.keras"</span> <span class="cf">if</span> SELECTED_MODEL <span class="op">==</span> <span class="st">"cnn"</span> <span class="cf">else</span> <span class="st">"model_p2_tl.keras"</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true" tabindex="-1"></a>model_path <span class="op">=</span> <span class="bu">str</span>(models_dir <span class="op">/</span> model_filename)</span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Running inference with: </span><span class="sc">{</span>SELECTED_MODEL<span class="sc">.</span>upper()<span class="sc">}</span><span class="ss"> (</span><span class="sc">{</span>model_path<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> wg_inf.run_model(model_path, X_batch)</span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co"># Decode + build batch summary</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>class_ids, confidences <span class="op">=</span> financial.get_predictions(predictions)</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>binary_labels, pattern_names <span class="op">=</span> financial.decode_labels(class_ids, id_to_binary, id_to_pattern)</span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>df_batch2 <span class="op">=</span> financial.build_batch_df(binary_labels, confidences, label_mapping)</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="co"># Financial config</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"BATCH_ID"</span>, <span class="st">"LOT_001"</span>)</span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a>WPH <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"WPH"</span>, <span class="dv">100</span>)</span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a>VALUE_PER_WAFER <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"VALUE_PER_WAFER"</span>, <span class="dv">5000</span>)</span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>REPAIR_HOURS <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"REPAIR_HOURS"</span>, <span class="dv">8</span>)</span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a>PLANNING_HORIZON <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"PLANNING_HORIZON"</span>, <span class="dv">30</span>)</span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true" tabindex="-1"></a>CONFIDENCE_THRESHOLD <span class="op">=</span> <span class="bu">globals</span>().get(<span class="st">"CONFIDENCE_THRESHOLD"</span>, <span class="fl">0.7</span>)</span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> {</span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a>    <span class="st">"WPH"</span>: WPH,</span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a>    <span class="st">"VALUE_PER_WAFER"</span>: VALUE_PER_WAFER,</span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>    <span class="st">"REPAIR_HOURS"</span>: REPAIR_HOURS,</span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a>    <span class="st">"PLANNING_HORIZON"</span>: PLANNING_HORIZON,</span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a>    <span class="st">"BATCH_ID"</span>: BATCH_ID,</span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a>    <span class="st">"total_wafers"</span>: <span class="bu">len</span>(binary_labels),</span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a>    <span class="st">"low_conf_count"</span>: <span class="bu">int</span>((confidences <span class="op">&lt;</span> CONFIDENCE_THRESHOLD).<span class="bu">sum</span>()),</span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>df_financial2, summary2 <span class="op">=</span> financial.compute_financials(df_batch2, config)</span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview and save</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial preview (top 5) ---"</span>)</span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial2.head(<span class="dv">5</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Summary payload (truncated) ---"</span>)</span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(json.dumps(summary2, indent<span class="op">=</span><span class="dv">2</span>)[:<span class="dv">1000</span>])</span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>outdir_demo <span class="op">=</span> <span class="bu">str</span>(repo_root <span class="op">/</span> <span class="ss">f"reports_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">"</span> <span class="op">/</span> <span class="st">"refactor_demo"</span>)</span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>financial.save_reports(df_batch2, df_financial2, summary2, outdir_demo, BATCH_ID)</span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved refactor reports →"</span>, outdir_demo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loading dataset from /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz
 Loaded dataset shape: (38015, 52, 52, 3)
 Running inference with: CNN (/Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/wafer_images/phase2_models/model_p2_cnn.keras)
 --- Financial preview (top 5) ---
@@ -363,18 +368,18 @@ Saved refactor reports → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/
 <p>The table above treats all 38 patterns as independent. This table <strong>decomposes</strong> every detected pattern into its 8 base anomaly types and aggregates counts at the base level.</p>
 <p><strong>Logic:</strong> A wafer classified as <em>Donut + Edge Lock + Scratch</em> contributes <strong>+1</strong> to each of Donut, Edge Lock, and Scratch independently.</p>
 <p><strong>Why this matters:</strong> Fixing a root cause (e.g., the CMP machine) resolves the base anomaly across <em>every</em> combination pattern that contains it. This table reflects the true aggregate financial impact of addressing each base anomaly independently — giving a repair-action-oriented view.</p>
-<div id="ckmrfo875bs" class="cell" data-execution_count="4">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decompose all detections to base anomaly level and recompute financial metrics</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>df_batch_base <span class="op">=</span> financial.build_base_anomaly_df(binary_labels, confidences, label_mapping)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df_financial_base, summary_base <span class="op">=</span> financial.compute_financials(df_batch_base, config)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial Impact by Base Anomaly (Decomposed View) ---"</span>)</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial_base.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Save decomposed report</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>base_csv_path <span class="op">=</span> Path(outdir_demo) <span class="op">/</span> <span class="ss">f"base_anomaly_report_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">.csv"</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>df_financial_base.to_csv(base_csv_path, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Saved base anomaly report → </span><span class="sc">{</span>base_csv_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="ckmrfo875bs" class="cell" data-execution_count="28">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decompose all detections to base anomaly level and recompute financial metrics</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_batch_base <span class="op">=</span> financial.build_base_anomaly_df(binary_labels, confidences, label_mapping)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_financial_base, summary_base <span class="op">=</span> financial.compute_financials(df_batch_base, config)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Financial Impact by Base Anomaly (Decomposed View) ---"</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_financial_base.to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Save decomposed report</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>base_csv_path <span class="op">=</span> Path(outdir_demo) <span class="op">/</span> <span class="ss">f"base_anomaly_report_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">.csv"</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>df_financial_base.to_csv(base_csv_path, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Saved base anomaly report → </span><span class="sc">{</span>base_csv_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Financial Impact by Base Anomaly (Decomposed View) ---
 binary_label pattern_name  count  batch_pct  avg_confidence  triage_priority risk_level  yield_loss_pct  repair_cost  replacement_cost  downtime_per_hr  weighted_daily_loss  break_even_days    evoa_30d  priority_score                                                process_step                                                                                                      repair_action
@@ -402,19 +407,19 @@ Shows the <strong>aggregate financial impact</strong> of taking that action acro
 <li><strong>Partially resolved</strong>: the action fixes some components; savings are proportional to the fraction resolved.</li>
 </ul>
 <p>Use this table to answer: <em>“If I take action X, what is the total financial gain?”</em></p>
-<div id="l6ycf2rg3th" class="cell" data-execution_count="5">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build action-oriented financial table</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_actions <span class="op">=</span> financial.compute_action_table(df_financial2)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total unique repair actions identified: </span><span class="sc">{</span><span class="bu">len</span>(df_actions)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Action-Oriented Financial Table (top 10 by daily loss savings) ---"</span>)</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_actions.head(<span class="dv">10</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save action table alongside the pattern-oriented report</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>action_path <span class="op">=</span> Path(outdir_demo) <span class="op">/</span> <span class="ss">f"action_report_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">.csv"</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>df_actions.to_csv(action_path, index<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Saved action report → </span><span class="sc">{</span>action_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div id="l6ycf2rg3th" class="cell" data-execution_count="29">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build action-oriented financial table</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_actions <span class="op">=</span> financial.compute_action_table(df_financial2)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Total unique repair actions identified: </span><span class="sc">{</span><span class="bu">len</span>(df_actions)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"--- Action-Oriented Financial Table (top 10 by daily loss savings) ---"</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_actions.head(<span class="dv">10</span>).to_string(index<span class="op">=</span><span class="va">False</span>))</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Save action table alongside the pattern-oriented report</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>action_path <span class="op">=</span> Path(outdir_demo) <span class="op">/</span> <span class="ss">f"action_report_</span><span class="sc">{</span>BATCH_ID<span class="sc">}</span><span class="ss">.csv"</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>df_actions.to_csv(action_path, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Saved action report → </span><span class="sc">{</span>action_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Total unique repair actions identified: 23
 
