@@ -1013,15 +1013,7 @@ elif st.session_state.active_tab == "sample":
 
         images, pattern_ids = load_dataset()
 
-        # Pattern selection
-        all_pattern_names = [ID_TO_PATTERN[i] for i in range(len(ID_TO_PATTERN))]
-        selected_patterns = st.multiselect(
-            "Select defect patterns",
-            options=all_pattern_names,
-            default=None,
-            help="Leave empty to sample from all patterns.",
-            placeholder="All patterns",
-        )
+        selected_patterns = None
 
         # Batch size
         sample_size = st.slider("Number of samples", min_value=800, max_value=6000, value=1000)
@@ -1052,10 +1044,20 @@ elif st.session_state.active_tab == "sample":
                 f"{BASE_PATTERN_SCENARIO_DEFAULTS['TARGET_SHARE']:.0%} {focus_pattern}-related, "
                 f"{1 - BASE_PATTERN_SCENARIO_DEFAULTS['NORMAL_SHARE'] - BASE_PATTERN_SCENARIO_DEFAULTS['TARGET_SHARE']:.0%} Other"
             )
+        else:
+            # Pattern filter is only relevant for random sampling mode.
+            all_pattern_names = [ID_TO_PATTERN[i] for i in range(len(ID_TO_PATTERN))]
+            selected_patterns = st.multiselect(
+                "Select defect patterns",
+                options=all_pattern_names,
+                default=None,
+                help="Leave empty to sample from all patterns.",
+                placeholder="All patterns",
+            )
 
         if st.button("Generate Samples", type="primary"):
-            # Filter by selected patterns
-            if selected_patterns:
+            # Filter by selected patterns for Random samples mode.
+            if sample_mode == "Random samples" and selected_patterns:
                 from app.labels import PATTERN_TO_ID
 
                 selected_ids = [PATTERN_TO_ID[p] for p in selected_patterns]
