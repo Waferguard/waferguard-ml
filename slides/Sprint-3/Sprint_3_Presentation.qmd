@@ -1,0 +1,331 @@
+---
+title: "WaferGuardML — Technical Solution"
+subtitle: "From Defect Detection to Financial Impact"
+author: "WaferGuardML"
+date: today
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    transition: slide
+    width: 1280
+    height: 720
+    footer: "WaferGuardML"
+    highlight-style: monokai
+    code-line-numbers: false
+    incremental: false
+    smaller: false
+    header-includes: |
+        <style>
+        .reveal .slide-background-content { background-color: #2D2D2D; }
+        .reveal { font-size: 28px; color: #F0F0F0; }
+        .reveal h1, .reveal h2 { font-family: Georgia, serif; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em; }
+        .reveal h2 { border-bottom: 3px solid #888888; padding-bottom: 0.3em; margin-bottom: 0.6em; }
+        .reveal h3 { color: #E0E0E0; }
+        .reveal strong { color: #FFFFFF; }
+        .reveal blockquote { background: #3A3A3A; border-left: 5px solid #888888; padding: 1em 1.2em; font-size: 0.8em; font-style: normal; color: #CCCCCC; border-radius: 4px; }
+        .reveal table { font-size: 0.75em; color: #F0F0F0; }
+        .reveal th { background-color: #4A4A4A; color: white; padding: 0.5em 0.8em; }
+        .reveal td { padding: 0.4em 0.8em; border-color: #555555; }
+        .reveal .slide-number { color: #AAAAAA; }
+        .reveal code { font-size: 0.85em; color: #E0E0E0; }
+        .reveal pre { font-size: 0.6em; border-radius: 8px; background: #1A1A1A; }
+        .reveal a { color: #7EB8DA; }
+        .reveal .footer { color: #999999; }
+        .reveal ul, .reveal ol { color: #F0F0F0; }
+        .reveal dt { color: #FFFFFF; }
+        .reveal dd { color: #DDDDDD; }
+        section.center h2 { border-bottom: none; }
+        </style>
+---
+
+
+## Agenda
+
+1. **Use Case Scenario**
+2. **Streamlit App Demo**
+3. **Financial Impact Pipeline**
+4. **Financial Impact Results**
+5. **Next Steps**
+
+
+## The Problem
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Which defects<br/>are increasing?</strong>
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Which process step<br/>is causing it?</strong>
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>How much money<br/>are we losing?</strong>
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>What should we<br/>fix first?</strong>
+</td>
+</tr>
+</table>
+
+Today, semiconductor manufacturers catch defects manually, days or weeks after they happen. They can't answer any of these questions quickly.
+
+**WaferGuardML answers all of them automatically.**
+
+
+## Use Case: ChipCo Manufacturing
+
+*3 months after deploying WaferGuardML*
+
+<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Month 1</strong><br/><br/>System establishes<br/>baseline defect rates<br/>across all batches
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Month 2</strong><br/><br/>Donut defects start<br/>trending upward<br/>3% → 7% of batches
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Month 3</strong><br/><br/>Dashboard flags alert:<br/>Donut rate now 12%<br/>⚠️ Action required
+</td>
+</tr>
+</table>
+
+The system tells you **the CMP polishing pad is likely worn**, the repair costs **$130K**, and every day you wait costs **$350K in lost yield**.
+
+
+## What the App Tells ChipCo
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tr>
+<td style="background: #D32F2F; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
+<strong style="font-size: 1.2em;">The Problem</strong><br/><br/>
+Donut defect → CMP process<br/><br/>
+Polishing pad is worn<br/>or slurry is contaminated<br/><br/>
+<strong>Cost of doing nothing:<br/>$350K per day</strong>
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
+<td style="background: #4CAF50; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
+<strong style="font-size: 1.2em;">The Fix</strong><br/><br/>
+Replace pad, refresh slurry<br/>Clean CMP heads<br/><br/>
+<strong>Repair cost: $130K</strong><br/>
+<strong>Break-even: &lt; 1 day</strong><br/><br/>
+30-day savings: ~$10M
+</td>
+</tr>
+</table>
+
+
+## Live Demo: Streamlit App
+
+**Walking through the Donut defect scenario in the app**
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Classify</strong><br/><br/>Defect results<br/>with confidence scores
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Visualize</strong><br/><br/>Defect distribution<br/>across the batch
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Cost</strong><br/><br/>Financial impact<br/>per defect type
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Recommend</strong><br/><br/>Prioritized<br/>repair actions
+</td>
+</tr>
+</table>
+
+*Switching to live demo...*
+
+
+## How We Calculate Financial Impact
+
+<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 12px 0; font-size: 0.65em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+<strong>1. Detect</strong><br/><br/>Classify each wafer<br/>into one of<br/>38 patterns
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+<strong>2. Count</strong><br/><br/>How often each<br/>pattern appears<br/>in the batch
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+<strong>3. Map</strong><br/><br/>Link to process step,<br/>repair cost,<br/>yield loss
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+<strong>4. Calculate</strong><br/><br/>Daily loss,<br/>break-even,<br/>30-day risk
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 160px; vertical-align: middle;">
+<strong>5. Advise</strong><br/><br/>What to fix first<br/>and how much<br/>you save
+</td>
+</tr>
+</table>
+
+The result is a **prioritized action plan**: fix this process step first, it costs this much, and you'll save this much by doing it now.
+
+
+## Financial Impact Results
+
+<table style="font-size: 0.6em; margin: 1em auto;">
+<thead>
+<tr><th>Pattern</th><th>Count</th><th>Batch %</th><th>Confidence</th><th>Risk</th><th>Yield Loss</th><th>Daily Loss</th><th>Break-Even</th></tr>
+</thead>
+<tbody>
+<tr><td>Donut+Edge_Loc+Loc+Scratch</td><td>4,725</td><td>12.43%</td><td>99.87%</td><td style="color: #F44336;">Critical</td><td>18–85%</td><td>$771,860</td><td>0.6 days</td></tr>
+<tr><td>Center+Edge_Loc+Scratch</td><td>4,866</td><td>12.80%</td><td>99.84%</td><td style="color: #F44336;">Critical</td><td>13–75%</td><td>$675,851</td><td>0.7 days</td></tr>
+<tr><td>Center+Edge_Loc+Loc+Scratch</td><td>1,383</td><td>3.64%</td><td>99.52%</td><td style="color: #F44336;">Critical</td><td>13–80%</td><td>$204,092</td><td>3.0 days</td></tr>
+<tr><td>Donut+Loc+Scratch</td><td>1,160</td><td>3.05%</td><td>99.64%</td><td style="color: #F44336;">Critical</td><td>18–80%</td><td>$179,422</td><td>2.0 days</td></tr>
+<tr><td>Donut+Edge_Loc+Loc</td><td>2,913</td><td>7.66%</td><td>99.94%</td><td style="color: #FF9800;">High</td><td>16–60%</td><td>$349,424</td><td>1.1 days</td></tr>
+</tbody>
+</table>
+
+The top two patterns alone cost nearly **$1.5M per day** combined. Both have break-even times under 1 day, meaning the repair pays for itself within hours.
+
+
+## Next Steps
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Integrate</strong><br/><br/>Financial impact<br/>calculations directly<br/>into the Streamlit app
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Test & Deploy</strong><br/><br/>End-to-end pipeline:<br/>upload → classify →<br/>financial report
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Analyze</strong><br/><br/>App identifies trends,<br/>pinpoints costly processes,<br/>recommends savings
+</td>
+</tr>
+</table>
+
+
+---
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center; margin-top: -15%;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">Thank You</h2>
+<br>
+<p><strong>Questions?</strong></p>
+</div>
+</div>
+
+
+---
+
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh; text-align: center; margin-top: -15%;">
+<div>
+<h2 style="border: none; margin: 0; padding: 0;">Appendix</h2>
+</div>
+</div>
+
+## The Problem (Full Context) {data-visibility="uncounted"}
+
+You run a semiconductor fabrication plant. Every day, thousands of wafers move through your production line. Some come out with defects. Right now, your team catches them manually, days or weeks after they happen.
+
+**The questions you can't answer today:**
+
+- Which defect types are increasing? Is it getting worse?
+- Which specific process step is causing the problem?
+- How much money are we losing while we figure it out?
+- What should we fix first to save the most money?
+
+**WaferGuardML answers all of these automatically.**
+
+
+## What the App Tells ChipCo (Details) {data-visibility="uncounted"}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+### The Problem
+The Donut defect is linked to the **CMP (Chemical Mechanical Planarization)** process. A ring-shaped pattern appears when the polishing pad wears down or the slurry gets contaminated.
+
+Without the app, this trend goes unnoticed for weeks. By then, thousands of wafers are already affected.
+
+**Estimated cost of doing nothing: $350K per day**
+:::
+
+::: {.column width="50%"}
+### What the App Recommends
+Replace the polishing pad and refresh the slurry. Clean the CMP heads. Run requalification metrology.
+
+**Repair cost: $130K**
+**Break-even: less than 1 day**
+
+The manufacturer spends $130K once and avoids losing $350K every single day the problem continues. Over 30 days, that's roughly **$10M in savings**.
+:::
+
+::::
+
+
+## What Each Metric Means {data-visibility="uncounted"}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Weighted Daily Loss**
+How much money a specific defect pattern is costing per day, based on how frequently it appears and how much yield it destroys.
+
+**Break-Even Days**
+How quickly a repair pays for itself. If break-even is under 1 day, it means delaying the repair costs more than doing it right now.
+:::
+
+::: {.column width="50%"}
+**EVoA (Expected Value of Action)**
+The net savings over 30 days if you repair now versus doing nothing. A high EVoA means "fix this immediately."
+
+**Priority Score**
+Combines financial urgency with defect severity. The higher the score, the more important it is to act.
+:::
+
+::::
+
+These metrics turn raw defect data into a clear answer: **what to fix, in what order, and why it's worth it.**
+
+
+## Next Steps (Details) {data-visibility="uncounted"}
+
+**Sprint 3 (Next Week):**
+
+1. Integrate the financial impact calculations directly into the Streamlit dashboard so users see cost data alongside defect predictions in one place.
+
+2. Test the full pipeline end to end: upload wafer data → classify defects → generate financial report → display recommendations.
+
+3. Deploy the Streamlit app so the team and stakeholders can access it.
+
+**After Deployment:**
+
+4. Build an analysis feature where the app examines uploaded batch data over time, identifies which defect types are trending upward, pinpoints the manufacturing process steps responsible, and shows the business exactly where they are losing money and how to reduce costs.
+
+5. Gather feedback from stakeholders and iterate on the dashboard layout, metrics displayed, and recommendation format.
+
+
+## Financial Parameters per Defect Type {.smaller data-visibility="uncounted"}
+
+<table style="font-size: 0.65em; margin: 1em auto;">
+<thead>
+<tr><th>Defect</th><th>Repair Cost</th><th>Replacement Cost</th><th>Downtime/hr</th><th>Yield Loss</th><th>Risk</th><th>Process Step</th></tr>
+</thead>
+<tbody>
+<tr><td>Center</td><td>$275K</td><td>$6.0M</td><td>$2.05M</td><td>10–40%</td><td>High</td><td>Deposition / Plasma</td></tr>
+<tr><td>Donut</td><td>$130K</td><td>$5.25M</td><td>$550K</td><td>15–50%</td><td>High</td><td>CMP / Lithography</td></tr>
+<tr><td>Edge_Loc</td><td>$110K</td><td>$6.0M</td><td>$550K</td><td>1–10%</td><td>Medium</td><td>Diffusion / Thermal</td></tr>
+<tr><td>Edge_Ring</td><td>$255K</td><td>$12.5M</td><td>$2.25M</td><td>0–15%</td><td>High</td><td>Plasma Etch</td></tr>
+<tr><td>Loc</td><td>$155K</td><td>$8.5M</td><td>$2.05M</td><td>1–10%</td><td>Medium</td><td>Tool-specific</td></tr>
+<tr><td style="background: #D32F2F; color: white;">Near_Full</td><td style="background: #D32F2F; color: white;">$525K</td><td style="background: #D32F2F; color: white;">$8.5M</td><td style="background: #D32F2F; color: white;">$2.45M</td><td style="background: #D32F2F; color: white;">50–100%</td><td style="background: #D32F2F; color: white;">Critical</td><td style="background: #D32F2F; color: white;">Major Excursion</td></tr>
+<tr><td>Scratch</td><td>$77.5K</td><td>$5.25M</td><td>$550K</td><td>5–50%</td><td>Critical</td><td>Wafer Handling / CMP</td></tr>
+<tr><td>Random</td><td>$130K</td><td>N/A</td><td>$2.05M</td><td>1–20%</td><td>Medium</td><td>Environment / Contamination</td></tr>
+</tbody>
+</table>
