@@ -315,279 +315,6 @@
     "text": "References\n\nKyeong, S., Kim, H., & Kim, S. (2020). Classification of wafer map defects based on deep learning methods with a small amount of data. IEEE Access, 8, 21796–21806. https://www.researchgate.net/publication/339903705\nLi, Y., Zhang, X., & Wang, J. (2024). Deep learning approaches for wafer defect pattern recognition. arXiv Preprint. https://arxiv.org/html/2411.11029v1\nJMP Community. (2021). How to make a wafer map in JMP in under 30 seconds. https://community.jmp.com/t5/JMPer-Cable/How-to-make-a-wafer-map-in-JMP-in-under-30-seconds/ba-p/348607\nMathWorks. (n.d.). Classify defects on wafer maps using deep learning. https://www.mathworks.com/help/vision/ug/classify-defects-on-wafer-maps-using-deep-learning.html\nPDF.com. (n.d.). Understanding semiconductor data visualization with wafer maps: An introduction. https://www.pdf.com/understanding-semiconductor-data-visualization-with-wafer-maps-an-introduction/\nWikipedia contributors. (n.d.). Substrate mapping. https://en.wikipedia.org/wiki/Substrate_mapping"
   },
   {
-    "objectID": "slides/SecomData/slides.html#what-is-secom-data",
-    "href": "slides/SecomData/slides.html#what-is-secom-data",
-    "title": "WaferGuard ML",
-    "section": "What is SECOM Data?",
-    "text": "What is SECOM Data?\nSensor data from a semiconductor manufacturing process.\n\n590 sensor measurements per production entity\n1,567 samples (wafers/chips)\nBinary outcome: Pass (-1) vs Fail (1)\nSource: UCI Machine Learning Repository\n\n\nReal-world sensor data is notoriously “messy” and redundant"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#the-challenge",
-    "href": "slides/SecomData/slides.html#the-challenge",
-    "title": "WaferGuard ML",
-    "section": "The Challenge",
-    "text": "The Challenge\n\nHigh-dimensional sensor data (590 features)\nSevere class imbalance (~93% Pass, ~7% Fail)\nSignificant missing values across features\nMany redundant/correlated sensors"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#dataset-overview",
-    "href": "slides/SecomData/slides.html#dataset-overview",
-    "title": "WaferGuard ML",
-    "section": "Dataset Overview",
-    "text": "Dataset Overview\n\n\n\nAttribute\nValue\n\n\n\n\nSamples\n1,567 production entities\n\n\nFeatures\n590 sensor measurements\n\n\nLabels\nPass (-1) / Fail (1)\n\n\nCollection Period\n89 days (Jul-Oct 2008)"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#missing-value-analysis",
-    "href": "slides/SecomData/slides.html#missing-value-analysis",
-    "title": "WaferGuard ML",
-    "section": "Missing Value Analysis",
-    "text": "Missing Value Analysis"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#missing-value-distribution",
-    "href": "slides/SecomData/slides.html#missing-value-distribution",
-    "title": "WaferGuard ML",
-    "section": "Missing Value Distribution",
-    "text": "Missing Value Distribution\n\nFeatures with ANY missing: 538 out of 590 (91%)\nFeatures with &gt;50% missing: 28 features\nAverage missing per sample: 26.8 features (4.5%)\n\n\nStrategy: Drop features with &gt;50% missing; impute the rest"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#descriptive-statistics",
-    "href": "slides/SecomData/slides.html#descriptive-statistics",
-    "title": "WaferGuard ML",
-    "section": "Descriptive Statistics",
-    "text": "Descriptive Statistics"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#constant-features",
-    "href": "slides/SecomData/slides.html#constant-features",
-    "title": "WaferGuard ML",
-    "section": "Constant Features",
-    "text": "Constant Features\nSome sensors show zero variance (useless for prediction).\n\nExample: sensor_5 = 100.0 for all samples\nThese provide no discriminative power\nMust be identified and removed"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#class-distribution",
-    "href": "slides/SecomData/slides.html#class-distribution",
-    "title": "WaferGuard ML",
-    "section": "Class Distribution",
-    "text": "Class Distribution"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#class-imbalance",
-    "href": "slides/SecomData/slides.html#class-imbalance",
-    "title": "WaferGuard ML",
-    "section": "Class Imbalance",
-    "text": "Class Imbalance\nThe dataset is heavily skewed towards “Pass”.\n\n\n\nClass\nLabel\nFrequency\n\n\n\n\nPass\n-1\n~93%\n\n\nFail\n1\n~7%\n\n\n\n\nRisk: A model predicting “Pass” everywhere achieves 93% accuracy but fails the objective."
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#correlation-analysis",
-    "href": "slides/SecomData/slides.html#correlation-analysis",
-    "title": "WaferGuard ML",
-    "section": "Correlation Analysis",
-    "text": "Correlation Analysis"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#feature-correlations",
-    "href": "slides/SecomData/slides.html#feature-correlations",
-    "title": "WaferGuard ML",
-    "section": "Feature Correlations",
-    "text": "Feature Correlations\n\nMany sensors are highly correlated\nRedundant features increase model complexity\nStrategy: Remove one of each highly correlated pair (|r| &gt; 0.95)"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#additional-analysis",
-    "href": "slides/SecomData/slides.html#additional-analysis",
-    "title": "WaferGuard ML",
-    "section": "Additional Analysis",
-    "text": "Additional Analysis"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#feature-distribution",
-    "href": "slides/SecomData/slides.html#feature-distribution",
-    "title": "WaferGuard ML",
-    "section": "Feature Distribution",
-    "text": "Feature Distribution"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#preprocessing-strategy",
-    "href": "slides/SecomData/slides.html#preprocessing-strategy",
-    "title": "WaferGuard ML",
-    "section": "Preprocessing Strategy",
-    "text": "Preprocessing Strategy\n\nCleaning:\n\nRemove constant features (Zero Variance)\nRemove high missingness columns (&gt;50%)\n\nFeature Reduction:\n\nAddress multicollinearity (|r| &gt; 0.95)\nConsider PCA"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#handling-imbalance",
-    "href": "slides/SecomData/slides.html#handling-imbalance",
-    "title": "WaferGuard ML",
-    "section": "Handling Imbalance",
-    "text": "Handling Imbalance\nTo enable effective defect detection:\n\nStratified Sampling: Maintain 7% failure rate in splits\nSMOTE: Generate synthetic failure examples\nClass Weights: Penalize missing a failure more heavily"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#next-steps",
-    "href": "slides/SecomData/slides.html#next-steps",
-    "title": "WaferGuard ML",
-    "section": "Next Steps",
-    "text": "Next Steps\n\nExecute preprocessing pipeline\nBaseline Model Training (Logistic Regression / Random Forest)\nEvaluate using Recall and F1-Score (Accuracy is misleading here)"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#dataset-summary",
-    "href": "slides/SecomData/slides.html#dataset-summary",
-    "title": "WaferGuard ML",
-    "section": "Dataset Summary",
-    "text": "Dataset Summary\n\n1,567 Production Samples\n590 Sensor Features\nBinary Pass/Fail Labels\n89 Days of Production Data"
-  },
-  {
-    "objectID": "slides/SecomData/slides.html#data-quality-assessment",
-    "href": "slides/SecomData/slides.html#data-quality-assessment",
-    "title": "WaferGuard ML",
-    "section": "Data Quality Assessment",
-    "text": "Data Quality Assessment\n\n⚠️ Significant Missing Values (91% of features affected)\n⚠️ Constant Features Present\n⚠️ Severe Class Imbalance (93/7 split)\n✅ Preprocessing Pipeline Defined\n✅ Ready for Model Development"
-  },
-  {
-    "objectID": "blueprint.html",
-    "href": "blueprint.html",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Team: Milos, Hernan, Rolando, Oliver Duration: 10-12 weeks (5-6 sprints) Sprint Length: 2 weeks\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Data[\"Data Ingestion Layer\"]\n        SECOM[(SECOM Sensor Data)]\n        WM811K[(WM811K Wafer Images)]\n        VAL[Data Validation]\n    end\n\n    subgraph ML[\"Machine Learning Pipeline\"]\n        PRE[Preprocessing]\n        FE[Feature Engineering]\n        CNN[CNN Model]\n        AE[Autoencoder]\n        ENS[Ensemble Model]\n    end\n\n    subgraph INF[\"Inference & Alert System\"]\n        API[FastAPI Endpoint]\n        CONF[Confidence Scoring]\n        ALERT[Alert Generator]\n    end\n\n    subgraph VIZ[\"Visualization Dashboard\"]\n        STREAM[Streamlit Dashboard]\n        KPI[KPI Metrics]\n        GCAM[GradCAM Views]\n        HIST[Historical Trends]\n    end\n\n    subgraph MES[\"MES Integration\"]\n        SIM[MES Simulator]\n        HOOK[Integration Hooks]\n    end\n\n    SECOM --&gt; VAL\n    WM811K --&gt; VAL\n    VAL --&gt; PRE\n    PRE --&gt; FE\n    FE --&gt; CNN\n    FE --&gt; AE\n    CNN --&gt; ENS\n    AE --&gt; ENS\n    ENS --&gt; API\n    API --&gt; CONF\n    CONF --&gt; ALERT\n    API --&gt; STREAM\n    ALERT --&gt; STREAM\n    STREAM --&gt; KPI\n    STREAM --&gt; GCAM\n    STREAM --&gt; HIST\n    API --&gt; HOOK\n    SIM --&gt; HOOK\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    A[Raw Data] --&gt; B[Preprocessing]\n    B --&gt; C[Feature Engineering]\n    C --&gt; D[Model Training]\n    D --&gt; E[Validation]\n    E --&gt; F[Deployment]\n    F --&gt; G[Real-time Inference]\n    G --&gt; H[Dashboard]\n    H --&gt; I[Alerts]\n\n    style A fill:#e1f5fe\n    style D fill:#fff3e0\n    style H fill:#e8f5e9\n    style I fill:#ffebee\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEpic ID\nName\nDescription\nPhase Alignment\n\n\n\n\nKAN-1\nData Pipeline & Foundation\nEnvironment setup, data acquisition, EDA, preprocessing\nPhase 1-2\n\n\nKAN-2\nAnomaly Detection (ML) Model\nCNN + Autoencoder development, training, validation\nPhase 3\n\n\nKAN-3\nMES Integration & API\nFastAPI inference endpoints, MES simulation, alert system\nPhase 4\n\n\nKAN-4\nAnalytics + Dashboard\nStreamlit dashboard, visualizations, KPIs, GradCAM\nPhase 4\n\n\nKAN-5\nGovernance & Audit-ability\nModel versioning (MLflow), documentation, evaluation reports\nPhase 5\n\n\n\n\n\n\nYour original epics were solid. I recommend: - Split KAN-1 into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2) - Keep KAN-2 (MES Integration) as KAN-3 - Keep KAN-3 (Analytics+Dashboard) as KAN-4 - Keep KAN-4 (Governance) as KAN-5\nThis gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation\n\n\n\n\n\n\n\n\nflowchart LR\n    KAN1[KAN-1&lt;br/&gt;Data Pipeline]\n    KAN2[KAN-2&lt;br/&gt;ML Model]\n    KAN3[KAN-3&lt;br/&gt;MES Integration]\n    KAN4[KAN-4&lt;br/&gt;Dashboard]\n    KAN5[KAN-5&lt;br/&gt;Governance]\n\n    KAN1 --&gt; KAN2\n    KAN2 --&gt; KAN3\n    KAN2 --&gt; KAN4\n    KAN3 --&gt; KAN4\n    KAN4 --&gt; KAN5\n    KAN3 --&gt; KAN5\n\n    style KAN1 fill:#bbdefb,color:#000000\n    style KAN2 fill:#c8e6c9,color:#000000\n    style KAN3 fill:#fff9c4,color:#000000\n    style KAN4 fill:#ffccbc,color:#000000\n    style KAN5 fill:#e1bee7,color:#000000\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ngantt\n    title WaferGuard ML - Sprint Timeline\n    dateFormat  YYYY-MM-DD\n    section KAN-1 Data Pipeline\n        Sprint 1 - Foundation     :s1, 2026-01-27, 14d\n        Sprint 2 - Data Pipeline  :s2, after s1, 14d\n    section KAN-2 ML Model\n        Sprint 3 - Model Dev      :s3, after s2, 14d\n        Sprint 4 - Refinement     :s4, after s3, 14d\n    section KAN-3 & KAN-4\n        Sprint 4 - API            :s4b, after s3, 14d\n        Sprint 5 - Dashboard      :s5, after s4, 14d\n    section KAN-5 Governance\n        Sprint 6 - Documentation  :s6, after s5, 14d\n\n\n\n\n\n\n\n\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation) - 80% Done\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStatus\n\n\n\n\nKAN-8\nSet up Python Environment\nOliver\nDONE ✅\n\n\nKAN-9\nInitialize Git Repo With Branching Strategy + Rules\nOliver\nDONE ✅\n\n\nKAN-10\nDownload Secom Dataset + Verify Integrity\nOliver\nDONE ✅\n\n\nKAN-11\nDownload WM811 Image Analysis + Verify\nOliver\nDONE ✅\n\n\nKAN-12\nRun EDA on Secom Sensor Data\nRolando\nIN REVIEW 🔄\n\n\nKAN-13\nRun EDA on WM811K Image analysis\nOliver\nDONE ✅\n\n\nKAN-14\nData Quality Assessment Report\nUnassigned\nTO DO 📋\n\n\nKAN-15\nSet Up Jira Board with epics/stories\nRolando\nDONE ✅\n\n\nKAN-46\nResearch about how the pixels are generated from and actual image\nMilos\nDONE ✅\n\n\nKAN-47\nCreate slides for initial images EDA findings\nOliver\nDONE ✅\n\n\n\nSprint 1 Goal: Development environment ready, datasets loaded, initial EDA complete\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-1-010\nSECOM preprocessing pipeline (missing values, outliers)\nTBD\n5\nTODO\n\n\nKAN-1-011\nFeature engineering for sensor data\nTBD\n5\nTODO\n\n\nKAN-1-012\nWM811K image preprocessing (resize, normalize)\nTBD\n3\nTODO\n\n\nKAN-1-013\nImage augmentation strategy (rotation, flip)\nTBD\n3\nTODO\n\n\nKAN-1-014\nTrain/validation/test split implementation\nTBD\n2\nTODO\n\n\nKAN-1-015\nData loader classes (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-1-016\nHandle class imbalance (SMOTE/class weights)\nTBD\n3\nTODO\n\n\n\nSprint 2 Goal: Clean, processed datasets ready for model training\n\n\n\n\nEpic: KAN-2 (Anomaly Detection Model)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-001\nCNN architecture design for wafer classification\nTBD\n5\nTODO\n\n\nKAN-2-002\nImplement CNN model (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-2-003\nAutoencoder architecture for sensor anomaly\nTBD\n5\nTODO\n\n\nKAN-2-004\nImplement Autoencoder model\nTBD\n5\nTODO\n\n\nKAN-2-005\nTraining pipeline with early stopping\nTBD\n3\nTODO\n\n\nKAN-2-006\nHyperparameter tuning setup\nTBD\n3\nTODO\n\n\nKAN-2-007\nBaseline model benchmarking\nTBD\n3\nTODO\n\n\n\nSprint 3 Goal: Working CNN and Autoencoder models with baseline metrics\n\n\n\n\nEpics: KAN-2 (Model), KAN-3 (MES Integration)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-008\nModel validation and cross-validation\nTBD\n3\nTODO\n\n\nKAN-2-009\nEnsemble model (CNN + Autoencoder)\nTBD\n5\nTODO\n\n\nKAN-2-010\nGradCAM implementation for explainability\nTBD\n5\nTODO\n\n\nKAN-3-001\nFastAPI inference endpoint design\nTBD\n3\nTODO\n\n\nKAN-3-002\nImplement /predict endpoint\nTBD\n5\nTODO\n\n\nKAN-3-003\nConfidence scoring and threshold logic\nTBD\n3\nTODO\n\n\nKAN-3-004\nMES simulation mock data generator\nTBD\n3\nTODO\n\n\nKAN-3-005\nAlert generation logic\nTBD\n3\nTODO\n\n\n\nSprint 4 Goal: Optimized models, working inference API\n\n\n\n\nEpic: KAN-4 (Analytics + Dashboard)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-4-001\nDashboard wireframes in Figma\nTBD\n3\nTODO\n\n\nKAN-4-002\nStreamlit app skeleton\nTBD\n2\nTODO\n\n\nKAN-4-003\nReal-time anomaly detection view\nTBD\n5\nTODO\n\n\nKAN-4-004\nHistorical trend analysis charts\nTBD\n5\nTODO\n\n\nKAN-4-005\nModel confidence visualization\nTBD\n3\nTODO\n\n\nKAN-4-006\nGradCAM attention map display\nTBD\n5\nTODO\n\n\nKAN-4-007\nProduction KPIs (OEE, defect rate)\nTBD\n3\nTODO\n\n\nKAN-4-008\nAlert notification panel\nTBD\n3\nTODO\n\n\nKAN-4-009\nInteractive filtering and drill-down\nTBD\n5\nTODO\n\n\n\nSprint 5 Goal: Functional dashboard with all visualizations\n\n\n\n\nEpic: KAN-5 (Governance & Audit-ability)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-5-001\nComprehensive model evaluation report\nTBD\n5\nTODO\n\n\nKAN-5-002\nComparison vs baseline (SPC, manual)\nTBD\n5\nTODO\n\n\nKAN-5-003\nModel versioning documentation\nTBD\n3\nTODO\n\n\nKAN-5-004\nAPI documentation (OpenAPI/Swagger)\nTBD\n3\nTODO\n\n\nKAN-5-005\nUser guide for dashboard\nTBD\n3\nTODO\n\n\nKAN-5-006\nTechnical architecture documentation\nTBD\n3\nTODO\n\n\nKAN-5-007\nFinal presentation slides\nTBD\n5\nTODO\n\n\nKAN-5-008\nLive demo preparation\nTBD\n3\nTODO\n\n\nKAN-5-009\nCode cleanup and refactoring\nTBD\n3\nTODO\n\n\n\nSprint 6 Goal: Complete documentation, presentation ready\n\n\n\n\n\n\n\n\nWork Stream\nSpecialist\nAssistant\nPrimary Epics\n\n\n\n\nData Engineering & ML Pipeline\nTBD\nTBD\nKAN-1\n\n\nModel Development & Training\nTBD\nTBD\nKAN-2\n\n\nDashboard & Integration\nTBD\nTBD\nKAN-3, KAN-4\n\n\nEvaluation & Documentation\nTBD\nTBD\nKAN-5\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Team[\"WaferGuard ML Team\"]\n        subgraph WS1[\"Data Engineering\"]\n            DE1[Specialist: TBD]\n            DE2[Assistant: TBD]\n        end\n        subgraph WS2[\"Model Development\"]\n            MD1[Specialist: TBD]\n            MD2[Assistant: TBD]\n        end\n        subgraph WS3[\"Dashboard & Integration\"]\n            DI1[Specialist: TBD]\n            DI2[Assistant: TBD]\n        end\n        subgraph WS4[\"Evaluation & Docs\"]\n            ED1[Specialist: TBD]\n            ED2[Assistant: TBD]\n        end\n    end\n\n    WS1 --&gt;|Data| WS2\n    WS2 --&gt;|Models| WS3\n    WS3 --&gt;|System| WS4\n\n    style WS1 fill:#bbdefb\n    style WS2 fill:#c8e6c9\n    style WS3 fill:#fff9c4\n    style WS4 fill:#e1bee7\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Input[\"Input Data\"]\n        IMG[Wafer Images&lt;br/&gt;WM811K]\n        SEN[Sensor Data&lt;br/&gt;SECOM]\n    end\n\n    subgraph CNN[\"CNN Pipeline\"]\n        C1[Conv2D + ReLU]\n        C2[MaxPool]\n        C3[Conv2D + ReLU]\n        C4[MaxPool]\n        C5[Flatten]\n        C6[Dense + Softmax]\n    end\n\n    subgraph AE[\"Autoencoder Pipeline\"]\n        E1[Encoder]\n        E2[Latent Space]\n        E3[Decoder]\n        E4[Reconstruction Error]\n    end\n\n    subgraph Ensemble[\"Ensemble Decision\"]\n        COMB[Score Combination]\n        THRESH[Threshold Logic]\n        OUT[Final Prediction]\n    end\n\n    IMG --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4 --&gt; C5 --&gt; C6\n    SEN --&gt; E1 --&gt; E2 --&gt; E3 --&gt; E4\n    C6 --&gt; COMB\n    E4 --&gt; COMB\n    COMB --&gt; THRESH --&gt; OUT\n\n    style CNN fill:#e3f2fd\n    style AE fill:#f3e5f5\n    style Ensemble fill:#e8f5e9\n\n\n\n\n\n\n\n\n\n\nCore:           Python 3.9+\nML Framework:   PyTorch (recommended) or TensorFlow/Keras\nData:           NumPy, Pandas, Scikit-learn, OpenCV\nDashboard:      Streamlit (faster dev) or Plotly Dash\nAPI:            FastAPI\nTracking:       MLflow\nExplainability: SHAP, GradCAM\nVersion Control: Git + GitHub\nProject Mgmt:   Jira\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Frontend[\"Frontend\"]\n        ST[Streamlit]\n        FIG[Figma]\n    end\n\n    subgraph Backend[\"Backend\"]\n        FA[FastAPI]\n        ML[MLflow]\n    end\n\n    subgraph ML_Stack[\"ML Stack\"]\n        PT[PyTorch]\n        SK[Scikit-learn]\n        CV[OpenCV]\n    end\n\n    subgraph Data_Stack[\"Data\"]\n        PD[Pandas]\n        NP[NumPy]\n    end\n\n    subgraph DevOps[\"DevOps\"]\n        GIT[Git/GitHub]\n        JIRA[Jira]\n    end\n\n    Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend\n    DevOps -.-&gt; Backend\n    DevOps -.-&gt; ML_Stack\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDataset\nDescription\nSize\nSource\n\n\n\n\nSECOM\nSensor data (590 features)\n~1,500 samples\nUCI ML Repository\n\n\nWM811K\nWafer map images\n~38,000 images\nKaggle\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Sources[\"Data Sources\"]\n        S1[(SECOM&lt;br/&gt;UCI Repository)]\n        S2[(WM811K&lt;br/&gt;Kaggle)]\n    end\n\n    subgraph Processing[\"Processing\"]\n        P1[Missing Value&lt;br/&gt;Imputation]\n        P2[Outlier&lt;br/&gt;Detection]\n        P3[Normalization]\n        P4[Image Resize&lt;br/&gt;& Augment]\n    end\n\n    subgraph Output[\"Processed Data\"]\n        O1[Train Set&lt;br/&gt;70%]\n        O2[Val Set&lt;br/&gt;15%]\n        O3[Test Set&lt;br/&gt;15%]\n    end\n\n    S1 --&gt; P1 --&gt; P2 --&gt; P3 --&gt; O1 & O2 & O3\n    S2 --&gt; P4 --&gt; O1 & O2 & O3\n\n    style Sources fill:#e3f2fd\n    style Processing fill:#fff8e1\n    style Output fill:#e8f5e9\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMetric\nTarget\n\n\n\n\nCNN Accuracy\n&gt;90%\n\n\nFalse Positive Rate\n&lt;5%\n\n\nInference Latency\n&lt;500ms\n\n\nDashboard Refresh\n&lt;2s\n\n\n\n\n\n\n\n\n\n\npie showData\n    title Story Points Distribution\n    \"KAN-1 Data Pipeline\" : 47\n    \"KAN-2 ML Model\" : 42\n    \"KAN-3 MES Integration\" : 17\n    \"KAN-4 Dashboard\" : 34\n    \"KAN-5 Governance\" : 33\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsequenceDiagram\n    participant MES as MES System\n    participant API as FastAPI\n    participant Model as ML Model\n    participant DB as MLflow\n    participant Dash as Dashboard\n    participant Eng as Process Engineer\n\n    MES-&gt;&gt;API: POST /predict (wafer data)\n    API-&gt;&gt;Model: Load model from registry\n    Model-&gt;&gt;DB: Get latest model version\n    DB--&gt;&gt;Model: Return model weights\n    Model-&gt;&gt;Model: Run inference\n    Model--&gt;&gt;API: Prediction + confidence\n    API-&gt;&gt;API: Apply threshold logic\n\n    alt Anomaly Detected\n        API-&gt;&gt;Dash: Send alert\n        Dash-&gt;&gt;Eng: Display notification\n        API--&gt;&gt;MES: Response (anomaly: true)\n    else Normal\n        API--&gt;&gt;MES: Response (anomaly: false)\n    end\n\n    API-&gt;&gt;Dash: Update real-time view\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nstateDiagram-v2\n    [*] --&gt; Planning: Sprint Start\n    Planning --&gt; InProgress: Tasks Assigned\n    InProgress --&gt; CodeReview: PR Created\n    CodeReview --&gt; Testing: Approved\n    Testing --&gt; Done: Tests Pass\n    CodeReview --&gt; InProgress: Changes Requested\n    Testing --&gt; InProgress: Tests Fail\n    Done --&gt; [*]: Sprint End\n\n    note right of Planning: 2 hour session\n    note right of InProgress: Daily standups\n    note right of Done: Sprint review\n\n\n\n\n\n\n\n\n\n\nActive Sprint: Sprint 1 - Foundation Sprint Start: TBD Sprint End: TBD\n\n\n\nEnvironment setup\nData acquisition\nEDA complete\nJira configured\n\n\n\n\n\n\n\n\n\nMeeting\nFrequency\nDuration\nDay/Time\n\n\n\n\nSprint Planning\nBi-weekly\n2 hours\nSprint Day 1\n\n\nDaily Standup\nDaily\n15 min\nTBD\n\n\nSprint Review\nBi-weekly\n1.5 hours\nSprint Last Day\n\n\nSprint Retro\nBi-weekly\n1 hour\nSprint Last Day\n\n\n\n\n\n\n\n\nJira Board: TBD\nGitHub Repo: TBD\nFigma Designs: TBD\nMLflow Dashboard: TBD\nGoogle Drive: TBD\n\n\nLast Updated: 2026-01-23"
-  },
-  {
-    "objectID": "blueprint.html#system-architecture",
-    "href": "blueprint.html#system-architecture",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "flowchart TB\n    subgraph Data[\"Data Ingestion Layer\"]\n        SECOM[(SECOM Sensor Data)]\n        WM811K[(WM811K Wafer Images)]\n        VAL[Data Validation]\n    end\n\n    subgraph ML[\"Machine Learning Pipeline\"]\n        PRE[Preprocessing]\n        FE[Feature Engineering]\n        CNN[CNN Model]\n        AE[Autoencoder]\n        ENS[Ensemble Model]\n    end\n\n    subgraph INF[\"Inference & Alert System\"]\n        API[FastAPI Endpoint]\n        CONF[Confidence Scoring]\n        ALERT[Alert Generator]\n    end\n\n    subgraph VIZ[\"Visualization Dashboard\"]\n        STREAM[Streamlit Dashboard]\n        KPI[KPI Metrics]\n        GCAM[GradCAM Views]\n        HIST[Historical Trends]\n    end\n\n    subgraph MES[\"MES Integration\"]\n        SIM[MES Simulator]\n        HOOK[Integration Hooks]\n    end\n\n    SECOM --&gt; VAL\n    WM811K --&gt; VAL\n    VAL --&gt; PRE\n    PRE --&gt; FE\n    FE --&gt; CNN\n    FE --&gt; AE\n    CNN --&gt; ENS\n    AE --&gt; ENS\n    ENS --&gt; API\n    API --&gt; CONF\n    CONF --&gt; ALERT\n    API --&gt; STREAM\n    ALERT --&gt; STREAM\n    STREAM --&gt; KPI\n    STREAM --&gt; GCAM\n    STREAM --&gt; HIST\n    API --&gt; HOOK\n    SIM --&gt; HOOK"
-  },
-  {
-    "objectID": "blueprint.html#data-flow",
-    "href": "blueprint.html#data-flow",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "flowchart LR\n    A[Raw Data] --&gt; B[Preprocessing]\n    B --&gt; C[Feature Engineering]\n    C --&gt; D[Model Training]\n    D --&gt; E[Validation]\n    E --&gt; F[Deployment]\n    F --&gt; G[Real-time Inference]\n    G --&gt; H[Dashboard]\n    H --&gt; I[Alerts]\n\n    style A fill:#e1f5fe\n    style D fill:#fff3e0\n    style H fill:#e8f5e9\n    style I fill:#ffebee"
-  },
-  {
-    "objectID": "blueprint.html#epics-overview",
-    "href": "blueprint.html#epics-overview",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Epic ID\nName\nDescription\nPhase Alignment\n\n\n\n\nKAN-1\nData Pipeline & Foundation\nEnvironment setup, data acquisition, EDA, preprocessing\nPhase 1-2\n\n\nKAN-2\nAnomaly Detection (ML) Model\nCNN + Autoencoder development, training, validation\nPhase 3\n\n\nKAN-3\nMES Integration & API\nFastAPI inference endpoints, MES simulation, alert system\nPhase 4\n\n\nKAN-4\nAnalytics + Dashboard\nStreamlit dashboard, visualizations, KPIs, GradCAM\nPhase 4\n\n\nKAN-5\nGovernance & Audit-ability\nModel versioning (MLflow), documentation, evaluation reports\nPhase 5\n\n\n\n\n\n\nYour original epics were solid. I recommend: - Split KAN-1 into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2) - Keep KAN-2 (MES Integration) as KAN-3 - Keep KAN-3 (Analytics+Dashboard) as KAN-4 - Keep KAN-4 (Governance) as KAN-5\nThis gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation\n\n\n\n\n\n\n\n\nflowchart LR\n    KAN1[KAN-1&lt;br/&gt;Data Pipeline]\n    KAN2[KAN-2&lt;br/&gt;ML Model]\n    KAN3[KAN-3&lt;br/&gt;MES Integration]\n    KAN4[KAN-4&lt;br/&gt;Dashboard]\n    KAN5[KAN-5&lt;br/&gt;Governance]\n\n    KAN1 --&gt; KAN2\n    KAN2 --&gt; KAN3\n    KAN2 --&gt; KAN4\n    KAN3 --&gt; KAN4\n    KAN4 --&gt; KAN5\n    KAN3 --&gt; KAN5\n\n    style KAN1 fill:#bbdefb,color:#000000\n    style KAN2 fill:#c8e6c9,color:#000000\n    style KAN3 fill:#fff9c4,color:#000000\n    style KAN4 fill:#ffccbc,color:#000000\n    style KAN5 fill:#e1bee7,color:#000000"
-  },
-  {
-    "objectID": "blueprint.html#sprint-timeline",
-    "href": "blueprint.html#sprint-timeline",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "gantt\n    title WaferGuard ML - Sprint Timeline\n    dateFormat  YYYY-MM-DD\n    section KAN-1 Data Pipeline\n        Sprint 1 - Foundation     :s1, 2026-01-27, 14d\n        Sprint 2 - Data Pipeline  :s2, after s1, 14d\n    section KAN-2 ML Model\n        Sprint 3 - Model Dev      :s3, after s2, 14d\n        Sprint 4 - Refinement     :s4, after s3, 14d\n    section KAN-3 & KAN-4\n        Sprint 4 - API            :s4b, after s3, 14d\n        Sprint 5 - Dashboard      :s5, after s4, 14d\n    section KAN-5 Governance\n        Sprint 6 - Documentation  :s6, after s5, 14d"
-  },
-  {
-    "objectID": "blueprint.html#sprint-breakdown",
-    "href": "blueprint.html#sprint-breakdown",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Epic: KAN-1 (Data Pipeline & Foundation) - 80% Done\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStatus\n\n\n\n\nKAN-8\nSet up Python Environment\nOliver\nDONE ✅\n\n\nKAN-9\nInitialize Git Repo With Branching Strategy + Rules\nOliver\nDONE ✅\n\n\nKAN-10\nDownload Secom Dataset + Verify Integrity\nOliver\nDONE ✅\n\n\nKAN-11\nDownload WM811 Image Analysis + Verify\nOliver\nDONE ✅\n\n\nKAN-12\nRun EDA on Secom Sensor Data\nRolando\nIN REVIEW 🔄\n\n\nKAN-13\nRun EDA on WM811K Image analysis\nOliver\nDONE ✅\n\n\nKAN-14\nData Quality Assessment Report\nUnassigned\nTO DO 📋\n\n\nKAN-15\nSet Up Jira Board with epics/stories\nRolando\nDONE ✅\n\n\nKAN-46\nResearch about how the pixels are generated from and actual image\nMilos\nDONE ✅\n\n\nKAN-47\nCreate slides for initial images EDA findings\nOliver\nDONE ✅\n\n\n\nSprint 1 Goal: Development environment ready, datasets loaded, initial EDA complete\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-1-010\nSECOM preprocessing pipeline (missing values, outliers)\nTBD\n5\nTODO\n\n\nKAN-1-011\nFeature engineering for sensor data\nTBD\n5\nTODO\n\n\nKAN-1-012\nWM811K image preprocessing (resize, normalize)\nTBD\n3\nTODO\n\n\nKAN-1-013\nImage augmentation strategy (rotation, flip)\nTBD\n3\nTODO\n\n\nKAN-1-014\nTrain/validation/test split implementation\nTBD\n2\nTODO\n\n\nKAN-1-015\nData loader classes (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-1-016\nHandle class imbalance (SMOTE/class weights)\nTBD\n3\nTODO\n\n\n\nSprint 2 Goal: Clean, processed datasets ready for model training\n\n\n\n\nEpic: KAN-2 (Anomaly Detection Model)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-001\nCNN architecture design for wafer classification\nTBD\n5\nTODO\n\n\nKAN-2-002\nImplement CNN model (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-2-003\nAutoencoder architecture for sensor anomaly\nTBD\n5\nTODO\n\n\nKAN-2-004\nImplement Autoencoder model\nTBD\n5\nTODO\n\n\nKAN-2-005\nTraining pipeline with early stopping\nTBD\n3\nTODO\n\n\nKAN-2-006\nHyperparameter tuning setup\nTBD\n3\nTODO\n\n\nKAN-2-007\nBaseline model benchmarking\nTBD\n3\nTODO\n\n\n\nSprint 3 Goal: Working CNN and Autoencoder models with baseline metrics\n\n\n\n\nEpics: KAN-2 (Model), KAN-3 (MES Integration)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-008\nModel validation and cross-validation\nTBD\n3\nTODO\n\n\nKAN-2-009\nEnsemble model (CNN + Autoencoder)\nTBD\n5\nTODO\n\n\nKAN-2-010\nGradCAM implementation for explainability\nTBD\n5\nTODO\n\n\nKAN-3-001\nFastAPI inference endpoint design\nTBD\n3\nTODO\n\n\nKAN-3-002\nImplement /predict endpoint\nTBD\n5\nTODO\n\n\nKAN-3-003\nConfidence scoring and threshold logic\nTBD\n3\nTODO\n\n\nKAN-3-004\nMES simulation mock data generator\nTBD\n3\nTODO\n\n\nKAN-3-005\nAlert generation logic\nTBD\n3\nTODO\n\n\n\nSprint 4 Goal: Optimized models, working inference API\n\n\n\n\nEpic: KAN-4 (Analytics + Dashboard)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-4-001\nDashboard wireframes in Figma\nTBD\n3\nTODO\n\n\nKAN-4-002\nStreamlit app skeleton\nTBD\n2\nTODO\n\n\nKAN-4-003\nReal-time anomaly detection view\nTBD\n5\nTODO\n\n\nKAN-4-004\nHistorical trend analysis charts\nTBD\n5\nTODO\n\n\nKAN-4-005\nModel confidence visualization\nTBD\n3\nTODO\n\n\nKAN-4-006\nGradCAM attention map display\nTBD\n5\nTODO\n\n\nKAN-4-007\nProduction KPIs (OEE, defect rate)\nTBD\n3\nTODO\n\n\nKAN-4-008\nAlert notification panel\nTBD\n3\nTODO\n\n\nKAN-4-009\nInteractive filtering and drill-down\nTBD\n5\nTODO\n\n\n\nSprint 5 Goal: Functional dashboard with all visualizations\n\n\n\n\nEpic: KAN-5 (Governance & Audit-ability)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-5-001\nComprehensive model evaluation report\nTBD\n5\nTODO\n\n\nKAN-5-002\nComparison vs baseline (SPC, manual)\nTBD\n5\nTODO\n\n\nKAN-5-003\nModel versioning documentation\nTBD\n3\nTODO\n\n\nKAN-5-004\nAPI documentation (OpenAPI/Swagger)\nTBD\n3\nTODO\n\n\nKAN-5-005\nUser guide for dashboard\nTBD\n3\nTODO\n\n\nKAN-5-006\nTechnical architecture documentation\nTBD\n3\nTODO\n\n\nKAN-5-007\nFinal presentation slides\nTBD\n5\nTODO\n\n\nKAN-5-008\nLive demo preparation\nTBD\n3\nTODO\n\n\nKAN-5-009\nCode cleanup and refactoring\nTBD\n3\nTODO\n\n\n\nSprint 6 Goal: Complete documentation, presentation ready"
-  },
-  {
-    "objectID": "blueprint.html#work-stream-assignments",
-    "href": "blueprint.html#work-stream-assignments",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Work Stream\nSpecialist\nAssistant\nPrimary Epics\n\n\n\n\nData Engineering & ML Pipeline\nTBD\nTBD\nKAN-1\n\n\nModel Development & Training\nTBD\nTBD\nKAN-2\n\n\nDashboard & Integration\nTBD\nTBD\nKAN-3, KAN-4\n\n\nEvaluation & Documentation\nTBD\nTBD\nKAN-5\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Team[\"WaferGuard ML Team\"]\n        subgraph WS1[\"Data Engineering\"]\n            DE1[Specialist: TBD]\n            DE2[Assistant: TBD]\n        end\n        subgraph WS2[\"Model Development\"]\n            MD1[Specialist: TBD]\n            MD2[Assistant: TBD]\n        end\n        subgraph WS3[\"Dashboard & Integration\"]\n            DI1[Specialist: TBD]\n            DI2[Assistant: TBD]\n        end\n        subgraph WS4[\"Evaluation & Docs\"]\n            ED1[Specialist: TBD]\n            ED2[Assistant: TBD]\n        end\n    end\n\n    WS1 --&gt;|Data| WS2\n    WS2 --&gt;|Models| WS3\n    WS3 --&gt;|System| WS4\n\n    style WS1 fill:#bbdefb\n    style WS2 fill:#c8e6c9\n    style WS3 fill:#fff9c4\n    style WS4 fill:#e1bee7"
-  },
-  {
-    "objectID": "blueprint.html#ml-model-architecture",
-    "href": "blueprint.html#ml-model-architecture",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "flowchart TB\n    subgraph Input[\"Input Data\"]\n        IMG[Wafer Images&lt;br/&gt;WM811K]\n        SEN[Sensor Data&lt;br/&gt;SECOM]\n    end\n\n    subgraph CNN[\"CNN Pipeline\"]\n        C1[Conv2D + ReLU]\n        C2[MaxPool]\n        C3[Conv2D + ReLU]\n        C4[MaxPool]\n        C5[Flatten]\n        C6[Dense + Softmax]\n    end\n\n    subgraph AE[\"Autoencoder Pipeline\"]\n        E1[Encoder]\n        E2[Latent Space]\n        E3[Decoder]\n        E4[Reconstruction Error]\n    end\n\n    subgraph Ensemble[\"Ensemble Decision\"]\n        COMB[Score Combination]\n        THRESH[Threshold Logic]\n        OUT[Final Prediction]\n    end\n\n    IMG --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4 --&gt; C5 --&gt; C6\n    SEN --&gt; E1 --&gt; E2 --&gt; E3 --&gt; E4\n    C6 --&gt; COMB\n    E4 --&gt; COMB\n    COMB --&gt; THRESH --&gt; OUT\n\n    style CNN fill:#e3f2fd\n    style AE fill:#f3e5f5\n    style Ensemble fill:#e8f5e9"
-  },
-  {
-    "objectID": "blueprint.html#technology-stack-recommended",
-    "href": "blueprint.html#technology-stack-recommended",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Core:           Python 3.9+\nML Framework:   PyTorch (recommended) or TensorFlow/Keras\nData:           NumPy, Pandas, Scikit-learn, OpenCV\nDashboard:      Streamlit (faster dev) or Plotly Dash\nAPI:            FastAPI\nTracking:       MLflow\nExplainability: SHAP, GradCAM\nVersion Control: Git + GitHub\nProject Mgmt:   Jira\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Frontend[\"Frontend\"]\n        ST[Streamlit]\n        FIG[Figma]\n    end\n\n    subgraph Backend[\"Backend\"]\n        FA[FastAPI]\n        ML[MLflow]\n    end\n\n    subgraph ML_Stack[\"ML Stack\"]\n        PT[PyTorch]\n        SK[Scikit-learn]\n        CV[OpenCV]\n    end\n\n    subgraph Data_Stack[\"Data\"]\n        PD[Pandas]\n        NP[NumPy]\n    end\n\n    subgraph DevOps[\"DevOps\"]\n        GIT[Git/GitHub]\n        JIRA[Jira]\n    end\n\n    Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend\n    DevOps -.-&gt; Backend\n    DevOps -.-&gt; ML_Stack"
-  },
-  {
-    "objectID": "blueprint.html#key-datasets",
-    "href": "blueprint.html#key-datasets",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Dataset\nDescription\nSize\nSource\n\n\n\n\nSECOM\nSensor data (590 features)\n~1,500 samples\nUCI ML Repository\n\n\nWM811K\nWafer map images\n~38,000 images\nKaggle\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Sources[\"Data Sources\"]\n        S1[(SECOM&lt;br/&gt;UCI Repository)]\n        S2[(WM811K&lt;br/&gt;Kaggle)]\n    end\n\n    subgraph Processing[\"Processing\"]\n        P1[Missing Value&lt;br/&gt;Imputation]\n        P2[Outlier&lt;br/&gt;Detection]\n        P3[Normalization]\n        P4[Image Resize&lt;br/&gt;& Augment]\n    end\n\n    subgraph Output[\"Processed Data\"]\n        O1[Train Set&lt;br/&gt;70%]\n        O2[Val Set&lt;br/&gt;15%]\n        O3[Test Set&lt;br/&gt;15%]\n    end\n\n    S1 --&gt; P1 --&gt; P2 --&gt; P3 --&gt; O1 & O2 & O3\n    S2 --&gt; P4 --&gt; O1 & O2 & O3\n\n    style Sources fill:#e3f2fd\n    style Processing fill:#fff8e1\n    style Output fill:#e8f5e9"
-  },
-  {
-    "objectID": "blueprint.html#success-criteria",
-    "href": "blueprint.html#success-criteria",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Metric\nTarget\n\n\n\n\nCNN Accuracy\n&gt;90%\n\n\nFalse Positive Rate\n&lt;5%\n\n\nInference Latency\n&lt;500ms\n\n\nDashboard Refresh\n&lt;2s\n\n\n\n\n\n\n\n\n\n\npie showData\n    title Story Points Distribution\n    \"KAN-1 Data Pipeline\" : 47\n    \"KAN-2 ML Model\" : 42\n    \"KAN-3 MES Integration\" : 17\n    \"KAN-4 Dashboard\" : 34\n    \"KAN-5 Governance\" : 33"
-  },
-  {
-    "objectID": "blueprint.html#inference-flow",
-    "href": "blueprint.html#inference-flow",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "sequenceDiagram\n    participant MES as MES System\n    participant API as FastAPI\n    participant Model as ML Model\n    participant DB as MLflow\n    participant Dash as Dashboard\n    participant Eng as Process Engineer\n\n    MES-&gt;&gt;API: POST /predict (wafer data)\n    API-&gt;&gt;Model: Load model from registry\n    Model-&gt;&gt;DB: Get latest model version\n    DB--&gt;&gt;Model: Return model weights\n    Model-&gt;&gt;Model: Run inference\n    Model--&gt;&gt;API: Prediction + confidence\n    API-&gt;&gt;API: Apply threshold logic\n\n    alt Anomaly Detected\n        API-&gt;&gt;Dash: Send alert\n        Dash-&gt;&gt;Eng: Display notification\n        API--&gt;&gt;MES: Response (anomaly: true)\n    else Normal\n        API--&gt;&gt;MES: Response (anomaly: false)\n    end\n\n    API-&gt;&gt;Dash: Update real-time view"
-  },
-  {
-    "objectID": "blueprint.html#sprint-workflow",
-    "href": "blueprint.html#sprint-workflow",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "stateDiagram-v2\n    [*] --&gt; Planning: Sprint Start\n    Planning --&gt; InProgress: Tasks Assigned\n    InProgress --&gt; CodeReview: PR Created\n    CodeReview --&gt; Testing: Approved\n    Testing --&gt; Done: Tests Pass\n    CodeReview --&gt; InProgress: Changes Requested\n    Testing --&gt; InProgress: Tests Fail\n    Done --&gt; [*]: Sprint End\n\n    note right of Planning: 2 hour session\n    note right of InProgress: Daily standups\n    note right of Done: Sprint review"
-  },
-  {
-    "objectID": "blueprint.html#current-sprint-status",
-    "href": "blueprint.html#current-sprint-status",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Active Sprint: Sprint 1 - Foundation Sprint Start: TBD Sprint End: TBD\n\n\n\nEnvironment setup\nData acquisition\nEDA complete\nJira configured"
-  },
-  {
-    "objectID": "blueprint.html#meeting-schedule",
-    "href": "blueprint.html#meeting-schedule",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Meeting\nFrequency\nDuration\nDay/Time\n\n\n\n\nSprint Planning\nBi-weekly\n2 hours\nSprint Day 1\n\n\nDaily Standup\nDaily\n15 min\nTBD\n\n\nSprint Review\nBi-weekly\n1.5 hours\nSprint Last Day\n\n\nSprint Retro\nBi-weekly\n1 hour\nSprint Last Day"
-  },
-  {
-    "objectID": "blueprint.html#quick-links",
-    "href": "blueprint.html#quick-links",
-    "title": "WaferGuard ML - Project Blueprint",
-    "section": "",
-    "text": "Jira Board: TBD\nGitHub Repo: TBD\nFigma Designs: TBD\nMLflow Dashboard: TBD\nGoogle Drive: TBD\n\n\nLast Updated: 2026-01-23"
-  },
-  {
-    "objectID": "index.html#wafer-images-wm811k",
-    "href": "index.html#wafer-images-wm811k",
-    "title": "WaferGuard ML",
-    "section": "Wafer Images (WM811k)",
-    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
-  },
-  {
-    "objectID": "index.html#secom-sensor-data",
-    "href": "index.html#secom-sensor-data",
-    "title": "WaferGuard ML",
-    "section": "SECOM Sensor Data",
-    "text": "SECOM Sensor Data\n\nSECOM EDA"
-  },
-  {
-    "objectID": "index.html#sprint-2-model-building",
-    "href": "index.html#sprint-2-model-building",
-    "title": "WaferGuard ML",
-    "section": "Sprint 2 (Model Building)",
-    "text": "Sprint 2 (Model Building)\n\nSprint 2 Model Building"
-  },
-  {
-    "objectID": "index.html#wafer-images-wm811k-1",
-    "href": "index.html#wafer-images-wm811k-1",
-    "title": "WaferGuard ML",
-    "section": "Wafer Images (WM811k)",
-    "text": "Wafer Images (WM811k)\n\nWafer Images EDA Notebook\nWafer Images Modeling Notebook\nWafer Images Model testing"
-  },
-  {
-    "objectID": "index.html#secom-sensor-data-1",
-    "href": "index.html#secom-sensor-data-1",
-    "title": "WaferGuard ML",
-    "section": "SECOM Sensor Data",
-    "text": "SECOM Sensor Data\n\nSECOM EDA Notebook"
-  },
-  {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
     "href": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
     "title": "Anomaly Detection in Semiconductor Manufacturing",
@@ -789,6 +516,377 @@
     "title": "Anomaly Detection in Semiconductor Manufacturing",
     "section": "Key Technical Decisions",
     "text": "Key Technical Decisions\n\nOne-hot pixel encoding → preserves categorical nature\nFocal Loss + class weights → handles severe imbalance\nBackbone reuse → leverages Phase 1 knowledge for Phase 2\nTwo-stage fine-tuning → safe adaptation without catastrophic forgetting\nGeometric-only augmentation → respects discrete pixel states"
+  },
+  {
+    "objectID": "index.html#wafer-images-wm811k",
+    "href": "index.html#wafer-images-wm811k",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images (WM811k)",
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA"
+  },
+  {
+    "objectID": "index.html#secom-sensor-data",
+    "href": "index.html#secom-sensor-data",
+    "title": "WaferGuard ML",
+    "section": "SECOM Sensor Data",
+    "text": "SECOM Sensor Data\n\nSECOM EDA"
+  },
+  {
+    "objectID": "index.html#sprint-2-model-building",
+    "href": "index.html#sprint-2-model-building",
+    "title": "WaferGuard ML",
+    "section": "Sprint 2 (Model Building)",
+    "text": "Sprint 2 (Model Building)\n\nSprint 2 Model Building"
+  },
+  {
+    "objectID": "index.html#sprint-3-technical-solution",
+    "href": "index.html#sprint-3-technical-solution",
+    "title": "WaferGuard ML",
+    "section": "Sprint 3 (Technical Solution)",
+    "text": "Sprint 3 (Technical Solution)\n\nSprint 3 Technical Solution"
+  },
+  {
+    "objectID": "index.html#wafer-images-wm811k-1",
+    "href": "index.html#wafer-images-wm811k-1",
+    "title": "WaferGuard ML",
+    "section": "Wafer Images (WM811k)",
+    "text": "Wafer Images (WM811k)\n\nWafer Images EDA Notebook\nWafer Images Modeling Notebook\nWafer Images Model testing"
+  },
+  {
+    "objectID": "index.html#secom-sensor-data-1",
+    "href": "index.html#secom-sensor-data-1",
+    "title": "WaferGuard ML",
+    "section": "SECOM Sensor Data",
+    "text": "SECOM Sensor Data\n\nSECOM EDA Notebook"
+  },
+  {
+    "objectID": "blueprint.html",
+    "href": "blueprint.html",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Team: Milos, Hernan, Rolando, Oliver Duration: 10-12 weeks (5-6 sprints) Sprint Length: 2 weeks\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Data[\"Data Ingestion Layer\"]\n        SECOM[(SECOM Sensor Data)]\n        WM811K[(WM811K Wafer Images)]\n        VAL[Data Validation]\n    end\n\n    subgraph ML[\"Machine Learning Pipeline\"]\n        PRE[Preprocessing]\n        FE[Feature Engineering]\n        CNN[CNN Model]\n        AE[Autoencoder]\n        ENS[Ensemble Model]\n    end\n\n    subgraph INF[\"Inference & Alert System\"]\n        API[FastAPI Endpoint]\n        CONF[Confidence Scoring]\n        ALERT[Alert Generator]\n    end\n\n    subgraph VIZ[\"Visualization Dashboard\"]\n        STREAM[Streamlit Dashboard]\n        KPI[KPI Metrics]\n        GCAM[GradCAM Views]\n        HIST[Historical Trends]\n    end\n\n    subgraph MES[\"MES Integration\"]\n        SIM[MES Simulator]\n        HOOK[Integration Hooks]\n    end\n\n    SECOM --&gt; VAL\n    WM811K --&gt; VAL\n    VAL --&gt; PRE\n    PRE --&gt; FE\n    FE --&gt; CNN\n    FE --&gt; AE\n    CNN --&gt; ENS\n    AE --&gt; ENS\n    ENS --&gt; API\n    API --&gt; CONF\n    CONF --&gt; ALERT\n    API --&gt; STREAM\n    ALERT --&gt; STREAM\n    STREAM --&gt; KPI\n    STREAM --&gt; GCAM\n    STREAM --&gt; HIST\n    API --&gt; HOOK\n    SIM --&gt; HOOK\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    A[Raw Data] --&gt; B[Preprocessing]\n    B --&gt; C[Feature Engineering]\n    C --&gt; D[Model Training]\n    D --&gt; E[Validation]\n    E --&gt; F[Deployment]\n    F --&gt; G[Real-time Inference]\n    G --&gt; H[Dashboard]\n    H --&gt; I[Alerts]\n\n    style A fill:#e1f5fe\n    style D fill:#fff3e0\n    style H fill:#e8f5e9\n    style I fill:#ffebee\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nEpic ID\nName\nDescription\nPhase Alignment\n\n\n\n\nKAN-1\nData Pipeline & Foundation\nEnvironment setup, data acquisition, EDA, preprocessing\nPhase 1-2\n\n\nKAN-2\nAnomaly Detection (ML) Model\nCNN + Autoencoder development, training, validation\nPhase 3\n\n\nKAN-3\nMES Integration & API\nFastAPI inference endpoints, MES simulation, alert system\nPhase 4\n\n\nKAN-4\nAnalytics + Dashboard\nStreamlit dashboard, visualizations, KPIs, GradCAM\nPhase 4\n\n\nKAN-5\nGovernance & Audit-ability\nModel versioning (MLflow), documentation, evaluation reports\nPhase 5\n\n\n\n\n\n\nYour original epics were solid. I recommend: - Split KAN-1 into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2) - Keep KAN-2 (MES Integration) as KAN-3 - Keep KAN-3 (Analytics+Dashboard) as KAN-4 - Keep KAN-4 (Governance) as KAN-5\nThis gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation\n\n\n\n\n\n\n\n\nflowchart LR\n    KAN1[KAN-1&lt;br/&gt;Data Pipeline]\n    KAN2[KAN-2&lt;br/&gt;ML Model]\n    KAN3[KAN-3&lt;br/&gt;MES Integration]\n    KAN4[KAN-4&lt;br/&gt;Dashboard]\n    KAN5[KAN-5&lt;br/&gt;Governance]\n\n    KAN1 --&gt; KAN2\n    KAN2 --&gt; KAN3\n    KAN2 --&gt; KAN4\n    KAN3 --&gt; KAN4\n    KAN4 --&gt; KAN5\n    KAN3 --&gt; KAN5\n\n    style KAN1 fill:#bbdefb,color:#000000\n    style KAN2 fill:#c8e6c9,color:#000000\n    style KAN3 fill:#fff9c4,color:#000000\n    style KAN4 fill:#ffccbc,color:#000000\n    style KAN5 fill:#e1bee7,color:#000000\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ngantt\n    title WaferGuard ML - Sprint Timeline\n    dateFormat  YYYY-MM-DD\n    section KAN-1 Data Pipeline\n        Sprint 1 - Foundation     :s1, 2026-01-27, 14d\n        Sprint 2 - Data Pipeline  :s2, after s1, 14d\n    section KAN-2 ML Model\n        Sprint 3 - Model Dev      :s3, after s2, 14d\n        Sprint 4 - Refinement     :s4, after s3, 14d\n    section KAN-3 & KAN-4\n        Sprint 4 - API            :s4b, after s3, 14d\n        Sprint 5 - Dashboard      :s5, after s4, 14d\n    section KAN-5 Governance\n        Sprint 6 - Documentation  :s6, after s5, 14d\n\n\n\n\n\n\n\n\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation) - 80% Done\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStatus\n\n\n\n\nKAN-8\nSet up Python Environment\nOliver\nDONE ✅\n\n\nKAN-9\nInitialize Git Repo With Branching Strategy + Rules\nOliver\nDONE ✅\n\n\nKAN-10\nDownload Secom Dataset + Verify Integrity\nOliver\nDONE ✅\n\n\nKAN-11\nDownload WM811 Image Analysis + Verify\nOliver\nDONE ✅\n\n\nKAN-12\nRun EDA on Secom Sensor Data\nRolando\nIN REVIEW 🔄\n\n\nKAN-13\nRun EDA on WM811K Image analysis\nOliver\nDONE ✅\n\n\nKAN-14\nData Quality Assessment Report\nUnassigned\nTO DO 📋\n\n\nKAN-15\nSet Up Jira Board with epics/stories\nRolando\nDONE ✅\n\n\nKAN-46\nResearch about how the pixels are generated from and actual image\nMilos\nDONE ✅\n\n\nKAN-47\nCreate slides for initial images EDA findings\nOliver\nDONE ✅\n\n\n\nSprint 1 Goal: Development environment ready, datasets loaded, initial EDA complete\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-1-010\nSECOM preprocessing pipeline (missing values, outliers)\nTBD\n5\nTODO\n\n\nKAN-1-011\nFeature engineering for sensor data\nTBD\n5\nTODO\n\n\nKAN-1-012\nWM811K image preprocessing (resize, normalize)\nTBD\n3\nTODO\n\n\nKAN-1-013\nImage augmentation strategy (rotation, flip)\nTBD\n3\nTODO\n\n\nKAN-1-014\nTrain/validation/test split implementation\nTBD\n2\nTODO\n\n\nKAN-1-015\nData loader classes (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-1-016\nHandle class imbalance (SMOTE/class weights)\nTBD\n3\nTODO\n\n\n\nSprint 2 Goal: Clean, processed datasets ready for model training\n\n\n\n\nEpic: KAN-2 (Anomaly Detection Model)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-001\nCNN architecture design for wafer classification\nTBD\n5\nTODO\n\n\nKAN-2-002\nImplement CNN model (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-2-003\nAutoencoder architecture for sensor anomaly\nTBD\n5\nTODO\n\n\nKAN-2-004\nImplement Autoencoder model\nTBD\n5\nTODO\n\n\nKAN-2-005\nTraining pipeline with early stopping\nTBD\n3\nTODO\n\n\nKAN-2-006\nHyperparameter tuning setup\nTBD\n3\nTODO\n\n\nKAN-2-007\nBaseline model benchmarking\nTBD\n3\nTODO\n\n\n\nSprint 3 Goal: Working CNN and Autoencoder models with baseline metrics\n\n\n\n\nEpics: KAN-2 (Model), KAN-3 (MES Integration)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-008\nModel validation and cross-validation\nTBD\n3\nTODO\n\n\nKAN-2-009\nEnsemble model (CNN + Autoencoder)\nTBD\n5\nTODO\n\n\nKAN-2-010\nGradCAM implementation for explainability\nTBD\n5\nTODO\n\n\nKAN-3-001\nFastAPI inference endpoint design\nTBD\n3\nTODO\n\n\nKAN-3-002\nImplement /predict endpoint\nTBD\n5\nTODO\n\n\nKAN-3-003\nConfidence scoring and threshold logic\nTBD\n3\nTODO\n\n\nKAN-3-004\nMES simulation mock data generator\nTBD\n3\nTODO\n\n\nKAN-3-005\nAlert generation logic\nTBD\n3\nTODO\n\n\n\nSprint 4 Goal: Optimized models, working inference API\n\n\n\n\nEpic: KAN-4 (Analytics + Dashboard)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-4-001\nDashboard wireframes in Figma\nTBD\n3\nTODO\n\n\nKAN-4-002\nStreamlit app skeleton\nTBD\n2\nTODO\n\n\nKAN-4-003\nReal-time anomaly detection view\nTBD\n5\nTODO\n\n\nKAN-4-004\nHistorical trend analysis charts\nTBD\n5\nTODO\n\n\nKAN-4-005\nModel confidence visualization\nTBD\n3\nTODO\n\n\nKAN-4-006\nGradCAM attention map display\nTBD\n5\nTODO\n\n\nKAN-4-007\nProduction KPIs (OEE, defect rate)\nTBD\n3\nTODO\n\n\nKAN-4-008\nAlert notification panel\nTBD\n3\nTODO\n\n\nKAN-4-009\nInteractive filtering and drill-down\nTBD\n5\nTODO\n\n\n\nSprint 5 Goal: Functional dashboard with all visualizations\n\n\n\n\nEpic: KAN-5 (Governance & Audit-ability)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-5-001\nComprehensive model evaluation report\nTBD\n5\nTODO\n\n\nKAN-5-002\nComparison vs baseline (SPC, manual)\nTBD\n5\nTODO\n\n\nKAN-5-003\nModel versioning documentation\nTBD\n3\nTODO\n\n\nKAN-5-004\nAPI documentation (OpenAPI/Swagger)\nTBD\n3\nTODO\n\n\nKAN-5-005\nUser guide for dashboard\nTBD\n3\nTODO\n\n\nKAN-5-006\nTechnical architecture documentation\nTBD\n3\nTODO\n\n\nKAN-5-007\nFinal presentation slides\nTBD\n5\nTODO\n\n\nKAN-5-008\nLive demo preparation\nTBD\n3\nTODO\n\n\nKAN-5-009\nCode cleanup and refactoring\nTBD\n3\nTODO\n\n\n\nSprint 6 Goal: Complete documentation, presentation ready\n\n\n\n\n\n\n\n\nWork Stream\nSpecialist\nAssistant\nPrimary Epics\n\n\n\n\nData Engineering & ML Pipeline\nTBD\nTBD\nKAN-1\n\n\nModel Development & Training\nTBD\nTBD\nKAN-2\n\n\nDashboard & Integration\nTBD\nTBD\nKAN-3, KAN-4\n\n\nEvaluation & Documentation\nTBD\nTBD\nKAN-5\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Team[\"WaferGuard ML Team\"]\n        subgraph WS1[\"Data Engineering\"]\n            DE1[Specialist: TBD]\n            DE2[Assistant: TBD]\n        end\n        subgraph WS2[\"Model Development\"]\n            MD1[Specialist: TBD]\n            MD2[Assistant: TBD]\n        end\n        subgraph WS3[\"Dashboard & Integration\"]\n            DI1[Specialist: TBD]\n            DI2[Assistant: TBD]\n        end\n        subgraph WS4[\"Evaluation & Docs\"]\n            ED1[Specialist: TBD]\n            ED2[Assistant: TBD]\n        end\n    end\n\n    WS1 --&gt;|Data| WS2\n    WS2 --&gt;|Models| WS3\n    WS3 --&gt;|System| WS4\n\n    style WS1 fill:#bbdefb\n    style WS2 fill:#c8e6c9\n    style WS3 fill:#fff9c4\n    style WS4 fill:#e1bee7\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Input[\"Input Data\"]\n        IMG[Wafer Images&lt;br/&gt;WM811K]\n        SEN[Sensor Data&lt;br/&gt;SECOM]\n    end\n\n    subgraph CNN[\"CNN Pipeline\"]\n        C1[Conv2D + ReLU]\n        C2[MaxPool]\n        C3[Conv2D + ReLU]\n        C4[MaxPool]\n        C5[Flatten]\n        C6[Dense + Softmax]\n    end\n\n    subgraph AE[\"Autoencoder Pipeline\"]\n        E1[Encoder]\n        E2[Latent Space]\n        E3[Decoder]\n        E4[Reconstruction Error]\n    end\n\n    subgraph Ensemble[\"Ensemble Decision\"]\n        COMB[Score Combination]\n        THRESH[Threshold Logic]\n        OUT[Final Prediction]\n    end\n\n    IMG --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4 --&gt; C5 --&gt; C6\n    SEN --&gt; E1 --&gt; E2 --&gt; E3 --&gt; E4\n    C6 --&gt; COMB\n    E4 --&gt; COMB\n    COMB --&gt; THRESH --&gt; OUT\n\n    style CNN fill:#e3f2fd\n    style AE fill:#f3e5f5\n    style Ensemble fill:#e8f5e9\n\n\n\n\n\n\n\n\n\n\nCore:           Python 3.9+\nML Framework:   PyTorch (recommended) or TensorFlow/Keras\nData:           NumPy, Pandas, Scikit-learn, OpenCV\nDashboard:      Streamlit (faster dev) or Plotly Dash\nAPI:            FastAPI\nTracking:       MLflow\nExplainability: SHAP, GradCAM\nVersion Control: Git + GitHub\nProject Mgmt:   Jira\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Frontend[\"Frontend\"]\n        ST[Streamlit]\n        FIG[Figma]\n    end\n\n    subgraph Backend[\"Backend\"]\n        FA[FastAPI]\n        ML[MLflow]\n    end\n\n    subgraph ML_Stack[\"ML Stack\"]\n        PT[PyTorch]\n        SK[Scikit-learn]\n        CV[OpenCV]\n    end\n\n    subgraph Data_Stack[\"Data\"]\n        PD[Pandas]\n        NP[NumPy]\n    end\n\n    subgraph DevOps[\"DevOps\"]\n        GIT[Git/GitHub]\n        JIRA[Jira]\n    end\n\n    Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend\n    DevOps -.-&gt; Backend\n    DevOps -.-&gt; ML_Stack\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nDataset\nDescription\nSize\nSource\n\n\n\n\nSECOM\nSensor data (590 features)\n~1,500 samples\nUCI ML Repository\n\n\nWM811K\nWafer map images\n~38,000 images\nKaggle\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Sources[\"Data Sources\"]\n        S1[(SECOM&lt;br/&gt;UCI Repository)]\n        S2[(WM811K&lt;br/&gt;Kaggle)]\n    end\n\n    subgraph Processing[\"Processing\"]\n        P1[Missing Value&lt;br/&gt;Imputation]\n        P2[Outlier&lt;br/&gt;Detection]\n        P3[Normalization]\n        P4[Image Resize&lt;br/&gt;& Augment]\n    end\n\n    subgraph Output[\"Processed Data\"]\n        O1[Train Set&lt;br/&gt;70%]\n        O2[Val Set&lt;br/&gt;15%]\n        O3[Test Set&lt;br/&gt;15%]\n    end\n\n    S1 --&gt; P1 --&gt; P2 --&gt; P3 --&gt; O1 & O2 & O3\n    S2 --&gt; P4 --&gt; O1 & O2 & O3\n\n    style Sources fill:#e3f2fd\n    style Processing fill:#fff8e1\n    style Output fill:#e8f5e9\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nMetric\nTarget\n\n\n\n\nCNN Accuracy\n&gt;90%\n\n\nFalse Positive Rate\n&lt;5%\n\n\nInference Latency\n&lt;500ms\n\n\nDashboard Refresh\n&lt;2s\n\n\n\n\n\n\n\n\n\n\npie showData\n    title Story Points Distribution\n    \"KAN-1 Data Pipeline\" : 47\n    \"KAN-2 ML Model\" : 42\n    \"KAN-3 MES Integration\" : 17\n    \"KAN-4 Dashboard\" : 34\n    \"KAN-5 Governance\" : 33\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsequenceDiagram\n    participant MES as MES System\n    participant API as FastAPI\n    participant Model as ML Model\n    participant DB as MLflow\n    participant Dash as Dashboard\n    participant Eng as Process Engineer\n\n    MES-&gt;&gt;API: POST /predict (wafer data)\n    API-&gt;&gt;Model: Load model from registry\n    Model-&gt;&gt;DB: Get latest model version\n    DB--&gt;&gt;Model: Return model weights\n    Model-&gt;&gt;Model: Run inference\n    Model--&gt;&gt;API: Prediction + confidence\n    API-&gt;&gt;API: Apply threshold logic\n\n    alt Anomaly Detected\n        API-&gt;&gt;Dash: Send alert\n        Dash-&gt;&gt;Eng: Display notification\n        API--&gt;&gt;MES: Response (anomaly: true)\n    else Normal\n        API--&gt;&gt;MES: Response (anomaly: false)\n    end\n\n    API-&gt;&gt;Dash: Update real-time view\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nstateDiagram-v2\n    [*] --&gt; Planning: Sprint Start\n    Planning --&gt; InProgress: Tasks Assigned\n    InProgress --&gt; CodeReview: PR Created\n    CodeReview --&gt; Testing: Approved\n    Testing --&gt; Done: Tests Pass\n    CodeReview --&gt; InProgress: Changes Requested\n    Testing --&gt; InProgress: Tests Fail\n    Done --&gt; [*]: Sprint End\n\n    note right of Planning: 2 hour session\n    note right of InProgress: Daily standups\n    note right of Done: Sprint review\n\n\n\n\n\n\n\n\n\n\nActive Sprint: Sprint 1 - Foundation Sprint Start: TBD Sprint End: TBD\n\n\n\nEnvironment setup\nData acquisition\nEDA complete\nJira configured\n\n\n\n\n\n\n\n\n\nMeeting\nFrequency\nDuration\nDay/Time\n\n\n\n\nSprint Planning\nBi-weekly\n2 hours\nSprint Day 1\n\n\nDaily Standup\nDaily\n15 min\nTBD\n\n\nSprint Review\nBi-weekly\n1.5 hours\nSprint Last Day\n\n\nSprint Retro\nBi-weekly\n1 hour\nSprint Last Day\n\n\n\n\n\n\n\n\nJira Board: TBD\nGitHub Repo: TBD\nFigma Designs: TBD\nMLflow Dashboard: TBD\nGoogle Drive: TBD\n\n\nLast Updated: 2026-01-23"
+  },
+  {
+    "objectID": "blueprint.html#system-architecture",
+    "href": "blueprint.html#system-architecture",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "flowchart TB\n    subgraph Data[\"Data Ingestion Layer\"]\n        SECOM[(SECOM Sensor Data)]\n        WM811K[(WM811K Wafer Images)]\n        VAL[Data Validation]\n    end\n\n    subgraph ML[\"Machine Learning Pipeline\"]\n        PRE[Preprocessing]\n        FE[Feature Engineering]\n        CNN[CNN Model]\n        AE[Autoencoder]\n        ENS[Ensemble Model]\n    end\n\n    subgraph INF[\"Inference & Alert System\"]\n        API[FastAPI Endpoint]\n        CONF[Confidence Scoring]\n        ALERT[Alert Generator]\n    end\n\n    subgraph VIZ[\"Visualization Dashboard\"]\n        STREAM[Streamlit Dashboard]\n        KPI[KPI Metrics]\n        GCAM[GradCAM Views]\n        HIST[Historical Trends]\n    end\n\n    subgraph MES[\"MES Integration\"]\n        SIM[MES Simulator]\n        HOOK[Integration Hooks]\n    end\n\n    SECOM --&gt; VAL\n    WM811K --&gt; VAL\n    VAL --&gt; PRE\n    PRE --&gt; FE\n    FE --&gt; CNN\n    FE --&gt; AE\n    CNN --&gt; ENS\n    AE --&gt; ENS\n    ENS --&gt; API\n    API --&gt; CONF\n    CONF --&gt; ALERT\n    API --&gt; STREAM\n    ALERT --&gt; STREAM\n    STREAM --&gt; KPI\n    STREAM --&gt; GCAM\n    STREAM --&gt; HIST\n    API --&gt; HOOK\n    SIM --&gt; HOOK"
+  },
+  {
+    "objectID": "blueprint.html#data-flow",
+    "href": "blueprint.html#data-flow",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "flowchart LR\n    A[Raw Data] --&gt; B[Preprocessing]\n    B --&gt; C[Feature Engineering]\n    C --&gt; D[Model Training]\n    D --&gt; E[Validation]\n    E --&gt; F[Deployment]\n    F --&gt; G[Real-time Inference]\n    G --&gt; H[Dashboard]\n    H --&gt; I[Alerts]\n\n    style A fill:#e1f5fe\n    style D fill:#fff3e0\n    style H fill:#e8f5e9\n    style I fill:#ffebee"
+  },
+  {
+    "objectID": "blueprint.html#epics-overview",
+    "href": "blueprint.html#epics-overview",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Epic ID\nName\nDescription\nPhase Alignment\n\n\n\n\nKAN-1\nData Pipeline & Foundation\nEnvironment setup, data acquisition, EDA, preprocessing\nPhase 1-2\n\n\nKAN-2\nAnomaly Detection (ML) Model\nCNN + Autoencoder development, training, validation\nPhase 3\n\n\nKAN-3\nMES Integration & API\nFastAPI inference endpoints, MES simulation, alert system\nPhase 4\n\n\nKAN-4\nAnalytics + Dashboard\nStreamlit dashboard, visualizations, KPIs, GradCAM\nPhase 4\n\n\nKAN-5\nGovernance & Audit-ability\nModel versioning (MLflow), documentation, evaluation reports\nPhase 5\n\n\n\n\n\n\nYour original epics were solid. I recommend: - Split KAN-1 into Data Pipeline (new KAN-1) and ML Model (keep as KAN-2) - Keep KAN-2 (MES Integration) as KAN-3 - Keep KAN-3 (Analytics+Dashboard) as KAN-4 - Keep KAN-4 (Governance) as KAN-5\nThis gives you a clear dependency chain: Data → Model → Integration → Dashboard → Documentation\n\n\n\n\n\n\n\n\nflowchart LR\n    KAN1[KAN-1&lt;br/&gt;Data Pipeline]\n    KAN2[KAN-2&lt;br/&gt;ML Model]\n    KAN3[KAN-3&lt;br/&gt;MES Integration]\n    KAN4[KAN-4&lt;br/&gt;Dashboard]\n    KAN5[KAN-5&lt;br/&gt;Governance]\n\n    KAN1 --&gt; KAN2\n    KAN2 --&gt; KAN3\n    KAN2 --&gt; KAN4\n    KAN3 --&gt; KAN4\n    KAN4 --&gt; KAN5\n    KAN3 --&gt; KAN5\n\n    style KAN1 fill:#bbdefb,color:#000000\n    style KAN2 fill:#c8e6c9,color:#000000\n    style KAN3 fill:#fff9c4,color:#000000\n    style KAN4 fill:#ffccbc,color:#000000\n    style KAN5 fill:#e1bee7,color:#000000"
+  },
+  {
+    "objectID": "blueprint.html#sprint-timeline",
+    "href": "blueprint.html#sprint-timeline",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "gantt\n    title WaferGuard ML - Sprint Timeline\n    dateFormat  YYYY-MM-DD\n    section KAN-1 Data Pipeline\n        Sprint 1 - Foundation     :s1, 2026-01-27, 14d\n        Sprint 2 - Data Pipeline  :s2, after s1, 14d\n    section KAN-2 ML Model\n        Sprint 3 - Model Dev      :s3, after s2, 14d\n        Sprint 4 - Refinement     :s4, after s3, 14d\n    section KAN-3 & KAN-4\n        Sprint 4 - API            :s4b, after s3, 14d\n        Sprint 5 - Dashboard      :s5, after s4, 14d\n    section KAN-5 Governance\n        Sprint 6 - Documentation  :s6, after s5, 14d"
+  },
+  {
+    "objectID": "blueprint.html#sprint-breakdown",
+    "href": "blueprint.html#sprint-breakdown",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Epic: KAN-1 (Data Pipeline & Foundation) - 80% Done\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStatus\n\n\n\n\nKAN-8\nSet up Python Environment\nOliver\nDONE ✅\n\n\nKAN-9\nInitialize Git Repo With Branching Strategy + Rules\nOliver\nDONE ✅\n\n\nKAN-10\nDownload Secom Dataset + Verify Integrity\nOliver\nDONE ✅\n\n\nKAN-11\nDownload WM811 Image Analysis + Verify\nOliver\nDONE ✅\n\n\nKAN-12\nRun EDA on Secom Sensor Data\nRolando\nIN REVIEW 🔄\n\n\nKAN-13\nRun EDA on WM811K Image analysis\nOliver\nDONE ✅\n\n\nKAN-14\nData Quality Assessment Report\nUnassigned\nTO DO 📋\n\n\nKAN-15\nSet Up Jira Board with epics/stories\nRolando\nDONE ✅\n\n\nKAN-46\nResearch about how the pixels are generated from and actual image\nMilos\nDONE ✅\n\n\nKAN-47\nCreate slides for initial images EDA findings\nOliver\nDONE ✅\n\n\n\nSprint 1 Goal: Development environment ready, datasets loaded, initial EDA complete\n\n\n\n\nEpic: KAN-1 (Data Pipeline & Foundation)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-1-010\nSECOM preprocessing pipeline (missing values, outliers)\nTBD\n5\nTODO\n\n\nKAN-1-011\nFeature engineering for sensor data\nTBD\n5\nTODO\n\n\nKAN-1-012\nWM811K image preprocessing (resize, normalize)\nTBD\n3\nTODO\n\n\nKAN-1-013\nImage augmentation strategy (rotation, flip)\nTBD\n3\nTODO\n\n\nKAN-1-014\nTrain/validation/test split implementation\nTBD\n2\nTODO\n\n\nKAN-1-015\nData loader classes (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-1-016\nHandle class imbalance (SMOTE/class weights)\nTBD\n3\nTODO\n\n\n\nSprint 2 Goal: Clean, processed datasets ready for model training\n\n\n\n\nEpic: KAN-2 (Anomaly Detection Model)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-001\nCNN architecture design for wafer classification\nTBD\n5\nTODO\n\n\nKAN-2-002\nImplement CNN model (PyTorch/TensorFlow)\nTBD\n5\nTODO\n\n\nKAN-2-003\nAutoencoder architecture for sensor anomaly\nTBD\n5\nTODO\n\n\nKAN-2-004\nImplement Autoencoder model\nTBD\n5\nTODO\n\n\nKAN-2-005\nTraining pipeline with early stopping\nTBD\n3\nTODO\n\n\nKAN-2-006\nHyperparameter tuning setup\nTBD\n3\nTODO\n\n\nKAN-2-007\nBaseline model benchmarking\nTBD\n3\nTODO\n\n\n\nSprint 3 Goal: Working CNN and Autoencoder models with baseline metrics\n\n\n\n\nEpics: KAN-2 (Model), KAN-3 (MES Integration)\n\n\n\n\n\n\n\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-2-008\nModel validation and cross-validation\nTBD\n3\nTODO\n\n\nKAN-2-009\nEnsemble model (CNN + Autoencoder)\nTBD\n5\nTODO\n\n\nKAN-2-010\nGradCAM implementation for explainability\nTBD\n5\nTODO\n\n\nKAN-3-001\nFastAPI inference endpoint design\nTBD\n3\nTODO\n\n\nKAN-3-002\nImplement /predict endpoint\nTBD\n5\nTODO\n\n\nKAN-3-003\nConfidence scoring and threshold logic\nTBD\n3\nTODO\n\n\nKAN-3-004\nMES simulation mock data generator\nTBD\n3\nTODO\n\n\nKAN-3-005\nAlert generation logic\nTBD\n3\nTODO\n\n\n\nSprint 4 Goal: Optimized models, working inference API\n\n\n\n\nEpic: KAN-4 (Analytics + Dashboard)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-4-001\nDashboard wireframes in Figma\nTBD\n3\nTODO\n\n\nKAN-4-002\nStreamlit app skeleton\nTBD\n2\nTODO\n\n\nKAN-4-003\nReal-time anomaly detection view\nTBD\n5\nTODO\n\n\nKAN-4-004\nHistorical trend analysis charts\nTBD\n5\nTODO\n\n\nKAN-4-005\nModel confidence visualization\nTBD\n3\nTODO\n\n\nKAN-4-006\nGradCAM attention map display\nTBD\n5\nTODO\n\n\nKAN-4-007\nProduction KPIs (OEE, defect rate)\nTBD\n3\nTODO\n\n\nKAN-4-008\nAlert notification panel\nTBD\n3\nTODO\n\n\nKAN-4-009\nInteractive filtering and drill-down\nTBD\n5\nTODO\n\n\n\nSprint 5 Goal: Functional dashboard with all visualizations\n\n\n\n\nEpic: KAN-5 (Governance & Audit-ability)\n\n\n\nTask ID\nTask\nOwner\nStory Points\nStatus\n\n\n\n\nKAN-5-001\nComprehensive model evaluation report\nTBD\n5\nTODO\n\n\nKAN-5-002\nComparison vs baseline (SPC, manual)\nTBD\n5\nTODO\n\n\nKAN-5-003\nModel versioning documentation\nTBD\n3\nTODO\n\n\nKAN-5-004\nAPI documentation (OpenAPI/Swagger)\nTBD\n3\nTODO\n\n\nKAN-5-005\nUser guide for dashboard\nTBD\n3\nTODO\n\n\nKAN-5-006\nTechnical architecture documentation\nTBD\n3\nTODO\n\n\nKAN-5-007\nFinal presentation slides\nTBD\n5\nTODO\n\n\nKAN-5-008\nLive demo preparation\nTBD\n3\nTODO\n\n\nKAN-5-009\nCode cleanup and refactoring\nTBD\n3\nTODO\n\n\n\nSprint 6 Goal: Complete documentation, presentation ready"
+  },
+  {
+    "objectID": "blueprint.html#work-stream-assignments",
+    "href": "blueprint.html#work-stream-assignments",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Work Stream\nSpecialist\nAssistant\nPrimary Epics\n\n\n\n\nData Engineering & ML Pipeline\nTBD\nTBD\nKAN-1\n\n\nModel Development & Training\nTBD\nTBD\nKAN-2\n\n\nDashboard & Integration\nTBD\nTBD\nKAN-3, KAN-4\n\n\nEvaluation & Documentation\nTBD\nTBD\nKAN-5\n\n\n\n\n\n\n\n\n\n\nflowchart TB\n    subgraph Team[\"WaferGuard ML Team\"]\n        subgraph WS1[\"Data Engineering\"]\n            DE1[Specialist: TBD]\n            DE2[Assistant: TBD]\n        end\n        subgraph WS2[\"Model Development\"]\n            MD1[Specialist: TBD]\n            MD2[Assistant: TBD]\n        end\n        subgraph WS3[\"Dashboard & Integration\"]\n            DI1[Specialist: TBD]\n            DI2[Assistant: TBD]\n        end\n        subgraph WS4[\"Evaluation & Docs\"]\n            ED1[Specialist: TBD]\n            ED2[Assistant: TBD]\n        end\n    end\n\n    WS1 --&gt;|Data| WS2\n    WS2 --&gt;|Models| WS3\n    WS3 --&gt;|System| WS4\n\n    style WS1 fill:#bbdefb\n    style WS2 fill:#c8e6c9\n    style WS3 fill:#fff9c4\n    style WS4 fill:#e1bee7"
+  },
+  {
+    "objectID": "blueprint.html#ml-model-architecture",
+    "href": "blueprint.html#ml-model-architecture",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "flowchart TB\n    subgraph Input[\"Input Data\"]\n        IMG[Wafer Images&lt;br/&gt;WM811K]\n        SEN[Sensor Data&lt;br/&gt;SECOM]\n    end\n\n    subgraph CNN[\"CNN Pipeline\"]\n        C1[Conv2D + ReLU]\n        C2[MaxPool]\n        C3[Conv2D + ReLU]\n        C4[MaxPool]\n        C5[Flatten]\n        C6[Dense + Softmax]\n    end\n\n    subgraph AE[\"Autoencoder Pipeline\"]\n        E1[Encoder]\n        E2[Latent Space]\n        E3[Decoder]\n        E4[Reconstruction Error]\n    end\n\n    subgraph Ensemble[\"Ensemble Decision\"]\n        COMB[Score Combination]\n        THRESH[Threshold Logic]\n        OUT[Final Prediction]\n    end\n\n    IMG --&gt; C1 --&gt; C2 --&gt; C3 --&gt; C4 --&gt; C5 --&gt; C6\n    SEN --&gt; E1 --&gt; E2 --&gt; E3 --&gt; E4\n    C6 --&gt; COMB\n    E4 --&gt; COMB\n    COMB --&gt; THRESH --&gt; OUT\n\n    style CNN fill:#e3f2fd\n    style AE fill:#f3e5f5\n    style Ensemble fill:#e8f5e9"
+  },
+  {
+    "objectID": "blueprint.html#technology-stack-recommended",
+    "href": "blueprint.html#technology-stack-recommended",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Core:           Python 3.9+\nML Framework:   PyTorch (recommended) or TensorFlow/Keras\nData:           NumPy, Pandas, Scikit-learn, OpenCV\nDashboard:      Streamlit (faster dev) or Plotly Dash\nAPI:            FastAPI\nTracking:       MLflow\nExplainability: SHAP, GradCAM\nVersion Control: Git + GitHub\nProject Mgmt:   Jira\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Frontend[\"Frontend\"]\n        ST[Streamlit]\n        FIG[Figma]\n    end\n\n    subgraph Backend[\"Backend\"]\n        FA[FastAPI]\n        ML[MLflow]\n    end\n\n    subgraph ML_Stack[\"ML Stack\"]\n        PT[PyTorch]\n        SK[Scikit-learn]\n        CV[OpenCV]\n    end\n\n    subgraph Data_Stack[\"Data\"]\n        PD[Pandas]\n        NP[NumPy]\n    end\n\n    subgraph DevOps[\"DevOps\"]\n        GIT[Git/GitHub]\n        JIRA[Jira]\n    end\n\n    Data_Stack --&gt; ML_Stack --&gt; Backend --&gt; Frontend\n    DevOps -.-&gt; Backend\n    DevOps -.-&gt; ML_Stack"
+  },
+  {
+    "objectID": "blueprint.html#key-datasets",
+    "href": "blueprint.html#key-datasets",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Dataset\nDescription\nSize\nSource\n\n\n\n\nSECOM\nSensor data (590 features)\n~1,500 samples\nUCI ML Repository\n\n\nWM811K\nWafer map images\n~38,000 images\nKaggle\n\n\n\n\n\n\n\n\n\n\nflowchart LR\n    subgraph Sources[\"Data Sources\"]\n        S1[(SECOM&lt;br/&gt;UCI Repository)]\n        S2[(WM811K&lt;br/&gt;Kaggle)]\n    end\n\n    subgraph Processing[\"Processing\"]\n        P1[Missing Value&lt;br/&gt;Imputation]\n        P2[Outlier&lt;br/&gt;Detection]\n        P3[Normalization]\n        P4[Image Resize&lt;br/&gt;& Augment]\n    end\n\n    subgraph Output[\"Processed Data\"]\n        O1[Train Set&lt;br/&gt;70%]\n        O2[Val Set&lt;br/&gt;15%]\n        O3[Test Set&lt;br/&gt;15%]\n    end\n\n    S1 --&gt; P1 --&gt; P2 --&gt; P3 --&gt; O1 & O2 & O3\n    S2 --&gt; P4 --&gt; O1 & O2 & O3\n\n    style Sources fill:#e3f2fd\n    style Processing fill:#fff8e1\n    style Output fill:#e8f5e9"
+  },
+  {
+    "objectID": "blueprint.html#success-criteria",
+    "href": "blueprint.html#success-criteria",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Metric\nTarget\n\n\n\n\nCNN Accuracy\n&gt;90%\n\n\nFalse Positive Rate\n&lt;5%\n\n\nInference Latency\n&lt;500ms\n\n\nDashboard Refresh\n&lt;2s\n\n\n\n\n\n\n\n\n\n\npie showData\n    title Story Points Distribution\n    \"KAN-1 Data Pipeline\" : 47\n    \"KAN-2 ML Model\" : 42\n    \"KAN-3 MES Integration\" : 17\n    \"KAN-4 Dashboard\" : 34\n    \"KAN-5 Governance\" : 33"
+  },
+  {
+    "objectID": "blueprint.html#inference-flow",
+    "href": "blueprint.html#inference-flow",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "sequenceDiagram\n    participant MES as MES System\n    participant API as FastAPI\n    participant Model as ML Model\n    participant DB as MLflow\n    participant Dash as Dashboard\n    participant Eng as Process Engineer\n\n    MES-&gt;&gt;API: POST /predict (wafer data)\n    API-&gt;&gt;Model: Load model from registry\n    Model-&gt;&gt;DB: Get latest model version\n    DB--&gt;&gt;Model: Return model weights\n    Model-&gt;&gt;Model: Run inference\n    Model--&gt;&gt;API: Prediction + confidence\n    API-&gt;&gt;API: Apply threshold logic\n\n    alt Anomaly Detected\n        API-&gt;&gt;Dash: Send alert\n        Dash-&gt;&gt;Eng: Display notification\n        API--&gt;&gt;MES: Response (anomaly: true)\n    else Normal\n        API--&gt;&gt;MES: Response (anomaly: false)\n    end\n\n    API-&gt;&gt;Dash: Update real-time view"
+  },
+  {
+    "objectID": "blueprint.html#sprint-workflow",
+    "href": "blueprint.html#sprint-workflow",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "stateDiagram-v2\n    [*] --&gt; Planning: Sprint Start\n    Planning --&gt; InProgress: Tasks Assigned\n    InProgress --&gt; CodeReview: PR Created\n    CodeReview --&gt; Testing: Approved\n    Testing --&gt; Done: Tests Pass\n    CodeReview --&gt; InProgress: Changes Requested\n    Testing --&gt; InProgress: Tests Fail\n    Done --&gt; [*]: Sprint End\n\n    note right of Planning: 2 hour session\n    note right of InProgress: Daily standups\n    note right of Done: Sprint review"
+  },
+  {
+    "objectID": "blueprint.html#current-sprint-status",
+    "href": "blueprint.html#current-sprint-status",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Active Sprint: Sprint 1 - Foundation Sprint Start: TBD Sprint End: TBD\n\n\n\nEnvironment setup\nData acquisition\nEDA complete\nJira configured"
+  },
+  {
+    "objectID": "blueprint.html#meeting-schedule",
+    "href": "blueprint.html#meeting-schedule",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Meeting\nFrequency\nDuration\nDay/Time\n\n\n\n\nSprint Planning\nBi-weekly\n2 hours\nSprint Day 1\n\n\nDaily Standup\nDaily\n15 min\nTBD\n\n\nSprint Review\nBi-weekly\n1.5 hours\nSprint Last Day\n\n\nSprint Retro\nBi-weekly\n1 hour\nSprint Last Day"
+  },
+  {
+    "objectID": "blueprint.html#quick-links",
+    "href": "blueprint.html#quick-links",
+    "title": "WaferGuard ML - Project Blueprint",
+    "section": "",
+    "text": "Jira Board: TBD\nGitHub Repo: TBD\nFigma Designs: TBD\nMLflow Dashboard: TBD\nGoogle Drive: TBD\n\n\nLast Updated: 2026-01-23"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#what-is-secom-data",
+    "href": "slides/SecomData/slides.html#what-is-secom-data",
+    "title": "WaferGuard ML",
+    "section": "What is SECOM Data?",
+    "text": "What is SECOM Data?\nSensor data from a semiconductor manufacturing process.\n\n590 sensor measurements per production entity\n1,567 samples (wafers/chips)\nBinary outcome: Pass (-1) vs Fail (1)\nSource: UCI Machine Learning Repository\n\n\nReal-world sensor data is notoriously “messy” and redundant"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#the-challenge",
+    "href": "slides/SecomData/slides.html#the-challenge",
+    "title": "WaferGuard ML",
+    "section": "The Challenge",
+    "text": "The Challenge\n\nHigh-dimensional sensor data (590 features)\nSevere class imbalance (~93% Pass, ~7% Fail)\nSignificant missing values across features\nMany redundant/correlated sensors"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#dataset-overview",
+    "href": "slides/SecomData/slides.html#dataset-overview",
+    "title": "WaferGuard ML",
+    "section": "Dataset Overview",
+    "text": "Dataset Overview\n\n\n\nAttribute\nValue\n\n\n\n\nSamples\n1,567 production entities\n\n\nFeatures\n590 sensor measurements\n\n\nLabels\nPass (-1) / Fail (1)\n\n\nCollection Period\n89 days (Jul-Oct 2008)"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#missing-value-analysis",
+    "href": "slides/SecomData/slides.html#missing-value-analysis",
+    "title": "WaferGuard ML",
+    "section": "Missing Value Analysis",
+    "text": "Missing Value Analysis"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#missing-value-distribution",
+    "href": "slides/SecomData/slides.html#missing-value-distribution",
+    "title": "WaferGuard ML",
+    "section": "Missing Value Distribution",
+    "text": "Missing Value Distribution\n\nFeatures with ANY missing: 538 out of 590 (91%)\nFeatures with &gt;50% missing: 28 features\nAverage missing per sample: 26.8 features (4.5%)\n\n\nStrategy: Drop features with &gt;50% missing; impute the rest"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#descriptive-statistics",
+    "href": "slides/SecomData/slides.html#descriptive-statistics",
+    "title": "WaferGuard ML",
+    "section": "Descriptive Statistics",
+    "text": "Descriptive Statistics"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#constant-features",
+    "href": "slides/SecomData/slides.html#constant-features",
+    "title": "WaferGuard ML",
+    "section": "Constant Features",
+    "text": "Constant Features\nSome sensors show zero variance (useless for prediction).\n\nExample: sensor_5 = 100.0 for all samples\nThese provide no discriminative power\nMust be identified and removed"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#class-distribution",
+    "href": "slides/SecomData/slides.html#class-distribution",
+    "title": "WaferGuard ML",
+    "section": "Class Distribution",
+    "text": "Class Distribution"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#class-imbalance",
+    "href": "slides/SecomData/slides.html#class-imbalance",
+    "title": "WaferGuard ML",
+    "section": "Class Imbalance",
+    "text": "Class Imbalance\nThe dataset is heavily skewed towards “Pass”.\n\n\n\nClass\nLabel\nFrequency\n\n\n\n\nPass\n-1\n~93%\n\n\nFail\n1\n~7%\n\n\n\n\nRisk: A model predicting “Pass” everywhere achieves 93% accuracy but fails the objective."
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#correlation-analysis",
+    "href": "slides/SecomData/slides.html#correlation-analysis",
+    "title": "WaferGuard ML",
+    "section": "Correlation Analysis",
+    "text": "Correlation Analysis"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#feature-correlations",
+    "href": "slides/SecomData/slides.html#feature-correlations",
+    "title": "WaferGuard ML",
+    "section": "Feature Correlations",
+    "text": "Feature Correlations\n\nMany sensors are highly correlated\nRedundant features increase model complexity\nStrategy: Remove one of each highly correlated pair (|r| &gt; 0.95)"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#additional-analysis",
+    "href": "slides/SecomData/slides.html#additional-analysis",
+    "title": "WaferGuard ML",
+    "section": "Additional Analysis",
+    "text": "Additional Analysis"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#feature-distribution",
+    "href": "slides/SecomData/slides.html#feature-distribution",
+    "title": "WaferGuard ML",
+    "section": "Feature Distribution",
+    "text": "Feature Distribution"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#preprocessing-strategy",
+    "href": "slides/SecomData/slides.html#preprocessing-strategy",
+    "title": "WaferGuard ML",
+    "section": "Preprocessing Strategy",
+    "text": "Preprocessing Strategy\n\nCleaning:\n\nRemove constant features (Zero Variance)\nRemove high missingness columns (&gt;50%)\n\nFeature Reduction:\n\nAddress multicollinearity (|r| &gt; 0.95)\nConsider PCA"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#handling-imbalance",
+    "href": "slides/SecomData/slides.html#handling-imbalance",
+    "title": "WaferGuard ML",
+    "section": "Handling Imbalance",
+    "text": "Handling Imbalance\nTo enable effective defect detection:\n\nStratified Sampling: Maintain 7% failure rate in splits\nSMOTE: Generate synthetic failure examples\nClass Weights: Penalize missing a failure more heavily"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#next-steps",
+    "href": "slides/SecomData/slides.html#next-steps",
+    "title": "WaferGuard ML",
+    "section": "Next Steps",
+    "text": "Next Steps\n\nExecute preprocessing pipeline\nBaseline Model Training (Logistic Regression / Random Forest)\nEvaluate using Recall and F1-Score (Accuracy is misleading here)"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#dataset-summary",
+    "href": "slides/SecomData/slides.html#dataset-summary",
+    "title": "WaferGuard ML",
+    "section": "Dataset Summary",
+    "text": "Dataset Summary\n\n1,567 Production Samples\n590 Sensor Features\nBinary Pass/Fail Labels\n89 Days of Production Data"
+  },
+  {
+    "objectID": "slides/SecomData/slides.html#data-quality-assessment",
+    "href": "slides/SecomData/slides.html#data-quality-assessment",
+    "title": "WaferGuard ML",
+    "section": "Data Quality Assessment",
+    "text": "Data Quality Assessment\n\n⚠️ Significant Missing Values (91% of features affected)\n⚠️ Constant Features Present\n⚠️ Severe Class Imbalance (93/7 split)\n✅ Preprocessing Pipeline Defined\n✅ Ready for Model Development"
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#agenda",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#agenda",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Agenda",
+    "text": "Agenda\n\nUse Case Scenario\nStreamlit App Demo\nFinancial Impact Pipeline\nFinancial Impact Results\nNext Steps"
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#the-problem",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#the-problem",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "The Problem",
+    "text": "The Problem\n\n\n\nWhich defectsare increasing?\n\n\nWhich process stepis causing it?\n\n\nHow much moneyare we losing?\n\n\nWhat should wefix first?\n\n\n\nToday, semiconductor manufacturers catch defects manually, days or weeks after they happen. They can’t answer any of these questions quickly.\nWaferGuardML answers all of them automatically."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#use-case-chipco-manufacturing",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#use-case-chipco-manufacturing",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Use Case: ChipCo Manufacturing",
+    "text": "Use Case: ChipCo Manufacturing\n3 months after deploying WaferGuardML\n\n\n\nMonth 1System establishesbaseline defect ratesacross all batches\n\n\n→\n\n\nMonth 2Donut defects starttrending upward3% → 7% of batches\n\n\n→\n\n\nMonth 3Dashboard flags alert:Donut rate now 12%⚠️ Action required\n\n\n\nThe system tells you the CMP polishing pad is likely worn, the repair costs $130K, and every day you wait costs $350K in lost yield."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#what-the-app-tells-chipco",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#what-the-app-tells-chipco",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "What the App Tells ChipCo",
+    "text": "What the App Tells ChipCo\n\n\n\nThe Problem Donut defect → CMP process Polishing pad is wornor slurry is contaminated Cost of doing nothing:$350K per day\n\n\n→\n\n\nThe Fix Replace pad, refresh slurryClean CMP heads Repair cost: $130K Break-even: &lt; 1 day 30-day savings: ~$10M"
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#live-demo-streamlit-app",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#live-demo-streamlit-app",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Live Demo: Streamlit App",
+    "text": "Live Demo: Streamlit App\nWalking through the Donut defect scenario in the app\n\n\n\nClassifyDefect resultswith confidence scores\n\n\n→\n\n\nVisualizeDefect distributionacross the batch\n\n\n→\n\n\nCostFinancial impactper defect type\n\n\n→\n\n\nRecommendPrioritizedrepair actions\n\n\n\nSwitching to live demo…"
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#how-we-calculate-financial-impact",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#how-we-calculate-financial-impact",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "How We Calculate Financial Impact",
+    "text": "How We Calculate Financial Impact\n\n\n\n1. DetectClassify each waferinto one of38 patterns\n\n\n→\n\n\n2. CountHow often eachpattern appearsin the batch\n\n\n→\n\n\n3. MapLink to process step,repair cost,yield loss\n\n\n→\n\n\n4. CalculateDaily loss,break-even,30-day risk\n\n\n→\n\n\n5. AdviseWhat to fix firstand how muchyou save\n\n\n\nThe result is a prioritized action plan: fix this process step first, it costs this much, and you’ll save this much by doing it now."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#financial-impact-results",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#financial-impact-results",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Financial Impact Results",
+    "text": "Financial Impact Results\n\n\n\n\nPattern\n\n\nCount\n\n\nBatch %\n\n\nConfidence\n\n\nRisk\n\n\nYield Loss\n\n\nDaily Loss\n\n\nBreak-Even\n\n\n\n\n\n\nDonut+Edge_Loc+Loc+Scratch\n\n\n4,725\n\n\n12.43%\n\n\n99.87%\n\n\nCritical\n\n\n18–85%\n\n\n$771,860\n\n\n0.6 days\n\n\n\n\nCenter+Edge_Loc+Scratch\n\n\n4,866\n\n\n12.80%\n\n\n99.84%\n\n\nCritical\n\n\n13–75%\n\n\n$675,851\n\n\n0.7 days\n\n\n\n\nCenter+Edge_Loc+Loc+Scratch\n\n\n1,383\n\n\n3.64%\n\n\n99.52%\n\n\nCritical\n\n\n13–80%\n\n\n$204,092\n\n\n3.0 days\n\n\n\n\nDonut+Loc+Scratch\n\n\n1,160\n\n\n3.05%\n\n\n99.64%\n\n\nCritical\n\n\n18–80%\n\n\n$179,422\n\n\n2.0 days\n\n\n\n\nDonut+Edge_Loc+Loc\n\n\n2,913\n\n\n7.66%\n\n\n99.94%\n\n\nHigh\n\n\n16–60%\n\n\n$349,424\n\n\n1.1 days\n\n\n\n\nThe top two patterns alone cost nearly $1.5M per day combined. Both have break-even times under 1 day, meaning the repair pays for itself within hours."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#next-steps",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#next-steps",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Next Steps",
+    "text": "Next Steps\n\n\n\nIntegrateFinancial impactcalculations directlyinto the Streamlit app\n\n\n→\n\n\nTest & DeployEnd-to-end pipeline:upload → classify →financial report\n\n\n→\n\n\nAnalyzeApp identifies trends,pinpoints costly processes,recommends savings"
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#the-problem-full-context",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#the-problem-full-context",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "The Problem (Full Context)",
+    "text": "The Problem (Full Context)\nYou run a semiconductor fabrication plant. Every day, thousands of wafers move through your production line. Some come out with defects. Right now, your team catches them manually, days or weeks after they happen.\nThe questions you can’t answer today:\n\nWhich defect types are increasing? Is it getting worse?\nWhich specific process step is causing the problem?\nHow much money are we losing while we figure it out?\nWhat should we fix first to save the most money?\n\nWaferGuardML answers all of these automatically."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#what-the-app-tells-chipco-details",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#what-the-app-tells-chipco-details",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "What the App Tells ChipCo (Details)",
+    "text": "What the App Tells ChipCo (Details)\n\n\nThe Problem\nThe Donut defect is linked to the CMP (Chemical Mechanical Planarization) process. A ring-shaped pattern appears when the polishing pad wears down or the slurry gets contaminated.\nWithout the app, this trend goes unnoticed for weeks. By then, thousands of wafers are already affected.\nEstimated cost of doing nothing: $350K per day\n\nWhat the App Recommends\nReplace the polishing pad and refresh the slurry. Clean the CMP heads. Run requalification metrology.\nRepair cost: $130K Break-even: less than 1 day\nThe manufacturer spends $130K once and avoids losing $350K every single day the problem continues. Over 30 days, that’s roughly $10M in savings."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#what-each-metric-means",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#what-each-metric-means",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "What Each Metric Means",
+    "text": "What Each Metric Means\n\n\nWeighted Daily Loss How much money a specific defect pattern is costing per day, based on how frequently it appears and how much yield it destroys.\nBreak-Even Days How quickly a repair pays for itself. If break-even is under 1 day, it means delaying the repair costs more than doing it right now.\n\nEVoA (Expected Value of Action) The net savings over 30 days if you repair now versus doing nothing. A high EVoA means “fix this immediately.”\nPriority Score Combines financial urgency with defect severity. The higher the score, the more important it is to act.\n\nThese metrics turn raw defect data into a clear answer: what to fix, in what order, and why it’s worth it."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#next-steps-details",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#next-steps-details",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Next Steps (Details)",
+    "text": "Next Steps (Details)\nSprint 3 (Next Week):\n\nIntegrate the financial impact calculations directly into the Streamlit dashboard so users see cost data alongside defect predictions in one place.\nTest the full pipeline end to end: upload wafer data → classify defects → generate financial report → display recommendations.\nDeploy the Streamlit app so the team and stakeholders can access it.\n\nAfter Deployment:\n\nBuild an analysis feature where the app examines uploaded batch data over time, identifies which defect types are trending upward, pinpoints the manufacturing process steps responsible, and shows the business exactly where they are losing money and how to reduce costs.\nGather feedback from stakeholders and iterate on the dashboard layout, metrics displayed, and recommendation format."
+  },
+  {
+    "objectID": "slides/Sprint-3/Sprint_3_Presentation.html#financial-parameters-per-defect-type",
+    "href": "slides/Sprint-3/Sprint_3_Presentation.html#financial-parameters-per-defect-type",
+    "title": "WaferGuardML — Technical Solution",
+    "section": "Financial Parameters per Defect Type",
+    "text": "Financial Parameters per Defect Type\n\n\n\n\nDefect\n\n\nRepair Cost\n\n\nReplacement Cost\n\n\nDowntime/hr\n\n\nYield Loss\n\n\nRisk\n\n\nProcess Step\n\n\n\n\n\n\nCenter\n\n\n$275K\n\n\n$6.0M\n\n\n$2.05M\n\n\n10–40%\n\n\nHigh\n\n\nDeposition / Plasma\n\n\n\n\nDonut\n\n\n$130K\n\n\n$5.25M\n\n\n$550K\n\n\n15–50%\n\n\nHigh\n\n\nCMP / Lithography\n\n\n\n\nEdge_Loc\n\n\n$110K\n\n\n$6.0M\n\n\n$550K\n\n\n1–10%\n\n\nMedium\n\n\nDiffusion / Thermal\n\n\n\n\nEdge_Ring\n\n\n$255K\n\n\n$12.5M\n\n\n$2.25M\n\n\n0–15%\n\n\nHigh\n\n\nPlasma Etch\n\n\n\n\nLoc\n\n\n$155K\n\n\n$8.5M\n\n\n$2.05M\n\n\n1–10%\n\n\nMedium\n\n\nTool-specific\n\n\n\n\nNear_Full\n\n\n$525K\n\n\n$8.5M\n\n\n$2.45M\n\n\n50–100%\n\n\nCritical\n\n\nMajor Excursion\n\n\n\n\nScratch\n\n\n$77.5K\n\n\n$5.25M\n\n\n$550K\n\n\n5–50%\n\n\nCritical\n\n\nWafer Handling / CMP\n\n\n\n\nRandom\n\n\n$130K\n\n\nN/A\n\n\n$2.05M\n\n\n1–20%\n\n\nMedium\n\n\nEnvironment / Contamination"
   },
   {
     "objectID": "slides/wm811k/slides.html#what-is-a-semiconductor-wafer",
