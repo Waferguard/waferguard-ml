@@ -59,12 +59,15 @@ FINANCIAL_CONFIG_DEFAULTS = {
     "CONFIDENCE_THRESHOLD": 0.70,
 }
 
-# Scenario defaults used for donut-dominant test case analysis
-DONUT_SCENARIO_DEFAULTS = {
+# Scenario defaults used for base-pattern-dominant demo analysis
+BASE_PATTERN_SCENARIO_DEFAULTS = {
     "NORMAL_SHARE": 0.80,
-    "DONUT_SHARE": 0.16,
+    "TARGET_SHARE": 0.16,
     "RANDOM_SEED": 42,
 }
+
+# Backward-compatible alias for older references.
+DONUT_SCENARIO_DEFAULTS = BASE_PATTERN_SCENARIO_DEFAULTS
 
 # Dark theme background (matches .streamlit/config.toml)
 BG_COLOR = "#0E1117"

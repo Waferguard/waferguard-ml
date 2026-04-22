@@ -237,6 +237,7 @@ def _get_action_to_singles(financial_params: dict) -> dict[str, dict]:
                     "risk": params["risk"],
                     "priority": params["priority"],
                     "repair": params["repair"],
+                    "dt": params["dt"],
                 }
             action_map[act]["singles"].append(lbl)
     return action_map
@@ -302,10 +303,12 @@ def compute_financials(
         planning_horizon = config.get("PLANNING_HORIZON", 30)
         repair_hours = config.get("REPAIR_HOURS", 8)
         daily_loss = freq * y_mid * wph * value_per_wafer * 24
-        break_even = (params["repair"] / daily_loss) if daily_loss > 0 else 9_999
         avoided = daily_loss * planning_horizon
         dt_cost = params["dt"] * repair_hours
-        evoa = avoided - params["repair"] - dt_cost
+        production_stop_loss = wph * value_per_wafer * repair_hours
+        intervention_cost = params["repair"] + dt_cost + production_stop_loss
+        break_even = (intervention_cost / daily_loss) if daily_loss > 0 else 9_999
+        evoa = avoided - intervention_cost
         p_score = daily_loss * (1 / params["priority"]) if params["priority"] > 0 else 0
         rows.append({
             "binary_label": binary_label,
@@ -319,6 +322,9 @@ def compute_financials(
             "repair_cost": params["repair"],
             "replacement_cost": params.get("replace"),
             "downtime_per_hr": params["dt"],
+            "downtime_cost": round(dt_cost, 2),
+            "production_stop_loss": round(production_stop_loss, 2),
+            "intervention_cost_total": round(intervention_cost, 2),
             "weighted_daily_loss": round(daily_loss, 2),
             "break_even_days": round(break_even, 1),
             "evoa_30d": round(evoa, 2),
@@ -364,7 +370,9 @@ def compute_financials(
     return df_financial, summary_payload
 
 
-def compute_action_table(df_financial: pd.DataFrame, financial_params: dict | None = None) -> pd.DataFrame:
+def compute_action_table(
+    df_financial: pd.DataFrame, financial_params: dict | None = None, config: dict | None = None
+) -> pd.DataFrame:
     """Build an action-oriented financial table.
 
     Each row = one repair/maintenance action. For each action, aggregates the
@@ -377,6 +385,8 @@ def compute_action_table(df_financial: pd.DataFrame, financial_params: dict | No
     Args:
         df_financial: output of compute_financials (pattern-oriented rows).
         financial_params: optional override; defaults to FINANCIAL_PARAMS.
+        config: optional financial config for WPH, VALUE_PER_WAFER,
+            REPAIR_HOURS, and PLANNING_HORIZON.
 
     Returns:
         DataFrame sorted by daily_loss_savings descending with columns:
@@ -387,6 +397,13 @@ def compute_action_table(df_financial: pd.DataFrame, financial_params: dict | No
     """
     if financial_params is None:
         financial_params = FINANCIAL_PARAMS
+    if config is None:
+        config = {}
+
+    wph = config.get("WPH", 100)
+    value_per_wafer = config.get("VALUE_PER_WAFER", 5_000)
+    repair_hours = config.get("REPAIR_HOURS", 8)
+    planning_horizon = config.get("PLANNING_HORIZON", 30)
 
     action_map = _get_action_to_singles(financial_params)
 
@@ -420,17 +437,23 @@ def compute_action_table(df_financial: pd.DataFrame, financial_params: dict | No
             continue
 
         repair = meta["repair"]
+        dt_cost = meta["dt"] * repair_hours
+        production_stop_loss = wph * value_per_wafer * repair_hours
+        intervention_cost = repair + dt_cost + production_stop_loss
         rows.append({
             "repair_action": action,
             "process_step": meta["process"],
             "risk_level": meta["risk"],
             "triage_priority": meta["priority"],
             "repair_cost": repair,
+            "downtime_cost": round(dt_cost, 2),
+            "production_stop_loss": round(production_stop_loss, 2),
+            "intervention_cost_total": round(intervention_cost, 2),
             "patterns_fully_resolved": len(fully_resolved),
             "patterns_partially_resolved": len(partially_resolved),
             "daily_loss_savings": round(total_savings, 2),
-            "break_even_days": round(repair / total_savings, 1) if total_savings > 0 else 9_999,
-            "evoa_30d": round(total_savings * 30 - repair, 2),
+            "break_even_days": round(intervention_cost / total_savings, 1) if total_savings > 0 else 9_999,
+            "evoa_30d": round(total_savings * planning_horizon - intervention_cost, 2),
         })
 
     if not rows:

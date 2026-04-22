@@ -116,12 +116,17 @@ def render_kpi_cards(summary_payload: dict) -> None:
     c4.metric("Low Confidence", f"{low_conf_count} ({low_conf_share:.1f}%)")
 
 
-def render_donut_card(donut_metrics: dict[str, float]) -> None:
-    """Render Donut-related insights with dedicated callout metrics."""
+def render_pattern_card(base_pattern: str, pattern_metrics: dict[str, float]) -> None:
+    """Render selected base-pattern insights with dedicated callout metrics."""
     c1, c2, c3 = st.columns(3)
-    c1.metric("Donut-related Count", int(donut_metrics.get("count", 0)))
-    c2.metric("Donut-related Share", f"{donut_metrics.get('batch_pct', 0.0):.1f}%")
-    c3.metric("Donut Daily Loss", _format_currency(donut_metrics.get("daily_loss", 0.0)))
+    c1.metric(f"{base_pattern}-related Count", int(pattern_metrics.get("count", 0)))
+    c2.metric(f"{base_pattern}-related Share", f"{pattern_metrics.get('batch_pct', 0.0):.1f}%")
+    c3.metric(f"{base_pattern} Daily Loss", _format_currency(pattern_metrics.get("daily_loss", 0.0)))
+
+
+def render_donut_card(donut_metrics: dict[str, float]) -> None:
+    """Backward-compatible wrapper for existing calls."""
+    render_pattern_card("Donut", donut_metrics)
 
 
 def render_action_table(df_actions: pd.DataFrame, top_n: int = 5) -> None:

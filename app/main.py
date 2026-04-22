@@ -12,14 +12,14 @@ import streamlit as st
 import streamlit.components.v1 as components
 
 from app.config import (
+    BASE_PATTERN_SCENARIO_DEFAULTS,
     DATASET_PATH,
-    DONUT_SCENARIO_DEFAULTS,
     FINANCIAL_CONFIG_DEFAULTS,
     MAX_BATCH_SIZE,
     MODEL_REGISTRY,
     TOP_N_DEFAULT,
 )
-from app.financial_ui import analyze_results
+from app.financial_ui import BASE_PATTERNS, analyze_results, is_pattern_name_related
 from app.labels import get_description
 from app.model_utils import load_model, predict_batch, predict_single
 from app.preprocessing import parse_upload, prepare_for_model
@@ -28,8 +28,8 @@ from app.visualization import (
     render_action_table,
     render_base_anomaly_chart,
     render_confidence_chart,
-    render_donut_card,
     render_kpi_cards,
+    render_pattern_card,
     render_wafer_map,
 )
 
@@ -614,21 +614,28 @@ def _financial_config_from_state(batch_id: str) -> dict:
 
 
 def render_leadership_panel(results: list[dict], batch_id: str, section_title: str, lot_level: bool = True) -> None:
-    """Render financial KPI, donut insights, and action recommendations."""
+    """Render financial KPI, selected-pattern insights, and action recommendations."""
     if not results:
         return
 
     base_config = _financial_config_from_state(batch_id)
     threshold = float(st.session_state["fin_conf_threshold"])
-    analysis_view = analyze_results(results, base_config, threshold, use_donut_scenario=False)
+    focus_pattern = st.session_state.get("fin_focus_pattern", "Donut")
+    analysis_view = analyze_results(
+        results,
+        base_config,
+        threshold,
+        use_pattern_scenario=False,
+        focus_pattern=focus_pattern,
+    )
 
     st.subheader(section_title)
     if not lot_level:
         st.caption("Single-wafer values are indicative estimates. Leadership KPIs should be interpreted at lot level.")
 
     render_kpi_cards(analysis_view["summary_payload"])
-    st.markdown("**Donut-Related Insights**")
-    render_donut_card(analysis_view["donut_metrics"])
+    st.markdown(f"**{focus_pattern}-Related Insights**")
+    render_pattern_card(focus_pattern, analysis_view["pattern_metrics"])
 
     st.markdown("**Immediate Recommendation**")
     st.success(analysis_view["executive_recommendation"])
@@ -1017,19 +1024,33 @@ elif st.session_state.active_tab == "sample":
         )
 
         # Batch size
-        sample_size = st.slider("Number of samples", min_value=1, max_value=50, value=10)
+        sample_size = st.slider("Number of samples", min_value=800, max_value=6000, value=1000)
         sample_mode = st.radio(
             "Sample mode",
-            ["Random samples", "Donut-dominant demo scenario"],
+            ["Random samples", "Base-pattern demo scenario"],
             horizontal=True,
-            help="Use donut-dominant mode to simulate a realistic lot with mostly Normal wafers and elevated Donut-related defects.",
+            help="Use base-pattern mode to simulate a realistic lot with mostly Normal wafers and elevated selected-pattern defects.",
         )
 
-        if sample_mode == "Donut-dominant demo scenario":
+        focus_pattern = st.session_state.get("fin_focus_pattern", "Donut")
+
+        if sample_mode == "Base-pattern demo scenario":
+            current_pattern = st.session_state.get("fin_focus_pattern", "Donut")
+            if current_pattern not in BASE_PATTERNS:
+                current_pattern = "Donut"
+            selected_index = list(BASE_PATTERNS).index(current_pattern)
+
+            focus_pattern = st.selectbox(
+                "Focus base defect pattern",
+                options=list(BASE_PATTERNS),
+                index=selected_index,
+                key="fin_focus_pattern",
+                help="Used for targeted insights and demo-scenario composition.",
+            )
             st.caption(
-                f"Target composition: {DONUT_SCENARIO_DEFAULTS['NORMAL_SHARE']:.0%} Normal, "
-                f"{DONUT_SCENARIO_DEFAULTS['DONUT_SHARE']:.0%} Donut-related, "
-                f"{1 - DONUT_SCENARIO_DEFAULTS['NORMAL_SHARE'] - DONUT_SCENARIO_DEFAULTS['DONUT_SHARE']:.0%} Other"
+                f"Target composition: {BASE_PATTERN_SCENARIO_DEFAULTS['NORMAL_SHARE']:.0%} Normal, "
+                f"{BASE_PATTERN_SCENARIO_DEFAULTS['TARGET_SHARE']:.0%} {focus_pattern}-related, "
+                f"{1 - BASE_PATTERN_SCENARIO_DEFAULTS['NORMAL_SHARE'] - BASE_PATTERN_SCENARIO_DEFAULTS['TARGET_SHARE']:.0%} Other"
             )
 
         if st.button("Generate Samples", type="primary"):
@@ -1049,19 +1070,18 @@ elif st.session_state.active_tab == "sample":
                 actual_size = min(sample_size, len(pool))
                 rng = np.random.default_rng()
 
-                if sample_mode == "Donut-dominant demo scenario":
+                if sample_mode == "Base-pattern demo scenario":
                     # Build defect families from full dataset to create a controlled scenario lot.
                     pattern_names = np.array([ID_TO_PATTERN[int(pid)] for pid in pattern_ids])
                     normal_idx = np.where(pattern_names == "Normal")[0]
-                    donut_idx = np.where(np.char.find(pattern_names.astype(str), "Donut") >= 0)[0]
-                    other_idx = np.where(
-                        (pattern_names != "Normal") & (np.char.find(pattern_names.astype(str), "Donut") < 0)
-                    )[0]
+                    target_mask = np.array([is_pattern_name_related(name, focus_pattern) for name in pattern_names])
+                    target_idx = np.where(target_mask)[0]
+                    other_idx = np.where((pattern_names != "Normal") & (~target_mask))[0]
 
-                    n_normal = round(actual_size * DONUT_SCENARIO_DEFAULTS["NORMAL_SHARE"])
-                    n_donut = round(actual_size * DONUT_SCENARIO_DEFAULTS["DONUT_SHARE"])
-                    n_other = max(0, actual_size - n_normal - n_donut)
-                    n_normal += actual_size - (n_normal + n_donut + n_other)
+                    n_normal = round(actual_size * BASE_PATTERN_SCENARIO_DEFAULTS["NORMAL_SHARE"])
+                    n_target = round(actual_size * BASE_PATTERN_SCENARIO_DEFAULTS["TARGET_SHARE"])
+                    n_other = max(0, actual_size - n_normal - n_target)
+                    n_normal += actual_size - (n_normal + n_target + n_other)
 
                     def _draw(source_idx, n):
                         if n <= 0:
@@ -1071,15 +1091,16 @@ elif st.session_state.active_tab == "sample":
 
                     selected_idx = np.concatenate([
                         _draw(normal_idx, n_normal),
-                        _draw(donut_idx, n_donut),
+                        _draw(target_idx, n_target),
                         _draw(other_idx, n_other),
                     ])
                     rng.shuffle(selected_idx)
                     sampled = images[selected_idx]
                     st.session_state["sample_demo_mix"] = {
                         "normal": int(n_normal),
-                        "donut": int(n_donut),
+                        "target": int(n_target),
                         "other": int(n_other),
+                        "focus_pattern": focus_pattern,
                     }
                 else:
                     indices = rng.choice(len(pool), size=actual_size, replace=False)
@@ -1090,8 +1111,8 @@ elif st.session_state.active_tab == "sample":
                 st.session_state["generated_samples"] = sampled
                 st.session_state["sample_mode"] = sample_mode
 
-                if sample_mode == "Donut-dominant demo scenario":
-                    st.success(f"Generated {actual_size} donut-dominant demo wafers.")
+                if sample_mode == "Base-pattern demo scenario":
+                    st.success(f"Generated {actual_size} {focus_pattern}-dominant demo wafers.")
                 else:
                     st.success(f"Generated {actual_size} random wafer map samples.")
 
@@ -1121,9 +1142,16 @@ elif st.session_state.active_tab == "sample":
             df = build_results_dataframe(results)
             st.dataframe(df, use_container_width=True, hide_index=True)
 
-            if st.session_state.get("sample_mode") == "Donut-dominant demo scenario":
-                mix = st.session_state.get("sample_demo_mix") or {"normal": 0, "donut": 0, "other": 0}
-                st.info(f"Donut demo mode: N/D/O wafers = {mix['normal']}/{mix['donut']}/{mix['other']}")
+            if st.session_state.get("sample_mode") == "Base-pattern demo scenario":
+                mix = st.session_state.get("sample_demo_mix") or {
+                    "normal": 0,
+                    "target": 0,
+                    "other": 0,
+                    "focus_pattern": focus_pattern,
+                }
+                st.info(
+                    f"{mix['focus_pattern']} demo mode: N/T/O wafers = {mix['normal']}/{mix['target']}/{mix['other']}"
+                )
 
             render_leadership_panel(
                 results,
