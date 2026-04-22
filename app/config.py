@@ -1,11 +1,14 @@
 """App configuration constants."""
 
+import os
 from pathlib import Path
 
 # Dataset path
 DATASET_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "mixedtype-wafer-defect-datasets" / "Wafer_Map_Datasets.npz"
 )
+DATASET_SLUG = os.getenv("WAFER_DATASET_SLUG", "co1d7era/mixedtype-wafer-defect-datasets")
+ENABLE_RUNTIME_DATASET_BOOTSTRAP = os.getenv("ENABLE_RUNTIME_DATASET_BOOTSTRAP", "1") == "1"
 
 # Project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent

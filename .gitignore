@@ -59,6 +59,9 @@ models/saved/*
 *~
 .DS_Store
 
+# Streamlit local secrets
+.streamlit/secrets.toml
+
 # Environment
 .env
 .venv
