@@ -4,6 +4,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import streamlit as st
 from matplotlib.patches import Patch
 
 from app.config import BG_COLOR, WAFER_COLORS
@@ -91,3 +92,92 @@ def build_results_dataframe(results: list[dict]) -> pd.DataFrame:
         }
         for r in results
     ])
+
+
+def _format_currency(value: float) -> str:
+    value = float(value)
+    if abs(value) >= 1_000_000:
+        return f"${value / 1_000_000:.2f}M"
+    if abs(value) >= 1_000:
+        return f"${value / 1_000:.1f}K"
+    return f"${value:,.0f}"
+
+
+def render_kpi_cards(summary_payload: dict) -> None:
+    """Render leadership KPI cards for financial decision support."""
+    total_wafers = int(summary_payload.get("total_wafers", 0))
+    low_conf_count = int(summary_payload.get("low_conf_count", 0))
+    low_conf_share = (low_conf_count / total_wafers * 100) if total_wafers > 0 else 0.0
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Daily Loss", _format_currency(summary_payload.get("total_daily_loss", 0.0)))
+    c2.metric("Defect Rate", f"{summary_payload.get('defect_rate', 0.0) * 100:.1f}%")
+    c3.metric("Avg Confidence", f"{summary_payload.get('avg_confidence', 0.0) * 100:.1f}%")
+    c4.metric("Low Confidence", f"{low_conf_count} ({low_conf_share:.1f}%)")
+
+
+def render_donut_card(donut_metrics: dict[str, float]) -> None:
+    """Render Donut-related insights with dedicated callout metrics."""
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Donut-related Count", int(donut_metrics.get("count", 0)))
+    c2.metric("Donut-related Share", f"{donut_metrics.get('batch_pct', 0.0):.1f}%")
+    c3.metric("Donut Daily Loss", _format_currency(donut_metrics.get("daily_loss", 0.0)))
+
+
+def render_action_table(df_actions: pd.DataFrame, top_n: int = 5) -> None:
+    """Render prioritized repair actions for leadership."""
+    if df_actions.empty:
+        st.info("No action items available for this selection.")
+        return
+
+    show = df_actions.head(top_n)[
+        [
+            "repair_action",
+            "process_step",
+            "risk_level",
+            "daily_loss_savings",
+            "break_even_days",
+            "evoa_30d",
+        ]
+    ].rename(
+        columns={
+            "repair_action": "Action",
+            "process_step": "Process Step",
+            "risk_level": "Risk",
+            "daily_loss_savings": "Daily Savings",
+            "break_even_days": "Break-even (days)",
+            "evoa_30d": "30d EVoA",
+        }
+    )
+    st.dataframe(show, use_container_width=True, hide_index=True)
+
+
+def render_base_anomaly_chart(df_anomaly: pd.DataFrame) -> None:
+    """Render base defect prevalence for fast operational review."""
+    if df_anomaly.empty:
+        st.info("No base anomaly data available.")
+        return
+
+    chart_df = df_anomaly.sort_values("count", ascending=False).head(8)
+    fig, ax = plt.subplots(figsize=(9, 4.2), facecolor=BG_COLOR)
+    ax.set_facecolor(BG_COLOR)
+
+    bars = ax.barh(
+        chart_df["pattern_name"].iloc[::-1],
+        chart_df["count"].iloc[::-1],
+        color="#00a1de",
+        edgecolor="#1d3f58",
+    )
+    ax.set_xlabel("Wafer Count", color="white")
+    ax.tick_params(axis="x", colors="white")
+    ax.tick_params(axis="y", colors="white", labelsize=9)
+    for spine in ax.spines.values():
+        spine.set_color("#444")
+
+    for bar in bars:
+        w = bar.get_width()
+        ax.text(w + 0.2, bar.get_y() + bar.get_height() / 2, f"{int(w)}", va="center", color="white", fontsize=8)
+
+    fig.tight_layout()
+    st.pyplot(fig)
+    plt.close(fig)

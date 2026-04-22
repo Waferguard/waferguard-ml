@@ -50,5 +50,21 @@ WAFER_COLORS = {k: (r / 255, g / 255, b / 255) for k, (r, g, b) in WAFER_RGB.ite
 TOP_N_DEFAULT = 5
 MAX_BATCH_SIZE = 100
 
+# Financial analysis defaults (leadership decision support)
+FINANCIAL_CONFIG_DEFAULTS = {
+    "WPH": 100,
+    "VALUE_PER_WAFER": 5_000,
+    "REPAIR_HOURS": 8,
+    "PLANNING_HORIZON": 30,
+    "CONFIDENCE_THRESHOLD": 0.70,
+}
+
+# Scenario defaults used for donut-dominant test case analysis
+DONUT_SCENARIO_DEFAULTS = {
+    "NORMAL_SHARE": 0.80,
+    "DONUT_SHARE": 0.16,
+    "RANDOM_SEED": 42,
+}
+
 # Dark theme background (matches .streamlit/config.toml)
 BG_COLOR = "#0E1117"

@@ -11,11 +11,27 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import streamlit.components.v1 as components
 
-from app.config import DATASET_PATH, MAX_BATCH_SIZE, MODEL_REGISTRY, TOP_N_DEFAULT
+from app.config import (
+    DATASET_PATH,
+    DONUT_SCENARIO_DEFAULTS,
+    FINANCIAL_CONFIG_DEFAULTS,
+    MAX_BATCH_SIZE,
+    MODEL_REGISTRY,
+    TOP_N_DEFAULT,
+)
+from app.financial_ui import analyze_results
 from app.labels import get_description
 from app.model_utils import load_model, predict_batch, predict_single
 from app.preprocessing import parse_upload, prepare_for_model
-from app.visualization import build_results_dataframe, render_confidence_chart, render_wafer_map
+from app.visualization import (
+    build_results_dataframe,
+    render_action_table,
+    render_base_anomaly_chart,
+    render_confidence_chart,
+    render_donut_card,
+    render_kpi_cards,
+    render_wafer_map,
+)
 
 st.set_page_config(
     page_title="WaferGuard ML",
@@ -175,6 +191,50 @@ with st.sidebar:
     )
 
     top_n = st.slider("Top-N Predictions", min_value=3, max_value=38, value=TOP_N_DEFAULT)
+
+    st.divider()
+    st.markdown(
+        '<span style="color: #92d400; font-weight: 700; font-size: 1rem;">Financial Assumptions</span>',
+        unsafe_allow_html=True,
+    )
+    st.slider(
+        "Wafers per hour",
+        min_value=10,
+        max_value=500,
+        value=int(FINANCIAL_CONFIG_DEFAULTS["WPH"]),
+        step=5,
+        key="fin_wph",
+    )
+    st.slider(
+        "Value per wafer ($)",
+        min_value=500,
+        max_value=20_000,
+        value=int(FINANCIAL_CONFIG_DEFAULTS["VALUE_PER_WAFER"]),
+        step=100,
+        key="fin_value_per_wafer",
+    )
+    st.slider(
+        "Repair time (hours)",
+        min_value=1,
+        max_value=48,
+        value=int(FINANCIAL_CONFIG_DEFAULTS["REPAIR_HOURS"]),
+        key="fin_repair_hours",
+    )
+    st.slider(
+        "Planning horizon (days)",
+        min_value=7,
+        max_value=90,
+        value=int(FINANCIAL_CONFIG_DEFAULTS["PLANNING_HORIZON"]),
+        key="fin_planning_horizon",
+    )
+    st.slider(
+        "Low-confidence threshold",
+        min_value=0.50,
+        max_value=0.95,
+        value=float(FINANCIAL_CONFIG_DEFAULTS["CONFIDENCE_THRESHOLD"]),
+        step=0.01,
+        key="fin_conf_threshold",
+    )
 
     st.divider()
 
@@ -541,6 +601,75 @@ def build_hero_html(theme):
     )
 
 
+def _financial_config_from_state(batch_id: str) -> dict:
+    """Build financial config from sidebar controls."""
+    return {
+        "BATCH_ID": batch_id,
+        "WPH": st.session_state["fin_wph"],
+        "VALUE_PER_WAFER": st.session_state["fin_value_per_wafer"],
+        "REPAIR_HOURS": st.session_state["fin_repair_hours"],
+        "PLANNING_HORIZON": st.session_state["fin_planning_horizon"],
+        "CONFIDENCE_THRESHOLD": st.session_state["fin_conf_threshold"],
+    }
+
+
+def render_leadership_panel(results: list[dict], batch_id: str, section_title: str, lot_level: bool = True) -> None:
+    """Render financial KPI, donut insights, and action recommendations."""
+    if not results:
+        return
+
+    base_config = _financial_config_from_state(batch_id)
+    threshold = float(st.session_state["fin_conf_threshold"])
+    analysis_view = analyze_results(results, base_config, threshold, use_donut_scenario=False)
+
+    st.subheader(section_title)
+    if not lot_level:
+        st.caption("Single-wafer values are indicative estimates. Leadership KPIs should be interpreted at lot level.")
+
+    render_kpi_cards(analysis_view["summary_payload"])
+    st.markdown("**Donut-Related Insights**")
+    render_donut_card(analysis_view["donut_metrics"])
+
+    st.markdown("**Immediate Recommendation**")
+    st.success(analysis_view["executive_recommendation"])
+
+    with st.expander("Action Prioritization", expanded=True):
+        render_action_table(analysis_view["df_actions"], top_n=5)
+
+    with st.expander("Base Anomaly Breakdown", expanded=False):
+        render_base_anomaly_chart(analysis_view["df_anomaly"])
+
+    with st.expander("Top Financially Impactful Patterns", expanded=False):
+        if analysis_view["df_financial"].empty:
+            st.info("No defect financial patterns to display.")
+        else:
+            st.dataframe(
+                analysis_view["df_financial"]
+                .head(10)[
+                    [
+                        "pattern_name",
+                        "count",
+                        "batch_pct",
+                        "risk_level",
+                        "weighted_daily_loss",
+                        "break_even_days",
+                    ]
+                ]
+                .rename(
+                    columns={
+                        "pattern_name": "Pattern",
+                        "count": "Count",
+                        "batch_pct": "Batch %",
+                        "risk_level": "Risk",
+                        "weighted_daily_loss": "Daily Loss",
+                        "break_even_days": "Break-even (days)",
+                    }
+                ),
+                hide_index=True,
+                use_container_width=True,
+            )
+
+
 # ── Display prediction results ───────────────────────────────────────
 def display_prediction(raw, result, elapsed, top_n):
     """Display prediction results for a single wafer."""
@@ -758,6 +887,12 @@ if st.session_state.active_tab == "single":
             st.error(f"Failed to process file: {e}")
         else:
             display_prediction(raw, result, elapsed, top_n)
+            render_leadership_panel(
+                [result],
+                batch_id=f"SINGLE_{int(time.time())}",
+                section_title="Financial Snapshot",
+                lot_level=False,
+            )
 
 # ── Batch Upload ────────────────────────────────────────────────────
 elif st.session_state.active_tab == "batch":
@@ -816,6 +951,13 @@ elif st.session_state.active_tab == "batch":
             st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
             df = build_results_dataframe(results)
             st.dataframe(df, use_container_width=True, hide_index=True)
+
+            render_leadership_panel(
+                results,
+                batch_id=f"BATCH_{int(time.time())}",
+                section_title="Leadership Decision Support",
+                lot_level=True,
+            )
 
             # Expandable details per wafer
             st.subheader("Details")
@@ -876,6 +1018,19 @@ elif st.session_state.active_tab == "sample":
 
         # Batch size
         sample_size = st.slider("Number of samples", min_value=1, max_value=50, value=10)
+        sample_mode = st.radio(
+            "Sample mode",
+            ["Random samples", "Donut-dominant demo scenario"],
+            horizontal=True,
+            help="Use donut-dominant mode to simulate a realistic lot with mostly Normal wafers and elevated Donut-related defects.",
+        )
+
+        if sample_mode == "Donut-dominant demo scenario":
+            st.caption(
+                f"Target composition: {DONUT_SCENARIO_DEFAULTS['NORMAL_SHARE']:.0%} Normal, "
+                f"{DONUT_SCENARIO_DEFAULTS['DONUT_SHARE']:.0%} Donut-related, "
+                f"{1 - DONUT_SCENARIO_DEFAULTS['NORMAL_SHARE'] - DONUT_SCENARIO_DEFAULTS['DONUT_SHARE']:.0%} Other"
+            )
 
         if st.button("Generate Samples", type="primary"):
             # Filter by selected patterns
@@ -893,13 +1048,52 @@ elif st.session_state.active_tab == "sample":
             else:
                 actual_size = min(sample_size, len(pool))
                 rng = np.random.default_rng()
-                indices = rng.choice(len(pool), size=actual_size, replace=False)
-                sampled = pool[indices]
+
+                if sample_mode == "Donut-dominant demo scenario":
+                    # Build defect families from full dataset to create a controlled scenario lot.
+                    pattern_names = np.array([ID_TO_PATTERN[int(pid)] for pid in pattern_ids])
+                    normal_idx = np.where(pattern_names == "Normal")[0]
+                    donut_idx = np.where(np.char.find(pattern_names.astype(str), "Donut") >= 0)[0]
+                    other_idx = np.where(
+                        (pattern_names != "Normal") & (np.char.find(pattern_names.astype(str), "Donut") < 0)
+                    )[0]
+
+                    n_normal = round(actual_size * DONUT_SCENARIO_DEFAULTS["NORMAL_SHARE"])
+                    n_donut = round(actual_size * DONUT_SCENARIO_DEFAULTS["DONUT_SHARE"])
+                    n_other = max(0, actual_size - n_normal - n_donut)
+                    n_normal += actual_size - (n_normal + n_donut + n_other)
+
+                    def _draw(source_idx, n):
+                        if n <= 0:
+                            return np.array([], dtype=int)
+                        base = source_idx if len(source_idx) > 0 else np.arange(len(images))
+                        return rng.choice(base, size=n, replace=len(base) < n)
+
+                    selected_idx = np.concatenate([
+                        _draw(normal_idx, n_normal),
+                        _draw(donut_idx, n_donut),
+                        _draw(other_idx, n_other),
+                    ])
+                    rng.shuffle(selected_idx)
+                    sampled = images[selected_idx]
+                    st.session_state["sample_demo_mix"] = {
+                        "normal": int(n_normal),
+                        "donut": int(n_donut),
+                        "other": int(n_other),
+                    }
+                else:
+                    indices = rng.choice(len(pool), size=actual_size, replace=False)
+                    sampled = pool[indices]
+                    st.session_state["sample_demo_mix"] = None
 
                 # Store in session for display
                 st.session_state["generated_samples"] = sampled
+                st.session_state["sample_mode"] = sample_mode
 
-                st.success(f"Generated {actual_size} random wafer map samples.")
+                if sample_mode == "Donut-dominant demo scenario":
+                    st.success(f"Generated {actual_size} donut-dominant demo wafers.")
+                else:
+                    st.success(f"Generated {actual_size} random wafer map samples.")
 
         # Display and download generated samples
         if "generated_samples" in st.session_state:
@@ -926,6 +1120,17 @@ elif st.session_state.active_tab == "sample":
             st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
             df = build_results_dataframe(results)
             st.dataframe(df, use_container_width=True, hide_index=True)
+
+            if st.session_state.get("sample_mode") == "Donut-dominant demo scenario":
+                mix = st.session_state.get("sample_demo_mix") or {"normal": 0, "donut": 0, "other": 0}
+                st.info(f"Donut demo mode: N/D/O wafers = {mix['normal']}/{mix['donut']}/{mix['other']}")
+
+            render_leadership_panel(
+                results,
+                batch_id=f"SAMPLE_{int(time.time())}",
+                section_title="Leadership Decision Support",
+                lot_level=True,
+            )
 
             # Expandable details
             st.subheader("Details")
