@@ -346,9 +346,7 @@ if ENABLE_RUNTIME_DATASET_BOOTSTRAP:
         logger.info("Eager dataset bootstrap complete: %s", DATASET_READY_PATH)
     except Exception:
         logger.exception("Eager dataset bootstrap failed")
-        DATASET_BOOTSTRAP_ERROR = (
-            f"Dataset bootstrap failed for {DATASET_PATH}. See deployment logs for details."
-        )
+        DATASET_BOOTSTRAP_ERROR = f"Dataset bootstrap failed for {DATASET_PATH}. See deployment logs for details."
 elif not DATASET_PATH.exists():
     logger.warning("Runtime dataset bootstrap is disabled and the dataset file is missing.")
     DATASET_BOOTSTRAP_ERROR = (

@@ -96,7 +96,9 @@ def ensure_wafer_dataset(
 
     if not dataset_file.exists():
         msg = f"Dataset download completed but expected file not found: {dataset_file}"
-        logger.error("Dataset directory contents under %s: %s", dest_dir, [p.name for p in sorted(dest_dir.iterdir())[:20]])
+        logger.error(
+            "Dataset directory contents under %s: %s", dest_dir, [p.name for p in sorted(dest_dir.iterdir())[:20]]
+        )
         logger.error(msg)
         raise FileNotFoundError(msg)
 
