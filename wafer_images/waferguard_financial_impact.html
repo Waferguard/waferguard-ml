@@ -149,14 +149,14 @@ It takes the trained models and produces a <strong>ranked financial impact repor
     → Compute weighted daily loss, break-even, EVoA, priority score
     → Ranked repair recommendations</code></pre>
 <hr>
-<div id="2HQLLeciQrQf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-outputid="aba3bb33-f982-4bcc-a40c-eccb2d8bcac4" data-execution_count="23">
+<div id="2HQLLeciQrQf" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;colab&quot;,&quot;value&quot;:{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}}" data-outputid="aba3bb33-f982-4bcc-a40c-eccb2d8bcac4" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="Jpce7pQ3QrQg" class="cell" data-execution_count="24">
+<div id="Jpce7pQ3QrQg" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ── Configuration: Batch settings and financial assumptions ──────────────────</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BATCH_ID <span class="op">=</span> <span class="st">"LOT_001"</span>  <span class="co"># Production lot identifier</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>SELECTED_MODEL <span class="op">=</span> <span class="st">"cnn"</span>  <span class="co"># Which model to use: "cnn" or "tl"</span></span>
@@ -188,28 +188,29 @@ It takes the trained models and produces a <strong>ranked financial impact repor
 <h2 class="anchored" data-anchor-id="production-pipeline-run-refactored-library">Production Pipeline: Run Refactored Library</h2>
 <p>Execute the refactored financial analysis pipeline using the <code>financial_impact.financial</code> library.<br>
 Set configuration above, then run this cell to generate reports.</p>
-<div id="0f3a0f40" class="cell">
+<div id="0f3a0f40" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Run financial analysis pipeline using trained models + dataset</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _find_repo_root() <span class="op">-&gt;</span> Path:</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Walk up from cwd until pyproject.toml is found."""</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> Path.cwd()</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">/</span> <span class="st">"pyproject.toml"</span>).exists():</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.parent</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="st">"Could not locate repo root (pyproject.toml not found)"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _find_repo_root() <span class="op">-&gt;</span> Path:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Walk up from cwd until pyproject.toml is found."""</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> Path.cwd()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">6</span>):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> (p <span class="op">/</span> <span class="st">"pyproject.toml"</span>).exists():</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> p.parent</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">raise</span> <span class="pp">FileNotFoundError</span>(<span class="st">"Could not locate repo root (pyproject.toml not found)"</span>)</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> _find_repo_root()</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">str</span>(repo_root) <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(repo_root))</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"repo_root:"</span>, repo_root)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>repo_root <span class="op">=</span> _find_repo_root()</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">str</span>(repo_root) <span class="kw">not</span> <span class="kw">in</span> sys.path:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    sys.path.insert(<span class="dv">0</span>, <span class="bu">str</span>(repo_root))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"repo_root:"</span>, repo_root)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>repo_root: /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml</code></pre>
+<pre><code>repo_root: /Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml</code></pre>
 </div>
 </div>
-<div id="a869792c" class="cell" data-execution_count="26">
+<div id="a869792c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Now import after sys.path is set</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> financial</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> financial_impact <span class="im">import</span> inference <span class="im">as</span> wg_inf</span>
@@ -315,50 +316,52 @@ Set configuration above, then run this cell to generate reports.</p>
 <span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>financial.save_reports(df_batch2, df_financial2, summary2, outdir_demo, BATCH_ID)</span>
 <span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Saved refactor reports →"</span>, outdir_demo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Loading dataset from /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz
+<pre><code>Loading dataset from /Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml/data/mixedtype-wafer-defect-datasets/Wafer_Map_Datasets.npz
 Loaded dataset shape: (38015, 52, 52, 3)
-Running inference with: CNN (/Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/wafer_images/phase2_models/model_p2_cnn.keras)
+Running inference with: CNN (/Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml/wafer_images/phase2_models/model_p2_cnn.keras)
 --- Financial preview (top 5) ---
-binary_label                pattern_name  count  batch_pct  avg_confidence  triage_priority risk_level  yield_loss_pct  repair_cost  replacement_cost  downtime_per_hr  weighted_daily_loss  break_even_days   evoa_30d  priority_score                                                                                                                                                             process_step                                                                                                                                                                        repair_action
-    01101010  Donut+Edge_Loc+Loc+Scratch   6546      17.22          0.9779                2   Critical            51.5       472500        25000000.0          2050000           1064165.10              0.4 15052453.0       532082.55 CMP (primary) / Lithography Track (secondary) + Diffusion / Thermal Processing + Tool-specific (single chamber / handling subsystem) + Wafer Handling Path / CMP Contact Address S first (priority 2); then D, EL, L. Immediate: contain handling path; CMP: replace pad &amp; slurry, clean heads; Furnace zone temp recalibration; Robot motion/vibration check
-    10100010     Center+Edge_Loc+Scratch   6373      16.76          0.9750                2   Critical            44.0       462500        17250000.0          2050000            885160.32              0.5  9692309.6       442580.16                                                                         Deposition / Plasma Process + Diffusion / Thermal Processing + Wafer Handling Path / CMP Contact                                             Address S first (priority 2); then C, EL. Immediate: contain handling path; Chamber clean &amp; kit replace; Furnace zone temp recalibration
-    10101010 Center+Edge_Loc+Loc+Scratch   2175       5.72          0.9601                2   Critical            47.0       617500        25750000.0          2050000            322686.96              1.9 -7336891.2       161343.48                   Deposition / Plasma Process + Diffusion / Thermal Processing + Tool-specific (single chamber / handling subsystem) + Wafer Handling Path / CMP Contact            Address S first (priority 2); then C, EL, L. Immediate: contain handling path; Chamber clean &amp; kit replace; Furnace zone temp recalibration; Robot motion/vibration check
-    01101000          Donut+Edge_Loc+Loc   3730       9.81          0.9825                4       High            38.0       395000        19750000.0          2050000            447422.64              0.9 -3372320.8       111855.66                                     CMP (primary) / Lithography Track (secondary) + Diffusion / Thermal Processing + Tool-specific (single chamber / handling subsystem)                                      Address D first (priority 4); then EL, L. CMP: replace pad &amp; slurry, clean heads; Furnace zone temp recalibration; Robot motion/vibration check
-    00101000                Edge_Loc+Loc  14019      36.88          0.9785                5     Medium             8.0       265000        14500000.0          2050000            354024.00              0.7 -6044280.0        70804.80                                                                                     Diffusion / Thermal Processing + Tool-specific (single chamber / handling subsystem)                                                                                 Address EL first (priority 5); then L. Furnace zone temp recalibration; Robot motion/vibration check
+binary_label                pattern_name  count  batch_pct  avg_confidence  triage_priority risk_level  yield_loss_pct  repair_cost  replacement_cost  downtime_per_hr  weighted_daily_loss  break_even_days    evoa_30d  priority_score                                                                                                                                                             process_step                                                                                                                                                                           repair_action
+    10100010     Center+Edge_Loc+Scratch   1967       5.17          0.9806                2   Critical            44.0       462500        17250000.0          2050000            273203.04              1.7  -8666408.8       136601.52                                                                         Deposition / Plasma Process + Diffusion / Thermal Processing + Wafer Handling Path / CMP Contact                                                Address S first (priority 2); then C, EL. Immediate: contain handling path; Chamber clean &amp; kit replace; Furnace zone temp recalibration
+    01011010 Donut+Edge_Ring+Loc+Scratch   1009       2.65          0.9851                2   Critical            53.0       617500        31500000.0          2250000            168807.12              3.7 -13553286.4        84403.56                    CMP (primary) / Lithography Track (secondary) + Plasma Etch + Tool-specific (single chamber / handling subsystem) + Wafer Handling Path / CMP Contact Address S first (priority 2); then ER, D, L. Immediate: contain handling path; Replace focus ring / edge hardware; CMP: replace pad &amp; slurry, clean heads; Robot motion/vibration check
+    01101010  Donut+Edge_Loc+Loc+Scratch    997       2.62          0.9757                2   Critical            51.5       472500        25000000.0          2050000            162076.68              2.9 -12010199.6        81038.34 CMP (primary) / Lithography Track (secondary) + Diffusion / Thermal Processing + Tool-specific (single chamber / handling subsystem) + Wafer Handling Path / CMP Contact    Address S first (priority 2); then D, EL, L. Immediate: contain handling path; CMP: replace pad &amp; slurry, clean heads; Furnace zone temp recalibration; Robot motion/vibration check
+    01010010     Donut+Edge_Ring+Scratch   1003       2.64          0.9730                2   Critical            49.5       462500        23000000.0          2250000            156720.96              3.0 -13760871.2        78360.48                                                                          CMP (primary) / Lithography Track (secondary) + Plasma Etch + Wafer Handling Path / CMP Contact                                  Address S first (priority 2); then ER, D. Immediate: contain handling path; Replace focus ring / edge hardware; CMP: replace pad &amp; slurry, clean heads
+    01100010      Donut+Edge_Loc+Scratch    975       2.56          0.9625                2   Critical            49.0       317500        16500000.0           550000            150810.24              2.1   -193192.8        75405.12                                                       CMP (primary) / Lithography Track (secondary) + Diffusion / Thermal Processing + Wafer Handling Path / CMP Contact                                     Address S first (priority 2); then D, EL. Immediate: contain handling path; CMP: replace pad &amp; slurry, clean heads; Furnace zone temp recalibration
 
 --- Summary payload (truncated) ---
 {
   "batch_id": "LOT_001",
   "total_wafers": 38015,
-  "defective_wafers": 38015,
-  "defect_rate": 1.0,
-  "avg_confidence": 0.9149,
-  "low_conf_count": 1595,
-  "dominant_pattern": "00101000",
-  "total_daily_loss": 3533998.14,
-  "top_action": "Address S first (priority 2); then D, EL, L. Immediate: contain handling path; CMP: replace pad &amp; slurry, clean heads; Furnace zone temp recalibration; Robot motion/vibration check",
+  "defective_wafers": 37015,
+  "defect_rate": 0.9737,
+  "avg_confidence": 0.9777,
+  "low_conf_count": 799,
+  "dominant_pattern": "10100010",
+  "total_daily_loss": 3903761.88,
+  "top_action": "Address S first (priority 2); then C, EL. Immediate: contain handling path; Chamber clean &amp; kit replace; Furnace zone temp recalibration",
   "patterns": {
-    "01101010": {
-      "pattern_name": "Donut+Edge_Loc+Loc+Scratch",
-      "count": 6546,
-      "batch_pct": 17.22,
-      "weighted_daily_loss": 1064165.1,
-      "priority_score": 532082.55
-    },
     "10100010": {
       "pattern_name": "Center+Edge_Loc+Scratch",
-      "count": 6373,
-      "batch_pct": 16.76,
-      "weighted_daily_loss": 885160.32,
-      "priority_score": 442580.16
+      "count": 1967,
+      "batch_pct": 5.17,
+      "weighted_daily_loss": 273203.04,
+      "priority_score": 136601.52
     },
-    "10101010": {
-      "pattern_name": "Center+Edge_Loc+Loc+Scratch",
-      "count": 2175,
-      "batch_pct": 5.72,
-      "weighted_daily_loss": 322686.96,
-      "pr
-Saved refactor reports → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/reports_LOT_001/refactor_demo</code></pre>
+    "01011010": {
+      "pattern_name": "Donut+Edge_Ring+Loc+Scratch",
+      "count": 1009,
+      "batch_pct": 2.65,
+      "weighted_daily_loss": 168807.12,
+      "priority_score": 84403.56
+    },
+    "01101010": {
+      "pattern_name": "Donut+Edge_Loc+Loc+Scratch",
+      "count": 997,
+      "batch_pct": 2.62,
+      "weighted_daily_loss": 162076.68,
+      "priority_score": 81038.34
+    },
+    "01010010":
+Saved refactor reports → /Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml/reports_LOT_001/refactor_demo</code></pre>
 </div>
 </div>
 </section>
@@ -367,7 +370,7 @@ Saved refactor reports → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/
 <p>The table above treats all 38 patterns as independent. This table <strong>decomposes</strong> every detected pattern into its 8 base anomaly types and aggregates counts at the base level.</p>
 <p><strong>Logic:</strong> A wafer classified as <em>Donut + Edge Lock + Scratch</em> contributes <strong>+1</strong> to each of Donut, Edge Lock, and Scratch independently.</p>
 <p><strong>Why this matters:</strong> Fixing a root cause (e.g., the CMP machine) resolves the base anomaly across <em>every</em> combination pattern that contains it. This table reflects the true aggregate financial impact of addressing each base anomaly independently — giving a repair-action-oriented view.</p>
-<div id="ckmrfo875bs" class="cell" data-execution_count="28">
+<div id="ckmrfo875bs" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decompose all detections to base anomaly level and recompute financial metrics</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_batch_base <span class="op">=</span> financial.build_base_anomaly_df(binary_labels, confidences, label_mapping)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>df_financial_base, summary_base <span class="op">=</span> financial.compute_financials(df_batch_base, config)</span>
@@ -382,16 +385,16 @@ Saved refactor reports → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/
 <div class="cell-output cell-output-stdout">
 <pre><code>--- Financial Impact by Base Anomaly (Decomposed View) ---
 binary_label pattern_name  count  batch_pct  avg_confidence  triage_priority risk_level  yield_loss_pct  repair_cost  replacement_cost  downtime_per_hr  weighted_daily_loss  break_even_days    evoa_30d  priority_score                                                process_step                                                                                                      repair_action
-    00000010      Scratch  16221      42.67          0.9672                2   Critical            27.5        77500         5250000.0           550000           1408110.00              0.1  37765800.0       704055.00                           Wafer Handling Path / CMP Contact Immediate: contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes; replace CMP consumables
-    01000000        Donut  11913      31.34          0.9756                4       High            32.5       130000         5250000.0           550000           1222166.40              0.1  32134992.0       305541.60               CMP (primary) / Lithography Track (secondary)                    CMP: replace pad &amp; slurry, clean heads; Litho track: chemistry dump/refresh, nozzle maintenance
-    10000000       Center  10051      26.44          0.9637                3       High            25.0       275000         6000000.0          2050000            793188.00              0.3   7120640.0       264396.00                                 Deposition / Plasma Process                                      Chamber clean &amp; kit replace; RF/temp recalibration; requalification metrology
-    00100000     Edge_Loc  37792      99.41          0.9678                5     Medium             5.5       110000         6000000.0           550000            656128.44              0.2  15173853.2       131225.69                              Diffusion / Thermal Processing                      Furnace zone temp recalibration; thermocouple/lamp replacement; requalification thermal cycle
-    00001000          Loc  28139      74.02          0.9737                5     Medium             5.5       155000         8500000.0          2050000            488537.28              0.3  -1898881.6        97707.46         Tool-specific (single chamber / handling subsystem)                Robot motion/vibration check; chamber wall inspection for film delamination; targeted chamber clean
-    00000100    Near_Full     31       0.08          0.8770                1   Critical            75.0       525000         8500000.0          2450000              7335.00             71.6 -19904950.0         7335.00 Major Process Excursion (Etch / Deposition / Litho / Clean)       IMMEDIATE: lot hold + tool stop; engineering investigation; full chamber clean + requalification; WIP review
-    00000001       Random    192       0.51          0.9224                5     Medium            10.5       130000               NaN          2050000              6364.26             20.4 -16339072.2         1272.85                   Environment / Broad Contamination Control          FOUP/carrier cleaning; filter inspection/replacement; load lock particle monitoring; targeted tool cleans
-    00010000    Edge_Ring      0       0.00          0.0000                3       High             7.5       255000        12500000.0          2250000                 0.00           9999.0 -18255000.0            0.00                                                 Plasma Etch                               Replace focus ring / edge hardware; chamber clean; RF recalibration; requalification
+    00000010      Scratch  18759      49.35          0.9783                2   Critical            27.5        77500         5250000.0           550000           1628427.90              0.0  44375337.0       814213.95                           Wafer Handling Path / CMP Contact Immediate: contain handling path; swap/clean robot end effectors; inspect FOUPs/cassettes; replace CMP consumables
+    10000000       Center  13000      34.20          0.9767                3       High            25.0       275000         6000000.0          2050000           1025910.00              0.3  14102300.0       341970.00                                 Deposition / Plasma Process                                      Chamber clean &amp; kit replace; RF/temp recalibration; requalification metrology
+    01000000        Donut  12000      31.57          0.9751                4       High            32.5       130000         5250000.0           550000           1231093.50              0.1  32402805.0       307773.37               CMP (primary) / Lithography Track (secondary)                    CMP: replace pad &amp; slurry, clean heads; Litho track: chemistry dump/refresh, nozzle maintenance
+    00010000    Edge_Ring  12030      31.65          0.9763                3       High             7.5       255000        12500000.0          2250000            284808.60              0.9  -9710742.0        94936.20                                                 Plasma Etch                               Replace focus ring / edge hardware; chamber clean; RF recalibration; requalification
+    00001000          Loc  17938      47.19          0.9708                5     Medium             5.5       155000         8500000.0          2050000            311431.56              0.5  -7212053.2        62286.31         Tool-specific (single chamber / handling subsystem)                Robot motion/vibration check; chamber wall inspection for film delamination; targeted chamber clean
+    00100000     Edge_Loc  12913      33.97          0.9750                5     Medium             5.5       110000         6000000.0           550000            224190.12              0.5   2215703.6        44838.02                              Diffusion / Thermal Processing                      Furnace zone temp recalibration; thermocouple/lamp replacement; requalification thermal cycle
+    00000100    Near_Full    162       0.43          0.9780                1   Critical            75.0       525000         8500000.0          2450000             38349.00             13.7 -18974530.0        38349.00 Major Process Excursion (Etch / Deposition / Litho / Clean)       IMMEDIATE: lot hold + tool stop; engineering investigation; full chamber clean + requalification; WIP review
+    00000001       Random    853       2.24          0.9966                5     Medium            10.5       130000               NaN          2050000             28273.14              4.6 -15681805.8         5654.63                   Environment / Broad Contamination Control          FOUP/carrier cleaning; filter inspection/replacement; load lock particle monitoring; targeted tool cleans
 
-Saved base anomaly report → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/reports_LOT_001/refactor_demo/base_anomaly_report_LOT_001.csv</code></pre>
+Saved base anomaly report → /Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml/reports_LOT_001/refactor_demo/base_anomaly_report_LOT_001.csv</code></pre>
 </div>
 </div>
 </section>
@@ -406,7 +409,7 @@ Shows the <strong>aggregate financial impact</strong> of taking that action acro
 <li><strong>Partially resolved</strong>: the action fixes some components; savings are proportional to the fraction resolved.</li>
 </ul>
 <p>Use this table to answer: <em>“If I take action X, what is the total financial gain?”</em></p>
-<div id="l6ycf2rg3th" class="cell" data-execution_count="29">
+<div id="l6ycf2rg3th" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build action-oriented financial table</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_actions <span class="op">=</span> financial.compute_action_table(df_financial2)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -420,22 +423,22 @@ Shows the <strong>aggregate financial impact</strong> of taking that action acro
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>df_actions.to_csv(action_path, index<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">Saved action report → </span><span class="sc">{</span>action_path<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Total unique repair actions identified: 23
+<pre><code>Total unique repair actions identified: 27
 
 --- Action-Oriented Financial Table (top 10 by daily loss savings) ---
-                                repair_action                                        process_step risk_level  triage_priority  repair_cost  patterns_fully_resolved  patterns_partially_resolved  daily_loss_savings  break_even_days    evoa_30d
-              Furnace zone temp recalibration                      Diffusion / Thermal Processing     Medium                5       110000                        1                           10          1170072.16              0.1 34992164.65
-                thermocouple/lamp replacement                      Diffusion / Thermal Processing     Medium                5       110000                        1                           10          1170072.16              0.1 34992164.65
-                requalification thermal cycle                      Diffusion / Thermal Processing     Medium                5       110000                        1                           10          1170072.16              0.1 34992164.65
-                 Robot motion/vibration check Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        0                            6           726865.47              0.2 21650964.25
-chamber wall inspection for film delamination Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        0                            6           726865.47              0.2 21650964.25
-                       targeted chamber clean Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        0                            6           726865.47              0.2 21650964.25
-             Immediate: contain handling path                   Wafer Handling Path / CMP Contact   Critical                2        77500                        0                            6           693829.03              0.1 20737371.05
-                      replace CMP consumables                   Wafer Handling Path / CMP Contact   Critical                2        77500                        0                            6           693829.03              0.1 20737371.05
-                      inspect FOUPs/cassettes                   Wafer Handling Path / CMP Contact   Critical                2        77500                        0                            6           693829.03              0.1 20737371.05
-               swap/clean robot end effectors                   Wafer Handling Path / CMP Contact   Critical                2        77500                        0                            6           693829.03              0.1 20737371.05
+                                          repair_action                                        process_step risk_level  triage_priority  repair_cost  patterns_fully_resolved  patterns_partially_resolved  daily_loss_savings  break_even_days   evoa_30d
+                                replace CMP consumables                   Wafer Handling Path / CMP Contact   Critical                2        77500                        1                           17           928434.93              0.1 27775547.9
+                                inspect FOUPs/cassettes                   Wafer Handling Path / CMP Contact   Critical                2        77500                        1                           17           928434.93              0.1 27775547.9
+                         swap/clean robot end effectors                   Wafer Handling Path / CMP Contact   Critical                2        77500                        1                           17           928434.93              0.1 27775547.9
+                       Immediate: contain handling path                   Wafer Handling Path / CMP Contact   Critical                2        77500                        1                           17           928434.93              0.1 27775547.9
+                 CMP: replace pad &amp; slurry, clean heads       CMP (primary) / Lithography Track (secondary)       High                4       130000                        1                           11           661185.26              0.2 19705557.8
+Litho track: chemistry dump/refresh, nozzle maintenance       CMP (primary) / Lithography Track (secondary)       High                4       130000                        1                           11           661185.26              0.2 19705557.8
+          chamber wall inspection for film delamination Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        1                           17           661004.30              0.2 19675129.0
+                           Robot motion/vibration check Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        1                           17           661004.30              0.2 19675129.0
+                                 targeted chamber clean Tool-specific (single chamber / handling subsystem)     Medium                5       155000                        1                           17           661004.30              0.2 19675129.0
+                                  RF/temp recalibration                         Deposition / Plasma Process       High                3       275000                        1                           11           605108.60              0.5 17878258.0
 
-Saved action report → /Users/hernanmontoyag/Desktop/Capstone/waferguard-ml/reports_LOT_001/refactor_demo/action_report_LOT_001.csv</code></pre>
+Saved action report → /Users/oxm338/Library/Mobile Documents/com~apple~CloudDocs/Sites/waferguard-ml/reports_LOT_001/refactor_demo/action_report_LOT_001.csv</code></pre>
 </div>
 </div>
 
