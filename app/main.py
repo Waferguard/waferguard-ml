@@ -294,6 +294,69 @@ with st.spinner(f"Loading {model_choice} model..."):
     model = load_model(model_choice)
 
 
+def _streamlit_secret_value(secret_name: str) -> str | None:
+    """Return a Streamlit secret value if present without exposing it in logs."""
+    try:
+        if secret_name in st.secrets:
+            value = st.secrets.get(secret_name)
+            return str(value) if value is not None else None
+    except Exception:
+        logger.exception("Unable to read Streamlit secret %s", secret_name)
+    return None
+
+
+@st.cache_resource
+def _bootstrap_dataset_at_startup() -> Path:
+    """Ensure the wafer dataset is present as soon as the app starts."""
+    username = _streamlit_secret_value("KAGGLE_USERNAME")
+    key = _streamlit_secret_value("KAGGLE_KEY")
+
+    logger.info(
+        "App startup dataset bootstrap (enabled=%s, path=%s, slug=%s, has_username=%s, has_key=%s, cwd=%s)",
+        ENABLE_RUNTIME_DATASET_BOOTSTRAP,
+        DATASET_PATH,
+        DATASET_SLUG,
+        bool(username),
+        bool(key),
+        Path.cwd(),
+    )
+
+    if username and key:
+        os.environ["KAGGLE_USERNAME"] = username
+        os.environ["KAGGLE_KEY"] = key
+        logger.info("Kaggle credentials loaded from Streamlit secrets.")
+    else:
+        logger.warning("Kaggle credentials are missing from Streamlit secrets.")
+
+    return ensure_wafer_dataset(
+        dataset_file=DATASET_PATH,
+        dataset_slug=DATASET_SLUG,
+        username=username,
+        key=key,
+    )
+
+
+DATASET_BOOTSTRAP_ERROR: str | None = None
+DATASET_READY_PATH: Path = DATASET_PATH
+
+if ENABLE_RUNTIME_DATASET_BOOTSTRAP:
+    try:
+        logger.info("Starting eager dataset bootstrap at app startup.")
+        DATASET_READY_PATH = _bootstrap_dataset_at_startup()
+        logger.info("Eager dataset bootstrap complete: %s", DATASET_READY_PATH)
+    except Exception:
+        logger.exception("Eager dataset bootstrap failed")
+        DATASET_BOOTSTRAP_ERROR = (
+            f"Dataset bootstrap failed for {DATASET_PATH}. See deployment logs for details."
+        )
+elif not DATASET_PATH.exists():
+    logger.warning("Runtime dataset bootstrap is disabled and the dataset file is missing.")
+    DATASET_BOOTSTRAP_ERROR = (
+        "Dataset not found and runtime bootstrap is disabled. "
+        "Set ENABLE_RUNTIME_DATASET_BOOTSTRAP=1 or download it locally."
+    )
+
+
 # ── Clipboard paste: JS injected into parent document ────────────────
 PASTE_JS = """
 <script>
@@ -1000,56 +1063,8 @@ elif st.session_state.active_tab == "sample":
 
     st.subheader("Random Sample Generator")
     st.caption("Generate random wafer map samples from the dataset for demo and testing purposes.")
-
-    @st.cache_resource
-    def _ensure_runtime_dataset() -> Path:
-        """Download dataset on first run in Streamlit Cloud if file is not present."""
-        username = st.secrets.get("KAGGLE_USERNAME") if "KAGGLE_USERNAME" in st.secrets else None
-        key = st.secrets.get("KAGGLE_KEY") if "KAGGLE_KEY" in st.secrets else None
-
-        logger.info(
-            "Runtime dataset bootstrap requested (enabled=%s, path=%s, slug=%s, has_username=%s, has_key=%s)",
-            ENABLE_RUNTIME_DATASET_BOOTSTRAP,
-            DATASET_PATH,
-            DATASET_SLUG,
-            bool(username),
-            bool(key),
-        )
-
-        if username and key:
-            os.environ["KAGGLE_USERNAME"] = username
-            os.environ["KAGGLE_KEY"] = key
-            logger.info("Kaggle credentials found in Streamlit secrets and exported to environment.")
-        else:
-            logger.warning(
-                "Kaggle credentials not found in Streamlit secrets. "
-                "Streamlit Community Cloud must have KAGGLE_USERNAME and KAGGLE_KEY configured."
-            )
-
-        return ensure_wafer_dataset(
-            dataset_file=DATASET_PATH,
-            dataset_slug=DATASET_SLUG,
-            username=username,
-            key=key,
-        )
-
-    dataset_error = None
-    dataset_file = DATASET_PATH
-    if ENABLE_RUNTIME_DATASET_BOOTSTRAP:
-        try:
-            logger.info("Starting dataset bootstrap for %s", DATASET_PATH)
-            with st.spinner("Preparing wafer dataset..."):
-                dataset_file = _ensure_runtime_dataset()
-            logger.info("Dataset bootstrap complete: %s", dataset_file)
-        except Exception as exc:
-            logger.exception("Dataset bootstrap failed")
-            dataset_error = str(exc)
-    elif not DATASET_PATH.exists():
-        logger.warning("Runtime dataset bootstrap disabled and dataset missing at %s", DATASET_PATH)
-        dataset_error = (
-            "Dataset not found and runtime bootstrap is disabled. "
-            "Set ENABLE_RUNTIME_DATASET_BOOTSTRAP=1 or download it locally."
-        )
+    dataset_error = DATASET_BOOTSTRAP_ERROR
+    dataset_file = DATASET_READY_PATH
 
     if dataset_error:
         st.error("Unable to load Wafer_Map_Datasets.npz.")
@@ -1060,6 +1075,8 @@ elif st.session_state.active_tab == "sample":
             "For local runs, execute: poetry run python data/download_kaggle_data.py"
         )
     else:
+        if dataset_file != DATASET_PATH:
+            logger.info("Sample tab using bootstrapped dataset path %s", dataset_file)
 
         @st.cache_data
         def load_dataset(dataset_npz_path: str):

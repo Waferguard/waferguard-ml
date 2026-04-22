@@ -16,6 +16,17 @@ DEFAULT_DEST_DIR = Path(__file__).resolve().parent / "mixedtype-wafer-defect-dat
 DEFAULT_DEST_FILE = DEFAULT_DEST_DIR / "Wafer_Map_Datasets.npz"
 
 
+def find_dataset_file(root_dir: Path, filename: str = "Wafer_Map_Datasets.npz") -> Path | None:
+    """Find the first matching dataset file beneath a directory tree."""
+    matches = sorted(root_dir.rglob(filename))
+    if matches:
+        logger.info("Found %s candidate(s) for %s under %s", len(matches), filename, root_dir)
+        return matches[0]
+
+    logger.warning("No %s file found under %s", filename, root_dir)
+    return None
+
+
 def configure_kaggle_credentials(username: str | None = None, key: str | None = None) -> None:
     """Configure Kaggle credentials via env vars and kaggle.json for cloud runtime use."""
     if not username or not key:
@@ -38,6 +49,7 @@ def copy_dataset_tree(dataset_slug: str, dest_dir: Path) -> Path:
     logger.info("Downloading Kaggle dataset %s", dataset_slug)
     cache_path = Path(kagglehub.dataset_download(dataset_slug))
     logger.info("Kaggle dataset cached at %s", cache_path)
+    logger.info("Cached dataset entries: %s", [p.name for p in sorted(cache_path.iterdir())[:10]])
     if dest_dir.exists():
         logger.info("Removing existing dataset directory %s", dest_dir)
         shutil.rmtree(dest_dir)
@@ -75,7 +87,16 @@ def ensure_wafer_dataset(
         raise
 
     if not dataset_file.exists():
+        logger.warning("Expected dataset file missing after copy: %s", dataset_file)
+        candidate = find_dataset_file(dest_dir)
+        if candidate is not None:
+            logger.info("Copying discovered dataset file %s to expected path %s", candidate, dataset_file)
+            dataset_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(candidate, dataset_file)
+
+    if not dataset_file.exists():
         msg = f"Dataset download completed but expected file not found: {dataset_file}"
+        logger.error("Dataset directory contents under %s: %s", dest_dir, [p.name for p in sorted(dest_dir.iterdir())[:20]])
         logger.error(msg)
         raise FileNotFoundError(msg)
 
