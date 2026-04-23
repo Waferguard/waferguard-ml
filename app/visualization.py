@@ -4,6 +4,7 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 from matplotlib.patches import Patch
 
@@ -157,32 +158,59 @@ def render_action_table(df_actions: pd.DataFrame, top_n: int = 5) -> None:
     st.dataframe(show, use_container_width=True, hide_index=True)
 
 
-def render_base_anomaly_chart(df_anomaly: pd.DataFrame) -> None:
-    """Render base defect prevalence for fast operational review."""
+def render_combinations_sunburst(df_batch: pd.DataFrame) -> None:
+    """Render an interactive Sunburst chart of defect pattern combinations."""
+    if df_batch.empty:
+        st.info("No combination data available.")
+        return
+
+    # Filter out Normal wafers to focus on defects
+    df_chart = df_batch[df_batch["pattern_name"] != "Normal"].copy()
+    if df_chart.empty:
+        st.info("No defects found in this batch.")
+        return
+        
+    df_chart["root"] = "Defect Combinations"
+
+    fig = px.sunburst(
+        df_chart,
+        path=["root", "pattern_name"],
+        values="count",
+        color="count",
+        color_continuous_scale="Magma",
+        title=""
+    )
+    fig.update_layout(
+        margin=dict(t=20, l=10, r=10, b=10),
+        paper_bgcolor=BG_COLOR,
+        plot_bgcolor=BG_COLOR,
+        font=dict(color="white")
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def render_all_anomaly_treemap(df_anomaly: pd.DataFrame) -> None:
+    """Render an interactive Treemap of all anomaly types."""
     if df_anomaly.empty:
         st.info("No base anomaly data available.")
         return
 
-    chart_df = df_anomaly.sort_values("count", ascending=False).head(8)
-    fig, ax = plt.subplots(figsize=(9, 4.2), facecolor=BG_COLOR)
-    ax.set_facecolor(BG_COLOR)
+    # Create a copy and add a dummy root column for the treemap hierarchy
+    df_chart = df_anomaly.copy()
+    df_chart["root"] = "All Defects"
 
-    bars = ax.barh(
-        chart_df["pattern_name"].iloc[::-1],
-        chart_df["count"].iloc[::-1],
-        color="#00a1de",
-        edgecolor="#1d3f58",
+    fig = px.treemap(
+        df_chart,
+        path=["root", "pattern_name"],
+        values="count",
+        color="count",
+        color_continuous_scale="Viridis",
+        title=""
     )
-    ax.set_xlabel("Wafer Count", color="white")
-    ax.tick_params(axis="x", colors="white")
-    ax.tick_params(axis="y", colors="white", labelsize=9)
-    for spine in ax.spines.values():
-        spine.set_color("#444")
-
-    for bar in bars:
-        w = bar.get_width()
-        ax.text(w + 0.2, bar.get_y() + bar.get_height() / 2, f"{int(w)}", va="center", color="white", fontsize=8)
-
-    fig.tight_layout()
-    st.pyplot(fig)
-    plt.close(fig)
+    fig.update_layout(
+        margin=dict(t=20, l=10, r=10, b=10),
+        paper_bgcolor=BG_COLOR,
+        plot_bgcolor=BG_COLOR,
+        font=dict(color="white")
+    )
+    st.plotly_chart(fig, use_container_width=True)

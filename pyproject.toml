@@ -16,7 +16,8 @@ dependencies = [
     "scikit-learn (>=1.8.0,<2.0.0)",
     "streamlit (>=1.55.0,<2.0.0)",
     "pillow (>=12.1.1,<13.0.0)",
-    "openpyxl (>=3.0.0)"
+    "openpyxl (>=3.0.0)",
+    "plotly (>=6.7.0,<7.0.0)"
 ]
 
 [tool.poetry]

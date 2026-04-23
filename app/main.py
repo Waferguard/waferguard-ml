@@ -30,7 +30,8 @@ from app.preprocessing import parse_upload, prepare_for_model
 from app.visualization import (
     build_results_dataframe,
     render_action_table,
-    render_base_anomaly_chart,
+    render_all_anomaly_treemap,
+    render_combinations_sunburst,
     render_confidence_chart,
     render_kpi_cards,
     render_pattern_card,
@@ -465,8 +466,11 @@ def render_leadership_panel(results: list[dict], batch_id: str, section_title: s
     with st.expander("Action Prioritization", expanded=True):
         render_action_table(analysis_view["df_actions"], top_n=5)
 
-    with st.expander("Base Anomaly Breakdown", expanded=False):
-        render_base_anomaly_chart(analysis_view["df_anomaly"])
+    with st.expander("All Anomalies Treemap", expanded=False):
+        render_all_anomaly_treemap(analysis_view["df_anomaly"])
+
+    with st.expander("Defect Combinations Sunburst", expanded=False):
+        render_combinations_sunburst(analysis_view["df_batch"])
 
     with st.expander("Top Financially Impactful Patterns", expanded=False):
         if analysis_view["df_financial"].empty:
