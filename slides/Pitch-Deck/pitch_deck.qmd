@@ -96,7 +96,7 @@ When many dies fail in a recognizable shape, that's a **defect pattern** — and
 
 ::: {.column width="50%"}
 
-> 📸 **IMAGE:** Insert a wafer map example image here showing the color-coded dies
+![](images/normal-wafer.png){width="60%" fig-align="center"}
 
 :::
 
