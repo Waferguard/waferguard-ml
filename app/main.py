@@ -534,136 +534,13 @@ def display_prediction(raw, result, elapsed, top_n):
 if st.session_state.get("show_hero", True):
     components.html(build_hero_html(t), height=180)
 
-# ── Navigation cards ─────────────────────────────────────────────────
-if "active_tab" not in st.session_state:
-    st.session_state.active_tab = "single"
 
-NAV_CARDS = [
-    ("single", "Single Wafer", "Upload and classify a single wafer map."),
-    ("batch", "Batch Upload", "Process multiple wafer maps at once."),
-    ("sample", "Sample Data", "Generate and analyze random samples from the dataset."),
-]
-
-# CSS for card-style nav buttons
-st.markdown(
-    """<style>
-    /* Card base — shared by both active and inactive */
-    .nav-cards button {
-        background: #1a1d26 !important;
-        border: 1px solid rgba(255,255,255,0.1) !important;
-        border-radius: 8px !important;
-        color: #FAFAFA !important;
-        text-align: left !important;
-        padding: 12px 20px 28px !important;
-        transition: all 0.25s ease !important;
-        position: relative !important;
-        font-weight: 700 !important;
-        font-size: 1rem !important;
-        overflow: visible !important;
-    }
-
-    /* Hover */
-    .nav-cards button:hover {
-        border-color: rgba(255,255,255,0.5) !important;
-        background: #22252e !important;
-    }
-
-    /* Corner brackets on hover */
-    .nav-cards button:hover::before {
-        content: '';
-        position: absolute;
-        top: 6px; left: 8px;
-        width: 12px; height: 12px;
-        border-top: 2px solid rgba(255,255,255,0.6);
-        border-left: 2px solid rgba(255,255,255,0.6);
-        pointer-events: none;
-    }
-
-    /* Arrow on hover */
-    .nav-cards button:hover > span::after {
-        content: ' \\2192';
-        position: absolute;
-        right: 16px; top: 14px;
-        font-size: 1.2rem;
-        font-weight: 400;
-        color: rgba(255,255,255,0.6);
-    }
-
-    /* Bottom glow line */
-    .nav-cards div[data-testid="stButton"]::after {
-        content: '';
-        display: block;
-        height: 2px;
-        margin-top: -2px;
-        border-radius: 0 0 8px 8px;
-        background: linear-gradient(90deg, transparent, #92d400, transparent);
-        opacity: 0;
-        transition: opacity 0.25s ease;
-    }
-    .nav-cards div[data-testid="stButton"]:hover::after {
-        opacity: 1;
-    }
-
-    /* Active card */
-    .nav-cards button[kind="primary"] {
-        background: #1e2230 !important;
-        border-color: #92d400 !important;
-    }
-    .nav-cards button[kind="primary"]:hover {
-        border-color: #92d400 !important;
-        background: #252a38 !important;
-    }
-    .nav-cards div:has(button[kind="primary"])::after {
-        opacity: 1;
-    }
-
-    /* Description text via ::after on each button */
-    .nav-cards div[data-testid="stButton"]:nth-of-type(1) button::after {
-        content: 'Upload and classify a single wafer map.';
-    }
-    .nav-cards div[data-testid="stButton"]:nth-of-type(2) button::after {
-        content: 'Process multiple wafer maps at once.';
-    }
-    .nav-cards div[data-testid="stButton"]:nth-of-type(3) button::after {
-        content: 'Generate and analyze random samples from the dataset.';
-    }
-    .nav-cards button::after {
-        display: block;
-        font-size: 0.78rem;
-        font-weight: 400;
-        color: rgba(250,250,250,0.4);
-        margin-top: 3px;
-    }
-
-    /* Tighten gap between cards */
-    .nav-cards > div[data-testid="stVerticalBlock"] { gap: 0.3rem !important; }
-    </style>""",
-    unsafe_allow_html=True,
-)
-
-
-def _set_tab(tab_key):
-    st.session_state.active_tab = tab_key
-
-
-with st.container():
-    st.markdown('<div class="nav-cards">', unsafe_allow_html=True)
-    for key, title, _desc in NAV_CARDS:
-        is_active = st.session_state.active_tab == key
-        st.button(
-            title,
-            key=f"nav_{key}",
-            on_click=_set_tab,
-            args=(key,),
-            use_container_width=True,
-            type="primary" if is_active else "secondary",
-        )
-    st.markdown("</div>", unsafe_allow_html=True)
 
 # ── Main content ─────────────────────────────────────────────────────
+tab_single, tab_batch, tab_sample = st.tabs(["Single Wafer", "Batch Upload", "Sample Data"])
 
 # ── Single Wafer ────────────────────────────────────────────────────
-if st.session_state.active_tab == "single":
+with tab_single:
     input_method = st.radio(
         "Input method",
         ["Upload file", "Paste from clipboard"],
@@ -727,7 +604,7 @@ if st.session_state.active_tab == "single":
             )
 
 # ── Batch Upload ────────────────────────────────────────────────────
-elif st.session_state.active_tab == "batch":
+with tab_batch:
     uploaded_files = st.file_uploader(
         "Upload wafer maps",
         type=["npz", "png", "jpg", "jpeg"],
@@ -806,7 +683,7 @@ elif st.session_state.active_tab == "batch":
                     st.info(get_description(pattern_name))
 
 # ── Sample Data ─────────────────────────────────────────────────────
-elif st.session_state.active_tab == "sample":
+with tab_sample:
     import io
 
     import numpy as np
