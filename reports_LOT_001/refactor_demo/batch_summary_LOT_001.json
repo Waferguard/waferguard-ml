@@ -1,0 +1,279 @@
+{
+  "batch_id": "LOT_001",
+  "total_wafers": 38015,
+  "defective_wafers": 37015,
+  "defect_rate": 0.9737,
+  "avg_confidence": 0.9777,
+  "low_conf_count": 799,
+  "dominant_pattern": "10100010",
+  "total_daily_loss": 3903761.88,
+  "top_action": "Address S first (priority 2); then C, EL. Immediate: contain handling path; Chamber clean & kit replace; Furnace zone temp recalibration",
+  "patterns": {
+    "10100010": {
+      "pattern_name": "Center+Edge_Loc+Scratch",
+      "count": 1967,
+      "batch_pct": 5.17,
+      "weighted_daily_loss": 273203.04,
+      "priority_score": 136601.52
+    },
+    "01011010": {
+      "pattern_name": "Donut+Edge_Ring+Loc+Scratch",
+      "count": 1009,
+      "batch_pct": 2.65,
+      "weighted_daily_loss": 168807.12,
+      "priority_score": 84403.56
+    },
+    "01101010": {
+      "pattern_name": "Donut+Edge_Loc+Loc+Scratch",
+      "count": 997,
+      "batch_pct": 2.62,
+      "weighted_daily_loss": 162076.68,
+      "priority_score": 81038.34
+    },
+    "01010010": {
+      "pattern_name": "Donut+Edge_Ring+Scratch",
+      "count": 1003,
+      "batch_pct": 2.64,
+      "weighted_daily_loss": 156720.96,
+      "priority_score": 78360.48
+    },
+    "01100010": {
+      "pattern_name": "Donut+Edge_Loc+Scratch",
+      "count": 975,
+      "batch_pct": 2.56,
+      "weighted_daily_loss": 150810.24,
+      "priority_score": 75405.12
+    },
+    "01001010": {
+      "pattern_name": "Donut+Loc+Scratch",
+      "count": 971,
+      "batch_pct": 2.55,
+      "weighted_daily_loss": 150192.84,
+      "priority_score": 75096.42
+    },
+    "10011010": {
+      "pattern_name": "Center+Edge_Ring+Loc+Scratch",
+      "count": 981,
+      "batch_pct": 2.58,
+      "weighted_daily_loss": 147094.2,
+      "priority_score": 73547.1
+    },
+    "01000010": {
+      "pattern_name": "Donut+Scratch",
+      "count": 1003,
+      "batch_pct": 2.64,
+      "weighted_daily_loss": 145639.68,
+      "priority_score": 72819.84
+    },
+    "10101010": {
+      "pattern_name": "Center+Edge_Loc+Loc+Scratch",
+      "count": 959,
+      "batch_pct": 2.52,
+      "weighted_daily_loss": 142280.28,
+      "priority_score": 71140.14
+    },
+    "10010010": {
+      "pattern_name": "Center+Edge_Ring+Scratch",
+      "count": 996,
+      "batch_pct": 2.62,
+      "weighted_daily_loss": 141480.0,
+      "priority_score": 70740.0
+    },
+    "10001010": {
+      "pattern_name": "Center+Loc+Scratch",
+      "count": 972,
+      "batch_pct": 2.56,
+      "weighted_daily_loss": 135004.32,
+      "priority_score": 67502.16
+    },
+    "10000010": {
+      "pattern_name": "Center+Scratch",
+      "count": 1025,
+      "batch_pct": 2.7,
+      "weighted_daily_loss": 132657.96,
+      "priority_score": 66328.98
+    },
+    "00011010": {
+      "pattern_name": "Edge_Ring+Loc+Scratch",
+      "count": 968,
+      "batch_pct": 2.55,
+      "weighted_daily_loss": 103893.12,
+      "priority_score": 51946.56
+    },
+    "00101010": {
+      "pattern_name": "Edge_Loc+Loc+Scratch",
+      "count": 958,
+      "batch_pct": 2.52,
+      "weighted_daily_loss": 99795.96,
+      "priority_score": 49897.98
+    },
+    "00010010": {
+      "pattern_name": "Edge_Ring+Scratch",
+      "count": 1003,
+      "batch_pct": 2.64,
+      "weighted_daily_loss": 96565.44,
+      "priority_score": 48282.72
+    },
+    "00100010": {
+      "pattern_name": "Edge_Loc+Scratch",
+      "count": 997,
+      "batch_pct": 2.62,
+      "weighted_daily_loss": 95987.16,
+      "priority_score": 47993.58
+    },
+    "00001010": {
+      "pattern_name": "Loc+Scratch",
+      "count": 962,
+      "batch_pct": 2.53,
+      "weighted_daily_loss": 92619.96,
+      "priority_score": 46309.98
+    },
+    "00000010": {
+      "pattern_name": "Scratch",
+      "count": 1013,
+      "batch_pct": 2.66,
+      "weighted_daily_loss": 87935.1,
+      "priority_score": 43967.55
+    },
+    "01011000": {
+      "pattern_name": "Donut+Edge_Ring+Loc",
+      "count": 997,
+      "batch_pct": 2.62,
+      "weighted_daily_loss": 121164.12,
+      "priority_score": 40388.04
+    },
+    "00000100": {
+      "pattern_name": "Near_Full",
+      "count": 162,
+      "batch_pct": 0.43,
+      "weighted_daily_loss": 38349.0,
+      "priority_score": 38349.0
+    },
+    "01010000": {
+      "pattern_name": "Donut+Edge_Ring",
+      "count": 1004,
+      "batch_pct": 2.64,
+      "weighted_daily_loss": 112510.86,
+      "priority_score": 37503.62
+    },
+    "10011000": {
+      "pattern_name": "Center+Edge_Ring+Loc",
+      "count": 1018,
+      "batch_pct": 2.68,
+      "weighted_daily_loss": 102831.36,
+      "priority_score": 34277.12
+    },
+    "10101000": {
+      "pattern_name": "Center+Edge_Loc+Loc",
+      "count": 1022,
+      "batch_pct": 2.69,
+      "weighted_daily_loss": 98395.44,
+      "priority_score": 32798.48
+    },
+    "10010000": {
+      "pattern_name": "Center+Edge_Ring",
+      "count": 1016,
+      "batch_pct": 2.67,
+      "weighted_daily_loss": 93006.48,
+      "priority_score": 31002.16
+    },
+    "10001000": {
+      "pattern_name": "Center+Loc",
+      "count": 1023,
+      "batch_pct": 2.69,
+      "weighted_daily_loss": 90417.6,
+      "priority_score": 30139.2
+    },
+    "01101000": {
+      "pattern_name": "Donut+Edge_Loc+Loc",
+      "count": 993,
+      "batch_pct": 2.61,
+      "weighted_daily_loss": 119111.76,
+      "priority_score": 29777.94
+    },
+    "10100000": {
+      "pattern_name": "Center+Edge_Loc",
+      "count": 1010,
+      "batch_pct": 2.66,
+      "weighted_daily_loss": 89268.48,
+      "priority_score": 29756.16
+    },
+    "01001000": {
+      "pattern_name": "Donut+Loc",
+      "count": 1020,
+      "batch_pct": 2.68,
+      "weighted_daily_loss": 112694.4,
+      "priority_score": 28173.6
+    },
+    "01100000": {
+      "pattern_name": "Donut+Edge_Loc",
+      "count": 1007,
+      "batch_pct": 2.65,
+      "weighted_daily_loss": 111258.0,
+      "priority_score": 27814.5
+    },
+    "10000000": {
+      "pattern_name": "Center",
+      "count": 1011,
+      "batch_pct": 2.66,
+      "weighted_daily_loss": 79785.0,
+      "priority_score": 26595.0
+    },
+    "01000000": {
+      "pattern_name": "Donut",
+      "count": 1021,
+      "batch_pct": 2.69,
+      "weighted_daily_loss": 104746.2,
+      "priority_score": 26186.55
+    },
+    "00011000": {
+      "pattern_name": "Edge_Ring+Loc",
+      "count": 1026,
+      "batch_pct": 2.7,
+      "weighted_daily_loss": 34006.14,
+      "priority_score": 11335.38
+    },
+    "00010000": {
+      "pattern_name": "Edge_Ring",
+      "count": 1009,
+      "batch_pct": 2.65,
+      "weighted_daily_loss": 23887.8,
+      "priority_score": 7962.6
+    },
+    "00000001": {
+      "pattern_name": "Random",
+      "count": 853,
+      "batch_pct": 2.24,
+      "weighted_daily_loss": 28273.14,
+      "priority_score": 5654.63
+    },
+    "00101000": {
+      "pattern_name": "Edge_Loc+Loc",
+      "count": 1026,
+      "batch_pct": 2.7,
+      "weighted_daily_loss": 25909.44,
+      "priority_score": 5181.89
+    },
+    "00001000": {
+      "pattern_name": "Loc",
+      "count": 1036,
+      "batch_pct": 2.73,
+      "weighted_daily_loss": 17986.32,
+      "priority_score": 3597.26
+    },
+    "00100000": {
+      "pattern_name": "Edge_Loc",
+      "count": 1002,
+      "batch_pct": 2.64,
+      "weighted_daily_loss": 17396.28,
+      "priority_score": 3479.26
+    },
+    "00000000": {
+      "pattern_name": "Normal",
+      "count": 1000,
+      "batch_pct": 2.63,
+      "weighted_daily_loss": 0.0,
+      "priority_score": 0.0
+    }
+  }
+}
