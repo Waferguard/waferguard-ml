@@ -4,6 +4,8 @@ import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import plotly.express as px
+import streamlit as st
 from matplotlib.patches import Patch
 
 from app.config import BG_COLOR, WAFER_COLORS
@@ -91,3 +93,119 @@ def build_results_dataframe(results: list[dict]) -> pd.DataFrame:
         }
         for r in results
     ])
+
+
+def _format_currency(value: float) -> str:
+    value = float(value)
+    if abs(value) >= 1_000_000:
+        return f"${value / 1_000_000:.2f}M"
+    if abs(value) >= 1_000:
+        return f"${value / 1_000:.1f}K"
+    return f"${value:,.0f}"
+
+
+def render_kpi_cards(summary_payload: dict) -> None:
+    """Render leadership KPI cards for financial decision support."""
+    total_wafers = int(summary_payload.get("total_wafers", 0))
+    low_conf_count = int(summary_payload.get("low_conf_count", 0))
+    low_conf_share = (low_conf_count / total_wafers * 100) if total_wafers > 0 else 0.0
+
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Daily Loss", _format_currency(summary_payload.get("total_daily_loss", 0.0)))
+    c2.metric("Defect Rate", f"{summary_payload.get('defect_rate', 0.0) * 100:.1f}%")
+    c3.metric("Avg Confidence", f"{summary_payload.get('avg_confidence', 0.0) * 100:.1f}%")
+    c4.metric("Low Confidence", f"{low_conf_count} ({low_conf_share:.1f}%)")
+
+
+def render_pattern_card(base_pattern: str, pattern_metrics: dict[str, float]) -> None:
+    """Render selected base-pattern insights with dedicated callout metrics."""
+    c1, c2, c3 = st.columns(3)
+    c1.metric(f"{base_pattern}-related Count", int(pattern_metrics.get("count", 0)))
+    c2.metric(f"{base_pattern}-related Share", f"{pattern_metrics.get('batch_pct', 0.0):.1f}%")
+    c3.metric(f"{base_pattern} Daily Loss", _format_currency(pattern_metrics.get("daily_loss", 0.0)))
+
+
+def render_donut_card(donut_metrics: dict[str, float]) -> None:
+    """Backward-compatible wrapper for existing calls."""
+    render_pattern_card("Donut", donut_metrics)
+
+
+def render_action_table(df_actions: pd.DataFrame, top_n: int = 5) -> None:
+    """Render prioritized repair actions for leadership."""
+    if df_actions.empty:
+        st.info("No action items available for this selection.")
+        return
+
+    show = df_actions.head(top_n)[
+        [
+            "repair_action",
+            "process_step",
+            "risk_level",
+            "daily_loss_savings",
+            "break_even_days",
+            "evoa_30d",
+        ]
+    ].rename(
+        columns={
+            "repair_action": "Action",
+            "process_step": "Process Step",
+            "risk_level": "Risk",
+            "daily_loss_savings": "Daily Savings",
+            "break_even_days": "Break-even (days)",
+            "evoa_30d": "30d EVoA",
+        }
+    )
+    st.dataframe(show, use_container_width=True, hide_index=True)
+
+
+def render_combinations_sunburst(df_batch: pd.DataFrame) -> None:
+    """Render an interactive Sunburst chart of defect pattern combinations."""
+    if df_batch.empty:
+        st.info("No combination data available.")
+        return
+
+    # Filter out Normal wafers to focus on defects
+    df_chart = df_batch[df_batch["pattern_name"] != "Normal"].copy()
+    if df_chart.empty:
+        st.info("No defects found in this batch.")
+        return
+
+    df_chart["root"] = "Defect Combinations"
+
+    fig = px.sunburst(
+        df_chart, path=["root", "pattern_name"], values="count", color="count", color_continuous_scale="Magma", title=""
+    )
+    fig.update_layout(
+        margin={"t": 20, "l": 10, "r": 10, "b": 10},
+        paper_bgcolor=BG_COLOR,
+        plot_bgcolor=BG_COLOR,
+        font={"color": "white"},
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+def render_all_anomaly_treemap(df_anomaly: pd.DataFrame) -> None:
+    """Render an interactive Treemap of all anomaly types."""
+    if df_anomaly.empty:
+        st.info("No base anomaly data available.")
+        return
+
+    # Create a copy and add a dummy root column for the treemap hierarchy
+    df_chart = df_anomaly.copy()
+    df_chart["root"] = "All Defects"
+
+    fig = px.treemap(
+        df_chart,
+        path=["root", "pattern_name"],
+        values="count",
+        color="count",
+        color_continuous_scale="Viridis",
+        title="",
+    )
+    fig.update_layout(
+        margin={"t": 20, "l": 10, "r": 10, "b": 10},
+        paper_bgcolor=BG_COLOR,
+        plot_bgcolor=BG_COLOR,
+        font={"color": "white"},
+    )
+    st.plotly_chart(fig, use_container_width=True)

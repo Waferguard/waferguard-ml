@@ -1,11 +1,14 @@
 """App configuration constants."""
 
+import os
 from pathlib import Path
 
 # Dataset path
 DATASET_PATH = (
     Path(__file__).resolve().parent.parent / "data" / "mixedtype-wafer-defect-datasets" / "Wafer_Map_Datasets.npz"
 )
+DATASET_SLUG = os.getenv("WAFER_DATASET_SLUG", "co1d7era/mixedtype-wafer-defect-datasets")
+ENABLE_RUNTIME_DATASET_BOOTSTRAP = os.getenv("ENABLE_RUNTIME_DATASET_BOOTSTRAP", "1") == "1"
 
 # Project root
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -49,6 +52,25 @@ WAFER_COLORS = {k: (r / 255, g / 255, b / 255) for k, (r, g, b) in WAFER_RGB.ite
 # App defaults
 TOP_N_DEFAULT = 5
 MAX_BATCH_SIZE = 100
+
+# Financial analysis defaults (leadership decision support)
+FINANCIAL_CONFIG_DEFAULTS = {
+    "WPH": 100,
+    "VALUE_PER_WAFER": 5_000,
+    "REPAIR_HOURS": 8,
+    "PLANNING_HORIZON": 30,
+    "CONFIDENCE_THRESHOLD": 0.70,
+}
+
+# Scenario defaults used for base-pattern-dominant demo analysis
+BASE_PATTERN_SCENARIO_DEFAULTS = {
+    "NORMAL_SHARE": 0.80,
+    "TARGET_SHARE": 0.16,
+    "RANDOM_SEED": 42,
+}
+
+# Backward-compatible alias for older references.
+DONUT_SCENARIO_DEFAULTS = BASE_PATTERN_SCENARIO_DEFAULTS
 
 # Dark theme background (matches .streamlit/config.toml)
 BG_COLOR = "#0E1117"

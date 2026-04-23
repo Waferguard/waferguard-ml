@@ -59,6 +59,9 @@ models/saved/*
 *~
 .DS_Store
 
+# Streamlit local secrets
+.streamlit/secrets.toml
+
 # Environment
 .env
 .venv
@@ -86,5 +89,6 @@ data/secom
 docs/
 **/slides_files/
 **/training_artifacts/
-PresentationPDFs/
-architecture_report.pdf
+requirements.txt
+reports_LOT_001/refactor_demo/batch_summary_LOT_001.json
+Feedback/
