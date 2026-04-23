@@ -782,16 +782,19 @@ elif st.session_state.active_tab == "batch":
                 lot_level=True,
             )
 
-            # Summary
-            st.subheader(f"Results ({len(results)} wafers)")
-            st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
-            df = build_results_dataframe(results)
-            st.dataframe(df, use_container_width=True, hide_index=True)
-
-            # Expandable details per wafer
+            # Expandable details per pattern
             st.subheader("Details")
+            st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
+            
+            from collections import defaultdict
+            pattern_groups = defaultdict(list)
             for r in results:
-                with st.expander(f"Wafer #{r['index'] + 1} — {r['pattern_name']} ({r['confidence']:.1%})"):
+                pattern_groups[r['pattern_name']].append(r)
+                
+            for pattern_name, items in sorted(pattern_groups.items(), key=lambda x: len(x[1]), reverse=True):
+                count = len(items)
+                r = items[0]  # Show the first wafer as representative
+                with st.expander(f"{pattern_name} ({count} found) — Example Wafer #{r['index'] + 1}"):
                     c1, c2 = st.columns([1, 1.5])
                     with c1:
                         fig_w = render_wafer_map(combined[r["index"]])
@@ -801,7 +804,7 @@ elif st.session_state.active_tab == "batch":
                         fig_c = render_confidence_chart(r["probabilities"], top_n)
                         st.pyplot(fig_c)
                         plt.close(fig_c)
-                    st.info(get_description(r["pattern_name"]))
+                    st.info(get_description(pattern_name))
 
 # ── Sample Data ─────────────────────────────────────────────────────
 elif st.session_state.active_tab == "sample":
@@ -980,11 +983,6 @@ elif st.session_state.active_tab == "sample":
                 lot_level=True,
             )
 
-            st.subheader(f"Results ({len(results)} wafers)")
-            st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
-            df = build_results_dataframe(results)
-            st.dataframe(df, use_container_width=True, hide_index=True)
-
             if st.session_state.get("sample_mode") == "Base-pattern demo scenario":
                 mix = st.session_state.get("sample_demo_mix") or {
                     "normal": 0,
@@ -996,10 +994,19 @@ elif st.session_state.active_tab == "sample":
                     f"{mix['focus_pattern']} demo mode: N/T/O wafers = {mix['normal']}/{mix['target']}/{mix['other']}"
                 )
 
-            # Expandable details
+            # Expandable details per pattern
             st.subheader("Details")
+            st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
+            
+            from collections import defaultdict
+            pattern_groups = defaultdict(list)
             for r in results:
-                with st.expander(f"Wafer #{r['index'] + 1} — {r['pattern_name']} ({r['confidence']:.1%})"):
+                pattern_groups[r['pattern_name']].append(r)
+                
+            for pattern_name, items in sorted(pattern_groups.items(), key=lambda x: len(x[1]), reverse=True):
+                count = len(items)
+                r = items[0]  # Show the first wafer as representative
+                with st.expander(f"{pattern_name} ({count} found) — Example Wafer #{r['index'] + 1}"):
                     c1, c2 = st.columns([1, 1.5])
                     with c1:
                         fig_w = render_wafer_map(sampled[r["index"]])
@@ -1009,4 +1016,4 @@ elif st.session_state.active_tab == "sample":
                         fig_c = render_confidence_chart(r["probabilities"], top_n)
                         st.pyplot(fig_c)
                         plt.close(fig_c)
-                    st.info(get_description(r["pattern_name"]))
+                    st.info(get_description(pattern_name))
