@@ -439,50 +439,6 @@ When you fix one process step, you don't just fix one defect pattern. You fix **
 </table>
 
 
-## Use Case: How a Manufacturer Benefits
-
-<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
-<tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Step 1</strong><br/><br/>Upload batch of<br/>wafer inspection data<br/>to the dashboard
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Step 2</strong><br/><br/>System detects<br/>Donut defects trending<br/>upward across batches
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Step 3</strong><br/><br/>Dashboard shows:<br/>CMP process is the<br/>root cause
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
-<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Step 4</strong><br/><br/>Recommendation:<br/>Replace CMP pad<br/>$130K to save $2.1M/mo
-</td>
-</tr>
-</table>
-
-The manufacturer doesn't need to understand defect patterns. They get a clear answer: **what to fix, what it costs, and what they save**.
-
-
-## Financial Impact by Process Action {.smaller}
-
-Instead of costs per defect pattern, we show costs per **action the manufacturer can take**:
-
-<table style="font-size: 0.6em; margin: 1em auto;">
-<thead>
-<tr><th>Action</th><th>Process Step</th><th>Repair Cost</th><th>Patterns Fixed</th><th>Total Daily Savings</th><th>Break-Even</th></tr>
-</thead>
-<tbody>
-<tr><td style="font-weight: bold;">Replace CMP pad + refresh slurry</td><td>CMP / Lithography</td><td>$130K</td><td>12 patterns with Donut</td><td style="color: #4CAF50;">$X</td><td>&lt; 1 day</td></tr>
-<tr><td style="font-weight: bold;">Chamber clean + RF recalibration</td><td>Deposition / Plasma</td><td>$275K</td><td>10 patterns with Center</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
-<tr><td style="font-weight: bold;">Replace focus ring + edge hardware</td><td>Plasma Etch</td><td>$255K</td><td>10 patterns with Edge_Ring</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
-<tr><td style="font-weight: bold;">Swap/clean robot end effectors</td><td>Wafer Handling</td><td>$77.5K</td><td>12 patterns with Scratch</td><td style="color: #4CAF50;">$X</td><td>&lt; 1 day</td></tr>
-<tr><td style="font-weight: bold;">Furnace zone recalibration</td><td>Diffusion / Thermal</td><td>$110K</td><td>10 patterns with Edge_Loc</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
-</tbody>
-</table>
-
-*Daily savings values will be populated from the final app output. "Patterns Fixed" shows how one action cascades across multiple defect combinations.*
-
 
 ## Live Demo
 
@@ -509,28 +465,6 @@ Instead of costs per defect pattern, we show costs per **action the manufacturer
 </table>
 
 *Switching to live demo...*
-
-
-## Key Takeaways
-
-<table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
-<tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>97%+ Accuracy</strong><br/><br/>Our AI identifies<br/>38 defect patterns<br/>with high confidence
-</td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>Action-Based</strong><br/><br/>Financial impact grouped<br/>by what you can fix,<br/>not by defect pattern
-</td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>Cascade Effect</strong><br/><br/>One process fix eliminates<br/>defects across multiple<br/>patterns simultaneously
-</td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>Clear ROI</strong><br/><br/>Every recommendation<br/>comes with cost, savings,<br/>and break-even time
-</td>
-</tr>
-</table>
-
-WaferGuardML doesn't just tell manufacturers they have a problem. It tells them **exactly what to fix, how much it costs, and how much they save**.
 
 
 ---
@@ -735,4 +669,69 @@ Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
 </td>
 </tr>
 </table>
+
+## Use Case: How a Manufacturer Benefits {data-visibility="uncounted"}
+
+<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Step 1</strong><br/><br/>Upload batch of<br/>wafer inspection data<br/>to the dashboard
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Step 2</strong><br/><br/>System detects<br/>Donut defects trending<br/>upward across batches
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Step 3</strong><br/><br/>Dashboard shows:<br/>CMP process is the<br/>root cause
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">→</td>
+<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Step 4</strong><br/><br/>Recommendation:<br/>Replace CMP pad<br/>$130K to save $2.1M/mo
+</td>
+</tr>
+</table>
+
+The manufacturer doesn't need to understand defect patterns. They get a clear answer: **what to fix, what it costs, and what they save**.
+
+
+## Financial Impact by Process Action {data-visibility="uncounted"}
+
+Instead of costs per defect pattern, we show costs per **action the manufacturer can take**:
+
+<table style="font-size: 0.6em; margin: 1em auto;">
+<thead>
+<tr><th>Action</th><th>Process Step</th><th>Repair Cost</th><th>Patterns Fixed</th><th>Total Daily Savings</th><th>Break-Even</th></tr>
+</thead>
+<tbody>
+<tr><td style="font-weight: bold;">Replace CMP pad + refresh slurry</td><td>CMP / Lithography</td><td>$130K</td><td>12 patterns with Donut</td><td style="color: #4CAF50;">$X</td><td>&lt; 1 day</td></tr>
+<tr><td style="font-weight: bold;">Chamber clean + RF recalibration</td><td>Deposition / Plasma</td><td>$275K</td><td>10 patterns with Center</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
+<tr><td style="font-weight: bold;">Replace focus ring + edge hardware</td><td>Plasma Etch</td><td>$255K</td><td>10 patterns with Edge_Ring</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
+<tr><td style="font-weight: bold;">Swap/clean robot end effectors</td><td>Wafer Handling</td><td>$77.5K</td><td>12 patterns with Scratch</td><td style="color: #4CAF50;">$X</td><td>&lt; 1 day</td></tr>
+<tr><td style="font-weight: bold;">Furnace zone recalibration</td><td>Diffusion / Thermal</td><td>$110K</td><td>10 patterns with Edge_Loc</td><td style="color: #4CAF50;">$X</td><td>X days</td></tr>
+</tbody>
+</table>
+
+*Daily savings values will be populated from the final app output. "Patterns Fixed" shows how one action cascades across multiple defect combinations.*
+
+## Key Takeaways {data-visibility="uncounted"}
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>97%+ Accuracy</strong><br/><br/>Our AI identifies<br/>38 defect patterns<br/>with high confidence
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Action-Based</strong><br/><br/>Financial impact grouped<br/>by what you can fix,<br/>not by defect pattern
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Cascade Effect</strong><br/><br/>One process fix eliminates<br/>defects across multiple<br/>patterns simultaneously
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Clear ROI</strong><br/><br/>Every recommendation<br/>comes with cost, savings,<br/>and break-even time
+</td>
+</tr>
+</table>
+
+WaferGuardML doesn't just tell manufacturers they have a problem. It tells them **exactly what to fix, how much it costs, and how much they save**.
 
