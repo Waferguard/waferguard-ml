@@ -539,6 +539,34 @@
     "text": "Defect Patterns Tell a Story\nFailed dies don’t appear randomly. They form patterns that reveal what went wrong during manufacturing.\n\n\nEach pattern points to a specific manufacturing process:\n\nDonut → polishing problem (CMP)\nCenter → deposition chamber issue\nScratch → handling damage\nEdge Ring → etching problem\n\nThere are 8 base defect types, and they can appear in combinations — giving us 38 total patterns."
   },
   {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#single-defect-patterns",
+    "href": "slides/Pitch-Deck/pitch_deck.html#single-defect-patterns",
+    "title": "WaferGuardML",
+    "section": "Single Defect Patterns",
+    "text": "Single Defect Patterns"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#two-defect-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#two-defect-combinations",
+    "title": "WaferGuardML",
+    "section": "Two-Defect Combinations",
+    "text": "Two-Defect Combinations"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#three-defect-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#three-defect-combinations",
+    "title": "WaferGuardML",
+    "section": "Three-Defect Combinations",
+    "text": "Three-Defect Combinations"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#four-defect-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#four-defect-combinations",
+    "title": "WaferGuardML",
+    "section": "Four-Defect Combinations",
+    "text": "Four-Defect Combinations"
+  },
+  {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#our-dataset",
     "href": "slides/Pitch-Deck/pitch_deck.html#our-dataset",
     "title": "WaferGuardML",
@@ -546,11 +574,39 @@
     "text": "Our Dataset\n\n\nWe worked with a dataset of 38,015 wafer maps from real semiconductor manufacturing.\n\nEach image: 52 × 52 pixels\n38 unique defect patterns (8 base + 29 combinations)\nSome patterns are rare (as few as ~200 samples)\nSome are common (~1,000+ samples)\n\nThis imbalance reflects real manufacturing — some defects genuinely occur more often than others."
   },
   {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#what-is-a-neural-network",
+    "href": "slides/Pitch-Deck/pitch_deck.html#what-is-a-neural-network",
+    "title": "WaferGuardML",
+    "section": "What is a Neural Network?",
+    "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch defect”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type."
+  },
+  {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "title": "WaferGuardML",
     "section": "How Our AI Model Works",
     "text": "How Our AI Model Works\nWe built a custom AI model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
+    "title": "WaferGuardML",
+    "section": "Phase 1: Detecting the 8 Base Defect Types",
+    "text": "Phase 1: Detecting the 8 Base Defect Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-defect-patterns",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-defect-patterns",
+    "title": "WaferGuardML",
+    "section": "Phase 2: From 8 Base Types to 38 Defect Patterns",
+    "text": "Phase 2: From 8 Base Types to 38 Defect Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all 38 defect patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base defect patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 defect patterns(base + combinations)"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
+    "title": "WaferGuardML",
+    "section": "How Accuracy is Measured",
+    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each defect scored independently — above 50% means “present.” Accuracy measured per defect type (F1 score)\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nWe repeat this for every wafer in the test set — 97%+ are predicted correctly"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-problem",
@@ -651,8 +707,8 @@
     "text": "Financial Parameters\n\n\n\n\nDefect\n\n\nRepair Cost\n\n\nReplacement Cost\n\n\nDowntime/hr\n\n\nYield Loss\n\n\nRisk\n\n\n\n\n\n\nCenter\n\n\n$275K\n\n\n$6.0M\n\n\n$2.05M\n\n\n10–40%\n\n\nHigh\n\n\n\n\nDonut\n\n\n$130K\n\n\n$5.25M\n\n\n$550K\n\n\n15–50%\n\n\nHigh\n\n\n\n\nEdge_Loc\n\n\n$110K\n\n\n$6.0M\n\n\n$550K\n\n\n1–10%\n\n\nMedium\n\n\n\n\nEdge_Ring\n\n\n$255K\n\n\n$12.5M\n\n\n$2.25M\n\n\n0–15%\n\n\nHigh\n\n\n\n\nLoc\n\n\n$155K\n\n\n$8.5M\n\n\n$2.05M\n\n\n1–10%\n\n\nMedium\n\n\n\n\nNear_Full\n\n\n$525K\n\n\n$8.5M\n\n\n$2.45M\n\n\n50–100%\n\n\nCritical\n\n\n\n\nScratch\n\n\n$77.5K\n\n\n$5.25M\n\n\n$550K\n\n\n5–50%\n\n\nCritical\n\n\n\n\nRandom\n\n\n$130K\n\n\nN/A\n\n\n$2.05M\n\n\n1–20%\n\n\nMedium\n\n\n\n\nFor combination defects, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured-1",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured-1",
     "title": "WaferGuardML",
     "section": "How Accuracy is Measured",
     "text": "How Accuracy is Measured\nExample wafer: Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct"

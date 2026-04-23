@@ -248,6 +248,22 @@ WaferGuardML
 </div>
 </div></div>
 </section>
+<section id="single-defect-patterns" class="slide level2">
+<h2>Single Defect Patterns</h2>
+
+<img data-src="images/single-defect-types.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
+<section id="two-defect-combinations" class="slide level2">
+<h2>Two-Defect Combinations</h2>
+
+<img data-src="images/two-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
+<section id="three-defect-combinations" class="slide level2">
+<h2>Three-Defect Combinations</h2>
+
+<img data-src="images/three-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
+<section id="four-defect-combinations" class="slide level2">
+<h2>Four-Defect Combinations</h2>
+
+<img data-src="images/four-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
 <section id="our-dataset" class="slide level2">
 <h2>Our Dataset</h2>
 <div class="columns">
@@ -263,7 +279,26 @@ WaferGuardML
 </div><div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/dtsdis.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+<p><img data-src="images/pattern-distribution.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+</figure>
+</div>
+</div></div>
+</section>
+<section id="what-is-a-neural-network" class="slide level2">
+<h2>What is a Neural Network?</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p>Think of it as a <strong>decision-making system</strong> inspired by the brain:</p>
+<ul>
+<li><strong>Inputs</strong>: Raw data (e.g., pixel values of a wafer image)</li>
+<li><strong>Hidden layers</strong>: Each layer learns to detect increasingly complex patterns</li>
+<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch defect”)</li>
+</ul>
+<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.</p>
+</div><div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/nn1.png" class="quarto-figure quarto-figure-center" style="width:85.0%"></p>
 </figure>
 </div>
 </div></div>
@@ -293,6 +328,93 @@ WaferGuardML
 <p>We validated our model by comparing it against <strong>MobileNetV2</strong> — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric.</p>
 
 <img data-src="images/f1Comp.png" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%"></section>
+<section id="phase-1-detecting-the-8-base-defect-types" class="slide level2">
+<h2>Phase 1: Detecting the 8 Base Defect Types</h2>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/phase1.webp" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:50%;">
+<h3 id="output-threshold-50">Output (Threshold = 50%)</h3>
+<p>Center = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌</p>
+<h3 id="how-we-validated-it">How we validated it</h3>
+<ul>
+<li>Compared against MobileNetV2 — a model Google trained on millions of images</li>
+<li>If our custom model matches or beats it, we know our approach works</li>
+</ul>
+</div></div>
+</section>
+<section id="phase-2-from-8-base-types-to-38-defect-patterns" class="slide level2">
+<h2>Phase 2: From 8 Base Types to 38 Defect Patterns</h2>
+<p>We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all <strong>38 defect patterns.</strong></p>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/phase2.webp" class="quarto-figure quarto-figure-center" style="width:70.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Transfer learning from Phase 1 Model</strong><br><br>Detects 8 base defect patterns<br>(Center, Donut, Scratch, etc.)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br><br>Classify all 38 defect patterns<br>(base + combinations)
+</td>
+</tr>
+</tbody></table>
+</div></div>
+</section>
+<section id="how-accuracy-is-measured" class="slide level2">
+<h2>How Accuracy is Measured</h2>
+<p><strong>Example wafer - Center + Loc + Scratch</strong></p>
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
+<tbody><tr>
+<td style="vertical-align: top; width: 30%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br><br> <span>Center → 90% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br> <span>Loc → 95% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br> <span>Scratch → 88% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br><br> <em>Above 50% = Yes, Below = No</em></p>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
+→
+</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: center;">
+<p><strong style="font-size: 1.1em;">Transfer<br>Learning</strong><br><br> Freeze Phase 1<br>knowledge<br><br> Pass features<br>to Phase 2</p>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
+→
+</td>
+<td style="vertical-align: top; width: 22%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br><br> <span style="color: #888;">Center — 2%</span><br> <span style="color: #888;">Loc+Scratch — 1%</span><br> <span style="color: #4CAF50; font-weight: bold;">Center+Loc+Scratch — 97%</span><br> <span style="color: #888;">Center+Scratch — 0.5%</span><br> <span style="color: #888;">… 34 others &lt;1%</span><br><br> <em>Highest probability wins</em></p>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
+→
+</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #3A6B35; border-radius: 8px; padding: 15px; text-align: center;">
+<p><strong style="font-size: 1.1em;">Accuracy Check</strong><br><br> Predicted:<br><strong>Center+Loc+Scratch</strong><br><br> Actual:<br><strong>Center+Loc+Scratch</strong><br><br> <span style="color: #4CAF50; font-size: 1.3em;">✓ Correct</span></p>
+</div>
+</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Phase 1:</strong> Each defect scored independently — above 50% means “present.” Accuracy measured per defect type (F1 score)</li>
+<li><strong>Phase 2:</strong> Picks the single highest-probability pattern out of 38. Correct if it matches the true label</li>
+<li>We repeat this for every wafer in the test set — <strong>97%+ are predicted correctly</strong></li>
+</ul>
+</section>
 <section id="the-problem" class="slide level2">
 <h2>The Problem</h2>
 <p>Every day, semiconductor manufacturers produce thousands of wafers. Defects happen. The real challenge isn’t finding them — it’s knowing <strong>what to do about them</strong>.</p>
@@ -1014,7 +1136,7 @@ Medium
 </table>
 <p>For combination defects, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds.</p>
 </section>
-<section id="how-accuracy-is-measured" class="slide level2" data-visibility="uncounted">
+<section id="how-accuracy-is-measured-1" class="slide level2" data-visibility="uncounted">
 <h2>How Accuracy is Measured</h2>
 <p><strong>Example wafer: Center + Loc + Scratch</strong></p>
 <table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
