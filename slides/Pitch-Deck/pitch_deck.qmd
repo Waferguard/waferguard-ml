@@ -128,6 +128,24 @@ There are **8 base defect types**, and they can appear in **combinations** — g
 
 ::::
 
+## Single Defect Patterns
+
+![](images/single-defect-types.png){width="90%" fig-align="center"}
+
+
+## Two-Defect Combinations
+
+![](images/two-defects.png){width="90%" fig-align="center"}
+
+
+## Three-Defect Combinations
+
+![](images/three-defects.png){width="90%" fig-align="center"}
+
+
+## Four-Defect Combinations
+
+![](images/four-defects.png){width="90%" fig-align="center"}
 
 ## Our Dataset
 
@@ -146,7 +164,29 @@ This imbalance reflects real manufacturing — some defects genuinely occur more
 
 ::: {.column width="50%"}
 
-![](images/dtsdis.png){width="95%" fig-align="center"}
+![](images/pattern-distribution.png){width="95%" fig-align="center"}
+
+:::
+
+::::
+
+## What is a Neural Network?
+
+:::: {.columns}
+
+::: {.column width="50%"}
+Think of it as a **decision-making system** inspired by the brain:
+
+- **Inputs**: Raw data (e.g., pixel values of a wafer image)
+- **Hidden layers**: Each layer learns to detect increasingly complex patterns
+- **Output**: A prediction (e.g., "this wafer has a scratch defect")
+
+The network **learns by example** — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.
+:::
+
+::: {.column width="50%"}
+
+![](images/nn1.png){width="85%" fig-align="center"}
 
 :::
 
@@ -176,6 +216,119 @@ We built a custom AI model that looks at wafer maps and identifies the defect pa
 We validated our model by comparing it against **MobileNetV2** — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric.
 
 ![](images/f1Comp.png){width="70%" fig-align="center"}
+
+## Phase 1: Detecting the 8 Base Defect Types
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](images/phase1.webp){width="100%" fig-align="center"}
+:::
+
+::: {.column width="50%"}
+### Output (Threshold = 50%)
+Center = 80% ✅
+Edge Ring = 85% ✅
+Scratch = 80% ✅
+Donut = 30% ❌
+Edge Loc = 40% ❌
+Loc = 10% ❌
+Near Full = 1% ❌
+Random = 23% ❌
+
+### How we validated it
+- Compared against MobileNetV2 — a model Google trained on millions of images
+- If our custom model matches or beats it, we know our approach works
+:::
+
+::::
+
+
+## Phase 2: From 8 Base Types to 38 Defect Patterns
+
+We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all **38 defect patterns.**
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](images/phase2.webp){width="70%" fig-align="center"}
+
+:::
+
+::: {.column width="70%"}
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tr>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Transfer learning from Phase 1 Model</strong><br/><br/>Detects 8 base defect patterns<br/>(Center, Donut, Scratch, etc.)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
+<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br/><br/>Classify all 38 defect patterns<br/>(base + combinations)
+</td>
+</tr>
+</table>
+
+:::
+
+::::
+
+## How Accuracy is Measured
+
+**Example wafer - Center + Loc + Scratch**
+
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
+<tr>
+<td style="vertical-align: top; width: 30%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br/><br/>
+<span>Center → 90% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Loc → 95% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br/>
+<span>Scratch → 88% → <span style="color: #4CAF50;">✓ Yes</span></span><br/>
+<span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br/><br/>
+<em>Above 50% = Yes, Below = No</em>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: center;">
+<strong style="font-size: 1.1em;">Transfer<br/>Learning</strong><br/><br/>
+Freeze Phase 1<br/>knowledge<br/><br/>
+Pass features<br/>to Phase 2
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 22%; padding: 10px;">
+<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
+<strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br/><br/>
+<span style="color: #888;">Center — 2%</span><br/>
+<span style="color: #888;">Loc+Scratch — 1%</span><br/>
+<span style="color: #4CAF50; font-weight: bold;">Center+Loc+Scratch — 97%</span><br/>
+<span style="color: #888;">Center+Scratch — 0.5%</span><br/>
+<span style="color: #888;">... 34 others &lt;1%</span><br/><br/>
+<em>Highest probability wins</em>
+</div>
+</td>
+<td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
+<td style="vertical-align: top; width: 18%; padding: 10px;">
+<div style="background: #3A6B35; border-radius: 8px; padding: 15px; text-align: center;">
+<strong style="font-size: 1.1em;">Accuracy Check</strong><br/><br/>
+Predicted:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
+Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
+<span style="color: #4CAF50; font-size: 1.3em;">✓ Correct</span>
+</div>
+</td>
+</tr>
+</table>
+
+- **Phase 1:** Each defect scored independently — above 50% means "present." Accuracy measured per defect type (F1 score)
+- **Phase 2:** Picks the single highest-probability pattern out of 38. Correct if it matches the true label
+- We repeat this for every wafer in the test set — **97%+ are predicted correctly**
 
 
 ## The Problem
