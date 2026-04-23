@@ -19,7 +19,6 @@ from app.config import (
     DATASET_SLUG,
     ENABLE_RUNTIME_DATASET_BOOTSTRAP,
     FINANCIAL_CONFIG_DEFAULTS,
-    MAX_BATCH_SIZE,
     MODEL_REGISTRY,
     TOP_N_DEFAULT,
 )
@@ -734,7 +733,7 @@ elif st.session_state.active_tab == "batch":
         type=["npz", "png", "jpg", "jpeg"],
         accept_multiple_files=True,
         key="batch_upload",
-        help=f"Upload multiple files. NPZ files with multiple wafers are expanded. Max {MAX_BATCH_SIZE} wafers.",
+        help="Upload multiple files. NPZ files with multiple wafers are expanded.",
     )
 
     if uploaded_files:
@@ -758,10 +757,6 @@ elif st.session_state.active_tab == "batch":
 
         if all_raw:
             combined = np.concatenate(all_raw, axis=0)
-
-            if len(combined) > MAX_BATCH_SIZE:
-                st.warning(f"Batch truncated to {MAX_BATCH_SIZE} wafers (uploaded {len(combined)}).")
-                combined = combined[:MAX_BATCH_SIZE]
 
             with st.spinner(f"Classifying {len(combined)} wafer(s)..."):
                 t0 = time.perf_counter()
@@ -860,7 +855,7 @@ elif st.session_state.active_tab == "sample":
         sample_size = st.slider("Number of samples", min_value=800, max_value=6000, value=1000)
         sample_mode = st.radio(
             "Sample mode",
-            ["Random samples", "Base-pattern demo scenario"],
+            ["Base-pattern demo scenario", "Random samples"],
             horizontal=True,
             help="Use base-pattern mode to simulate a realistic lot with mostly Normal wafers and elevated selected-pattern defects.",
         )
