@@ -97,12 +97,24 @@ st.markdown(
         color: {t["text"]} !important;
     }}
 
-    /* Metric labels */
+    /* Metrics as Shadcn Cards */
+    [data-testid="stMetric"] {{
+        background-color: #1a1d26;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }}
     [data-testid="stMetricLabel"] {{
         color: {t["text_muted"]} !important;
+        font-weight: 500 !important;
+        font-size: 0.875rem !important;
+        margin-bottom: 0.25rem !important;
     }}
     [data-testid="stMetricValue"] {{
         color: {t["text"]} !important;
+        font-weight: 700 !important;
+        font-size: 1.875rem !important;
     }}
 
     /* Captions */
