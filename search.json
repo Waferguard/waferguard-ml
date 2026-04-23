@@ -637,32 +637,11 @@
     "text": "The Cascade Effect\nWhen you fix one process step, you don’t just fix one defect pattern. You fix every pattern that involves that defect type.\n\n\n\n\nFix CMP Process ($130K) ✓ Donut (single) ✓ Donut+Loc ✓ Donut+Scratch ✓ Donut+Edge_Loc ✓ Donut+Edge_Ring ✓ Donut+Loc+Scratch ✓ Donut+Edge_Loc+Loc ✓ Donut+Edge_Loc+Scratch ✓ Donut+Edge_Ring+Loc ✓ Donut+Edge_Ring+Scratch ✓ Donut+Edge_Loc+Loc+Scratch ✓ Donut+Edge_Ring+Loc+Scratch\n\n\n\n=\n\n\n\n12 patterns eliminated One repair, one cost $130K investment vs. millions in avoided losses"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#use-case-how-a-manufacturer-benefits",
-    "href": "slides/Pitch-Deck/pitch_deck.html#use-case-how-a-manufacturer-benefits",
-    "title": "WaferGuardML",
-    "section": "Use Case: How a Manufacturer Benefits",
-    "text": "Use Case: How a Manufacturer Benefits\n\n\n\nStep 1Upload batch ofwafer inspection datato the dashboard\n\n\n→\n\n\nStep 2System detectsDonut defects trendingupward across batches\n\n\n→\n\n\nStep 3Dashboard shows:CMP process is theroot cause\n\n\n→\n\n\nStep 4Recommendation:Replace CMP pad$130K to save $2.1M/mo\n\n\n\nThe manufacturer doesn’t need to understand defect patterns. They get a clear answer: what to fix, what it costs, and what they save."
-  },
-  {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
-    "href": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
-    "title": "WaferGuardML",
-    "section": "Financial Impact by Process Action",
-    "text": "Financial Impact by Process Action\nInstead of costs per defect pattern, we show costs per action the manufacturer can take:\n\n\n\n\nAction\n\n\nProcess Step\n\n\nRepair Cost\n\n\nPatterns Fixed\n\n\nTotal Daily Savings\n\n\nBreak-Even\n\n\n\n\n\n\nReplace CMP pad + refresh slurry\n\n\nCMP / Lithography\n\n\n\\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nChamber clean + RF recalibration\n\n\nDeposition / Plasma\n\n\n\\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nReplace focus ring + edge hardware\n\n\nPlasma Etch\n\n\n\\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nSwap/clean robot end effectors\n\n\nWafer Handling\n\n\n\\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nFurnace zone recalibration\n\n\nDiffusion / Thermal\n\n\n\\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nDaily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple defect combinations."
-  },
-  {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#live-demo",
     "href": "slides/Pitch-Deck/pitch_deck.html#live-demo",
     "title": "WaferGuardML",
     "section": "Live Demo",
     "text": "Live Demo\nWalking through the full WaferGuardML experience\n\n\n\nUploadWafer batch data\n\n\n→\n\n\nDetectAI classifieseach wafer\n\n\n→\n\n\nAnalyzeFinancial impactby process action\n\n\n→\n\n\nActPrioritized repairrecommendations\n\n\n\nSwitching to live demo…"
-  },
-  {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
-    "href": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
-    "title": "WaferGuardML",
-    "section": "Key Takeaways",
-    "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 defect patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by defect pattern\n\n\nCascade EffectOne process fix eliminatesdefects across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#wafer-map-generation-detail",
@@ -712,6 +691,27 @@
     "title": "WaferGuardML",
     "section": "How Accuracy is Measured",
     "text": "How Accuracy is Measured\nExample wafer: Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#use-case-how-a-manufacturer-benefits",
+    "href": "slides/Pitch-Deck/pitch_deck.html#use-case-how-a-manufacturer-benefits",
+    "title": "WaferGuardML",
+    "section": "Use Case: How a Manufacturer Benefits",
+    "text": "Use Case: How a Manufacturer Benefits\n\n\n\nStep 1Upload batch ofwafer inspection datato the dashboard\n\n\n→\n\n\nStep 2System detectsDonut defects trendingupward across batches\n\n\n→\n\n\nStep 3Dashboard shows:CMP process is theroot cause\n\n\n→\n\n\nStep 4Recommendation:Replace CMP pad$130K to save $2.1M/mo\n\n\n\nThe manufacturer doesn’t need to understand defect patterns. They get a clear answer: what to fix, what it costs, and what they save."
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
+    "href": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
+    "title": "WaferGuardML",
+    "section": "Financial Impact by Process Action",
+    "text": "Financial Impact by Process Action\nInstead of costs per defect pattern, we show costs per action the manufacturer can take:\n\n\n\n\nAction\n\n\nProcess Step\n\n\nRepair Cost\n\n\nPatterns Fixed\n\n\nTotal Daily Savings\n\n\nBreak-Even\n\n\n\n\n\n\nReplace CMP pad + refresh slurry\n\n\nCMP / Lithography\n\n\n\\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nChamber clean + RF recalibration\n\n\nDeposition / Plasma\n\n\n\\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nReplace focus ring + edge hardware\n\n\nPlasma Etch\n\n\n\\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nSwap/clean robot end effectors\n\n\nWafer Handling\n\n\n\\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nFurnace zone recalibration\n\n\nDiffusion / Thermal\n\n\n\\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nDaily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple defect combinations."
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
+    "href": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
+    "title": "WaferGuardML",
+    "section": "Key Takeaways",
+    "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 defect patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by defect pattern\n\n\nCascade EffectOne process fix eliminatesdefects across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
