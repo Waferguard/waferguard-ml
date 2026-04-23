@@ -27,7 +27,6 @@ from app.labels import get_description
 from app.model_utils import load_model, predict_batch, predict_single
 from app.preprocessing import parse_upload, prepare_for_model
 from app.visualization import (
-    build_results_dataframe,
     render_action_table,
     render_all_anomaly_treemap,
     render_combinations_sunburst,
@@ -547,7 +546,6 @@ if st.session_state.get("show_hero", True):
     components.html(build_hero_html(t), height=180)
 
 
-
 # ── Main content ─────────────────────────────────────────────────────
 tab_single, tab_batch, tab_sample = st.tabs(["Single Wafer", "Batch Upload", "Sample Data"])
 
@@ -673,12 +671,13 @@ with tab_batch:
             # Expandable details per pattern
             st.subheader("Details")
             st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
-            
+
             from collections import defaultdict
+
             pattern_groups = defaultdict(list)
             for r in results:
-                pattern_groups[r['pattern_name']].append(r)
-                
+                pattern_groups[r["pattern_name"]].append(r)
+
             for pattern_name, items in sorted(pattern_groups.items(), key=lambda x: len(x[1]), reverse=True):
                 count = len(items)
                 r = items[0]  # Show the first wafer as representative
@@ -885,12 +884,13 @@ with tab_sample:
             # Expandable details per pattern
             st.subheader("Details")
             st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
-            
+
             from collections import defaultdict
+
             pattern_groups = defaultdict(list)
             for r in results:
-                pattern_groups[r['pattern_name']].append(r)
-                
+                pattern_groups[r["pattern_name"]].append(r)
+
             for pattern_name, items in sorted(pattern_groups.items(), key=lambda x: len(x[1]), reverse=True):
                 count = len(items)
                 r = items[0]  # Show the first wafer as representative

@@ -169,22 +169,17 @@ def render_combinations_sunburst(df_batch: pd.DataFrame) -> None:
     if df_chart.empty:
         st.info("No defects found in this batch.")
         return
-        
+
     df_chart["root"] = "Defect Combinations"
 
     fig = px.sunburst(
-        df_chart,
-        path=["root", "pattern_name"],
-        values="count",
-        color="count",
-        color_continuous_scale="Magma",
-        title=""
+        df_chart, path=["root", "pattern_name"], values="count", color="count", color_continuous_scale="Magma", title=""
     )
     fig.update_layout(
-        margin=dict(t=20, l=10, r=10, b=10),
+        margin={"t": 20, "l": 10, "r": 10, "b": 10},
         paper_bgcolor=BG_COLOR,
         plot_bgcolor=BG_COLOR,
-        font=dict(color="white")
+        font={"color": "white"},
     )
     st.plotly_chart(fig, use_container_width=True)
 
@@ -205,12 +200,12 @@ def render_all_anomaly_treemap(df_anomaly: pd.DataFrame) -> None:
         values="count",
         color="count",
         color_continuous_scale="Viridis",
-        title=""
+        title="",
     )
     fig.update_layout(
-        margin=dict(t=20, l=10, r=10, b=10),
+        margin={"t": 20, "l": 10, "r": 10, "b": 10},
         paper_bgcolor=BG_COLOR,
         plot_bgcolor=BG_COLOR,
-        font=dict(color="white")
+        font={"color": "white"},
     )
     st.plotly_chart(fig, use_container_width=True)
