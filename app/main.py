@@ -120,48 +120,15 @@ SIDEBAR_HERO_HTML = """
   body { background: transparent; overflow: hidden;
          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-  @property --sb-glow {
-    syntax: '<color>';
-    inherits: false;
-    initial-value: #002776;
-  }
-  @keyframes sb-cycle {
-    0%, 100% { --sb-glow: #002776; }
-    33%      { --sb-glow: #92d400; }
-    66%      { --sb-glow: #00a1de; }
-  }
-
   .sb-card {
     position: relative;
     width: 100%;
-    padding: 14px 16px 12px;
-    border-radius: 10px;
-    animation: sb-cycle 6s ease-in-out infinite;
-    border: 1px solid var(--sb-glow);
-    box-shadow: 0 0 12px color-mix(in srgb, var(--sb-glow) 20%, transparent),
-                inset 0 0 20px color-mix(in srgb, var(--sb-glow) 6%, transparent);
-    background: SIDEBAR_CARD_BG;
-    transition: box-shadow 0.3s ease;
-    cursor: default;
+    padding: 8px 0;
   }
-  .sb-card:hover {
-    box-shadow: 0 0 20px color-mix(in srgb, var(--sb-glow) 40%, transparent),
-                0 0 40px color-mix(in srgb, var(--sb-glow) 12%, transparent),
-                inset 0 0 30px color-mix(in srgb, var(--sb-glow) 10%, transparent);
-  }
-
-  .sb-logo {
-    font-size: 1.1rem;
-    font-weight: 900;
-    color: SIDEBAR_LOGO_COLOR;
-    letter-spacing: -0.02em;
-    margin-bottom: 6px;
-  }
-  .sb-logo .dot { color: #92d400; }
 
   .sb-title {
-    font-size: 1.1rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    font-weight: 600;
     color: SIDEBAR_TEXT_COLOR;
     margin-bottom: 2px;
   }
@@ -171,24 +138,12 @@ SIDEBAR_HERO_HTML = """
   }
 </style>
 <div class="sb-card">
-  <div class="sb-logo">Deloitte<span class="dot">.</span></div>
   <div class="sb-title">WaferGuard ML</div>
   <div class="sb-caption">Wafer Map Defect Classifier</div>
 </div>
 """
 
 with st.sidebar:
-    # Sidebar hero card with glow effect
-    _sb_html = (
-        SIDEBAR_HERO_HTML
-        .replace("SIDEBAR_CARD_BG", t["bg2"])
-        .replace("SIDEBAR_LOGO_COLOR", t["logo_color"])
-        .replace("SIDEBAR_TEXT_COLOR", t["text"])
-        .replace("SIDEBAR_MUTED_COLOR", t["text_muted"])
-    )
-    components.html(_sb_html, height=105)
-    st.divider()
-
     model_choice = st.radio(
         "Select Model",
         options=list(MODEL_REGISTRY.keys()),
@@ -285,9 +240,6 @@ with st.sidebar:
         "Upload a wafer map image or .npz file to classify defect patterns "
         "across 38 categories."
     )
-
-    st.divider()
-    st.toggle("Show hero banner", value=True, key="show_hero")
 
 # ── Load model ───────────────────────────────────────────────────────
 with st.spinner(f"Loading {model_choice} model..."):
@@ -402,230 +354,24 @@ _HERO_TEMPLATE = """
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { background: THEME_BG; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
-  @property --glow-color {
-    syntax: '<color>';
-    inherits: false;
-    initial-value: #002776;
-  }
-  @property --glow-color-2 {
-    syntax: '<color>';
-    inherits: false;
-    initial-value: #00a1de;
-  }
-  @property --rotate {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
-  @property --bg-x {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
-  @property --bg-y {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
-  @property --bg-size {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-  }
-  @property --glow-blur {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 6;
-  }
-  @property --glow-opacity {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1;
-  }
-  @property --glow-scale {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 1.5;
-  }
-  @property --glow-radius {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 100;
-  }
-  @property --glow-translate-y {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
-  @property --white-shadow {
-    syntax: '<number>';
-    inherits: true;
-    initial-value: 0;
-  }
-
-  @keyframes palette-cycle {
-    0%, 100% { --glow-color: #002776; --glow-color-2: #00a1de; }
-    33%      { --glow-color: #92d400; --glow-color-2: #002776; }
-    66%      { --glow-color: #00a1de; --glow-color-2: #92d400; }
-  }
-
-  @keyframes rotate-bg {
-    0%   { --bg-x: 0;   --bg-y: 0; }
-    25%  { --bg-x: 100; --bg-y: 0; }
-    50%  { --bg-x: 100; --bg-y: 100; }
-    75%  { --bg-x: 0;   --bg-y: 100; }
-    100% { --bg-x: 0;   --bg-y: 0; }
-  }
-
-  @keyframes orbit {
-    from { --rotate: -70; --glow-translate-y: -65; }
-    25%  { --glow-translate-y: -65; }
-    50%  { --glow-translate-y: -65; }
-    75%  { --glow-translate-y: -65; }
-    to   { --rotate: 290; --glow-translate-y: -65; }
-  }
-
-  @keyframes shadow-pulse {
-    0%, 24%, 46%, 73%, 96% { --white-shadow: 0.5; }
-    12%, 28%, 41%, 63%, 75%, 82%, 98% { --white-shadow: 2.5; }
-    6%, 32%, 57% { --white-shadow: 1.3; }
-    18%, 52%, 88% { --white-shadow: 3.5; }
-  }
-
-  .glow-container {
-    --card-color: THEME_CARD;
-    --card-radius: 20px;
-    --border-width: 2px;
-    --animation-speed: 6s;
-    --interaction-speed: 0.55s;
-    --glow-rotate-unit: 1deg;
-
-    width: calc(100% - 16px);
-    height: 300px;
-    margin: 8px auto;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    z-index: 2;
-    border-radius: var(--card-radius);
-    cursor: pointer;
-    animation: palette-cycle 6s ease-in-out infinite;
-  }
-
-  .glow-container:before,
-  .glow-container:after {
-    content: "";
-    display: block;
-    position: absolute;
+  .header-container {
     width: 100%;
-    height: 100%;
-    border-radius: var(--card-radius);
-  }
-
-  .glow-content {
-    position: absolute;
-    inset: 0;
-    background: var(--card-color);
-    border-radius: calc(var(--card-radius) * 0.85);
+    margin: 8px auto;
+    padding: 16px 0;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px;
     text-align: center;
-    gap: 12px;
-  }
-
-  .glow-content:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: calc(100% + var(--border-width));
-    height: calc(100% + var(--border-width));
-    border-radius: calc(var(--card-radius) * 0.85);
-    box-shadow: 0 0 20px rgba(0,0,0,0.8);
-    mix-blend-mode: color-burn;
-    z-index: -1;
-    background: hsl(0deg 0% 12%) radial-gradient(
-      30% 40% at calc(var(--bg-x) * 1%) calc(var(--bg-y) * 1%),
-      var(--glow-color) 0%,
-      color-mix(in srgb, var(--glow-color) 60%, transparent) calc(30% * var(--bg-size)),
-      color-mix(in srgb, var(--glow-color-2) 40%, transparent) calc(60% * var(--bg-size)),
-      transparent 100%
-    );
-    animation: rotate-bg var(--animation-speed) linear infinite;
-    transition: --bg-size var(--interaction-speed) ease;
-  }
-
-  .glow {
-    --glow-translate-y: 0;
-    display: block;
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    animation: orbit var(--animation-speed) linear infinite;
-    transform: rotateZ(calc(var(--rotate) * var(--glow-rotate-unit)));
-    transform-origin: center;
-    border-radius: calc(var(--glow-radius) * 10vw);
-  }
-
-  .glow:after {
-    content: "";
-    display: block;
-    z-index: -2;
-    filter: blur(calc(var(--glow-blur) * 10px));
-    width: 130%;
-    height: 130%;
-    left: -15%;
-    top: -15%;
-    background: var(--glow-color);
-    position: relative;
-    border-radius: calc(var(--glow-radius) * 10vw);
-    transform: scaleY(calc(var(--glow-scale) / 1.1))
-               scaleX(calc(var(--glow-scale) * 1.2))
-               translateY(calc(var(--glow-translate-y) * 1%));
-    opacity: var(--glow-opacity);
-  }
-
-  .glow-container:hover .glow-content {
-    mix-blend-mode: darken;
-    box-shadow: 0 0 calc(var(--white-shadow) * 1vw) calc(var(--white-shadow) * 0.15vw) rgba(255, 255, 255, 0.2);
-    animation: shadow-pulse calc(var(--animation-speed) * 2) linear infinite;
-  }
-
-  .glow-container:hover .glow-content:before {
-    --bg-size: 15;
-    animation-play-state: paused;
-    transition: --bg-size var(--interaction-speed) ease;
-  }
-
-  .glow-container:hover .glow {
-    --glow-blur: 1.5;
-    --glow-opacity: 0.6;
-    --glow-scale: 2.5;
-    --glow-radius: 0;
-    --rotate: 900;
-    --glow-rotate-unit: 0;
-    animation-play-state: paused;
-  }
-
-  .glow-container:hover .glow:after {
-    --glow-translate-y: 0;
-    animation-play-state: paused;
-    transition: --glow-translate-y 0s ease, --glow-blur 0.05s ease,
-                --glow-opacity 0.05s ease, --glow-scale 0.05s ease,
-                --glow-radius 0.05s ease;
+    gap: 6px;
   }
 
   .hero-title {
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     color: THEME_TEXT;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.02em;
     line-height: 1.1;
-    z-index: 1;
   }
 
   .hero-title .accent {
@@ -633,29 +379,34 @@ _HERO_TEMPLATE = """
   }
 
   .hero-subtitle {
-    font-size: 1.1rem;
+    font-size: 0.95rem;
     color: #00a1de;
     font-weight: 500;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    z-index: 1;
   }
 
   .hero-tagline {
     font-size: 0.85rem;
     color: THEME_TEXT_MUTED;
-    z-index: 1;
-    margin-top: 4px;
+    margin-top: 2px;
   }
+
+  .main-logo {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: THEME_LOGO_COLOR;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+  .main-logo .dot { color: #92d400; }
 </style>
 
-<div class="glow-container">
-  <span class="glow"></span>
-  <div class="glow-content">
-    <div class="hero-title">Wafer<span class="accent">Guard</span> ML</div>
-    <div class="hero-subtitle">ML-Powered Wafer Defect Classification</div>
-    <div class="hero-tagline">Semiconductor wafer map analysis across 38 defect patterns</div>
-  </div>
+<div class="header-container">
+  <div class="main-logo">Deloitte<span class="dot">.</span></div>
+  <div class="hero-title">Wafer<span class="accent">Guard</span> ML</div>
+  <div class="hero-subtitle">ML-Powered Wafer Defect Classification</div>
+  <div class="hero-tagline">Semiconductor wafer map analysis across 38 defect patterns</div>
 </div>
 """
 
@@ -668,6 +419,7 @@ def build_hero_html(theme):
         .replace("THEME_CARD", theme["card"])
         .replace("THEME_TEXT_MUTED", theme["text_muted"])
         .replace("THEME_TEXT", theme["text"])
+        .replace("THEME_LOGO_COLOR", theme["logo_color"])
     )
 
 
@@ -777,7 +529,7 @@ def display_prediction(raw, result, elapsed, top_n):
 
 # ── Hero banner ─────────────────────────────────────────────────────
 if st.session_state.get("show_hero", True):
-    components.html(build_hero_html(t), height=340)
+    components.html(build_hero_html(t), height=180)
 
 # ── Navigation cards ─────────────────────────────────────────────────
 if "active_tab" not in st.session_state:
@@ -1023,18 +775,18 @@ elif st.session_state.active_tab == "batch":
                 mime="application/octet-stream",
             )
 
-            # Summary
-            st.subheader(f"Results ({len(results)} wafers)")
-            st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
-            df = build_results_dataframe(results)
-            st.dataframe(df, use_container_width=True, hide_index=True)
-
             render_leadership_panel(
                 results,
                 batch_id=f"BATCH_{int(time.time())}",
                 section_title="Leadership Decision Support",
                 lot_level=True,
             )
+
+            # Summary
+            st.subheader(f"Results ({len(results)} wafers)")
+            st.caption(f"Batch inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
+            df = build_results_dataframe(results)
+            st.dataframe(df, use_container_width=True, hide_index=True)
 
             # Expandable details per wafer
             st.subheader("Details")
@@ -1221,6 +973,13 @@ elif st.session_state.active_tab == "sample":
                 results = predict_batch(model, prepared)
                 elapsed = time.perf_counter() - t0
 
+            render_leadership_panel(
+                results,
+                batch_id=f"SAMPLE_{int(time.time())}",
+                section_title="Leadership Decision Support",
+                lot_level=True,
+            )
+
             st.subheader(f"Results ({len(results)} wafers)")
             st.caption(f"Inference time: {elapsed:.2f}s ({elapsed / len(results):.3f}s per wafer)")
             df = build_results_dataframe(results)
@@ -1236,13 +995,6 @@ elif st.session_state.active_tab == "sample":
                 st.info(
                     f"{mix['focus_pattern']} demo mode: N/T/O wafers = {mix['normal']}/{mix['target']}/{mix['other']}"
                 )
-
-            render_leadership_panel(
-                results,
-                batch_id=f"SAMPLE_{int(time.time())}",
-                section_title="Leadership Decision Support",
-                lot_level=True,
-            )
 
             # Expandable details
             st.subheader("Details")
