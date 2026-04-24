@@ -315,7 +315,7 @@ Pass features<br/>to Phase 2
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #3A6B35; border-radius: 8px; padding: 15px; text-align: center;">
+<div style="background: #4CAF50; border-radius: 8px; padding: 15px; text-align: center;">
 <strong style="font-size: 1.1em;">Accuracy Check</strong><br/><br/>
 Predicted:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
 Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
@@ -427,7 +427,7 @@ When you fix one process step, you don't just fix one defect pattern. You fix **
 <span style="color: #AAAAAA; font-size: 2em;">=</span>
 </td>
 <td style="vertical-align: middle; width: 45%; padding: 10px;">
-<div style="background: #3A6B35; border-radius: 8px; padding: 30px; text-align: center;">
+<div style="background: #4CAF50; border-radius: 8px; padding: 30px; text-align: center;">
 <strong style="font-size: 1.3em;">12 patterns eliminated</strong><br/><br/>
 <span style="font-size: 1.1em;">One repair, one cost</span><br/><br/>
 <strong style="font-size: 1.5em;">$130K investment</strong><br/>
@@ -659,7 +659,7 @@ Pass features<br/>to Phase 2
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">→</td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #3A6B35; border-radius: 8px; padding: 15px; text-align: center;">
+<div style="background: #4CAF50; border-radius: 8px; padding: 15px; text-align: center;">
 <strong style="font-size: 1.1em;">Accuracy Check</strong><br/><br/>
 Predicted:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
 Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
