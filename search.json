@@ -515,7 +515,7 @@
     "href": "slides/Pitch-Deck/pitch_deck.html#agenda",
     "title": "WaferGuardML",
     "section": "Agenda",
-    "text": "Agenda\n\nBackground\nThe Data & Our Model\nThe Problem\nOur Solution\nThe Business Value\nLive Demo\nKey Takeaways"
+    "text": "Agenda\n\nBackground\nThe Data & Our Model\nThe Problem\nOur Solution\nThe Business Value\nLive Demo"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#from-silicon-to-chips",
@@ -585,7 +585,7 @@
     "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "title": "WaferGuardML",
     "section": "How Our AI Model Works",
-    "text": "How Our AI Model Works\nWe built a custom AI model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
+    "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
