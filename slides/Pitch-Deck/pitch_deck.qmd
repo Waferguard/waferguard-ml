@@ -48,7 +48,6 @@ format:
 4. **Our Solution**
 5. **The Business Value**
 6. **Live Demo**
-7. **Key Takeaways**
 
 
 ## From Silicon to Chips
@@ -195,7 +194,7 @@ The network **learns by example** — we show it thousands of labeled wafer imag
 
 ## How Our AI Model Works
 
-We built a custom AI model that looks at wafer maps and identifies the defect pattern automatically.
+We built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.
 
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tr>
