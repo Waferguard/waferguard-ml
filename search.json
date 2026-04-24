@@ -581,13 +581,6 @@
     "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch defect”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
-    "title": "WaferGuardML",
-    "section": "How Our AI Model Works",
-    "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
-  },
-  {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
     "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
     "title": "WaferGuardML",
@@ -712,6 +705,13 @@
     "title": "WaferGuardML",
     "section": "Key Takeaways",
     "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 defect patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by defect pattern\n\n\nCascade EffectOne process fix eliminatesdefects across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
+    "title": "WaferGuardML",
+    "section": "How Our AI Model Works",
+    "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",

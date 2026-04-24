@@ -302,31 +302,6 @@ WaferGuardML
 </div>
 </div></div>
 </section>
-<section id="how-our-ai-model-works" class="slide level2">
-<h2>How Our AI Model Works</h2>
-<p>We built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.</p>
-<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
-<tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
-<strong>Phase 1</strong><br><br>Model learns to detect<br>the 8 base defect types<br>(Donut, Center, Scratch…)
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
-→
-</td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
-<strong>Phase 2</strong><br><br>Uses that knowledge<br>to classify all 38<br>defect patterns
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
-→
-</td>
-<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
-<strong>Result</strong><br><br>97%+ accuracy<br>Outperformed Google’s<br>pre-trained model
-</td>
-</tr>
-</tbody></table>
-<p>We validated our model by comparing it against <strong>MobileNetV2</strong> — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric.</p>
-
-<img data-src="images/f1Comp.png" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%"></section>
 <section id="phase-1-detecting-the-8-base-defect-types" class="slide level2">
 <h2>Phase 1: Detecting the 8 Base Defect Types</h2>
 <div class="columns">
@@ -1171,9 +1146,34 @@ X days
 </tr>
 </tbody></table>
 <p>WaferGuardML doesn’t just tell manufacturers they have a problem. It tells them <strong>exactly what to fix, how much it costs, and how much they save</strong>.</p>
-
-
 </section>
+<section id="how-our-ai-model-works" class="slide level2" data-visibility="uncounted">
+<h2>How Our AI Model Works</h2>
+<p>We built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.</p>
+<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<tbody><tr>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Phase 1</strong><br><br>Model learns to detect<br>the 8 base defect types<br>(Donut, Center, Scratch…)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Phase 2</strong><br><br>Uses that knowledge<br>to classify all 38<br>defect patterns
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
+→
+</td>
+<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Result</strong><br><br>97%+ accuracy<br>Outperformed Google’s<br>pre-trained model
+</td>
+</tr>
+</tbody></table>
+<p>We validated our model by comparing it against <strong>MobileNetV2</strong> — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric.</p>
+
+
+
+<img data-src="images/f1Comp.png" class="quarto-figure quarto-figure-center r-stretch" style="width:70.0%"></section>
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
