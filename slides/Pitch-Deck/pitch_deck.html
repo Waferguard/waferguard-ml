@@ -9,8 +9,8 @@
 <link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e19f81c97bc45f6835df6be9cce9fdc9.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.9.37">
 
-  <meta name="author" content="WaferGuardML">
-  <meta name="dcterms.date" content="2026-04-24">
+  <meta name="author" content="Hernan · Milos · Oliver · Rolando">
+  <meta name="dcterms.date" content="2026-04-29">
   <title>WaferGuard ML Slides – WaferGuardML</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -126,21 +126,21 @@
     }
   </style>
   <style>
-  .reveal .slide-background-content { background-color: #2D2D2D; }
+  .reveal .slide-background-content { background-color: #1A1A2E; }
   .reveal { font-size: 28px; color: #F0F0F0; }
   .reveal h1, .reveal h2 { font-family: Georgia, serif; font-weight: 700; color: #FFFFFF; letter-spacing: -0.02em; }
-  .reveal h2 { border-bottom: 3px solid #888888; padding-bottom: 0.3em; margin-bottom: 0.6em; }
+  .reveal h2 { border-bottom: 3px solid #86BC25; padding-bottom: 0.3em; margin-bottom: 0.6em; }
   .reveal h3 { color: #E0E0E0; }
   .reveal strong { color: #FFFFFF; }
-  .reveal blockquote { background: #3A3A3A; border-left: 5px solid #888888; padding: 1em 1.2em; font-size: 0.8em; font-style: normal; color: #CCCCCC; border-radius: 4px; }
+  .reveal blockquote { background: #2A2A40; border-left: 5px solid #86BC25; padding: 1em 1.2em; font-size: 0.8em; font-style: normal; color: #CCCCCC; border-radius: 4px; }
   .reveal table { font-size: 0.75em; color: #F0F0F0; }
-  .reveal th { background-color: #4A4A4A; color: white; padding: 0.5em 0.8em; }
-  .reveal td { padding: 0.4em 0.8em; border-color: #555555; }
+  .reveal th { background-color: #2A2A40; color: white; padding: 0.5em 0.8em; }
+  .reveal td { padding: 0.4em 0.8em; border-color: #3A3A50; }
   .reveal .slide-number { color: #AAAAAA; }
   .reveal code { font-size: 0.85em; color: #E0E0E0; }
-  .reveal pre { font-size: 0.6em; border-radius: 8px; background: #1A1A1A; }
-  .reveal a { color: #7EB8DA; }
-  .reveal .footer { color: #999999; }
+  .reveal pre { font-size: 0.6em; border-radius: 8px; background: #0D0D1A; }
+  .reveal a { color: #86BC25; }
+  .reveal .footer { color: #F0F0F0; font-size: 1.0em; }
   .reveal ul, .reveal ol { color: #F0F0F0; }
   .reveal dt { color: #FFFFFF; }
   .reveal dd { color: #DDDDDD; }
@@ -152,18 +152,18 @@
     <div class="slides">
 
 <section id="title-slide" class="quarto-title-block center">
-  <h1 class="title">WaferGuardML</h1>
+  <h1 class="title">WaferGuard<span style="color: #86BC25;">ML</span></h1>
   <p class="subtitle">AI-Powered Quality Intelligence for Semiconductor Manufacturing</p>
 
 <div class="quarto-title-authors">
 <div class="quarto-title-author">
 <div class="quarto-title-author-name">
-WaferGuardML 
+Hernan · Milos · Oliver · Rolando 
 </div>
 </div>
 </div>
 
-  <p class="date">2026-04-24</p>
+  <p class="date">2026-04-29</p>
 </section>
 <section id="agenda" class="slide level2">
 <h2>Agenda</h2>
@@ -178,33 +178,42 @@ WaferGuardML
 </section>
 <section id="from-silicon-to-chips" class="slide level2">
 <h2>From Silicon to Chips</h2>
+<div class="columns">
+<div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="images/wafer.jpg" class="quarto-figure quarto-figure-center" style="width:100.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:70%;">
 <p>Semiconductor chips power everything from phones to cars to medical devices. They start as a thin circular slice of silicon called a <strong>wafer</strong>.</p>
-<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 10px 0; font-size: 0.6em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Wafer</strong><br><br>A thin, round slice<br>of pure silicon<br>(~12 inches wide)
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 150px; vertical-align: middle;">
+<strong>Wafer</strong><br><br>Thin, round slice<br>of pure silicon<br>(~12 inches wide)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Dies</strong><br><br>Hundreds of tiny chips<br>built onto one wafer<br>each becomes a product
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 150px; vertical-align: middle;">
+<strong>Dies</strong><br><br>Hundreds of tiny<br>chips built onto<br>one wafer
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Testing</strong><br><br>Each die is electrically<br>tested before being<br>cut and packaged
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 150px; vertical-align: middle;">
+<strong>Testing</strong><br><br>Each die tested<br>electrically before<br>being packaged
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Chips</strong><br><br>Passing dies become<br>finished chips used in<br>phones, cars, etc.
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 150px; vertical-align: middle;">
+<strong>Chips</strong><br><br>Passing dies become<br>chips in phones,<br>cars, etc.
 </td>
 </tr>
 </tbody></table>
-<p>The percentage of dies that pass testing is called <strong>yield</strong>. Higher yield = lower cost. Defects reduce yield.</p>
+<p>The percentage of dies that pass testing is called <strong>yield</strong>. Higher yield = lower cost. Anomalies reduce yield.</p>
+</div></div>
 </section>
 <section id="how-wafer-maps-are-generated" class="slide level2">
 <h2>How Wafer Maps Are Generated</h2>
@@ -217,7 +226,7 @@ WaferGuardML
 <li><strong>1</strong> = passed electrical test ✓</li>
 <li><strong>2</strong> = failed electrical test ✗</li>
 </ul>
-<p>When many dies fail in a recognizable shape, that’s a <strong>defect pattern</strong> — and it usually points to a specific problem in the manufacturing process.</p>
+<p>When many dies fail in a recognizable shape, that’s an <strong>anomaly pattern</strong> — and it usually points to a specific problem in the manufacturing process.</p>
 </div><div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -226,8 +235,8 @@ WaferGuardML
 </div>
 </div></div>
 </section>
-<section id="defect-patterns-tell-a-story" class="slide level2">
-<h2>Defect Patterns Tell a Story</h2>
+<section id="anomaly-patterns-tell-a-story" class="slide level2">
+<h2>Anomaly Patterns Tell a Story</h2>
 <p>Failed dies don’t appear randomly. They form patterns that reveal what went wrong during manufacturing.</p>
 <div class="columns">
 <div class="column" style="width:40%;">
@@ -238,7 +247,7 @@ WaferGuardML
 <li><strong>Scratch</strong> → handling damage</li>
 <li><strong>Edge Ring</strong> → etching problem</li>
 </ul>
-<p>There are <strong>8 base defect types</strong>, and they can appear in <strong>combinations</strong> — giving us <strong>38 total patterns</strong>.</p>
+<p>There are <strong>8 base anomaly types</strong>, and they can appear in <strong>combinations</strong> — giving us <strong>38 total patterns</strong>.</p>
 </div><div class="column" style="width:60%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -247,20 +256,20 @@ WaferGuardML
 </div>
 </div></div>
 </section>
-<section id="single-defect-patterns" class="slide level2">
-<h2>Single Defect Patterns</h2>
+<section id="single-anomaly-patterns" class="slide level2">
+<h2>Single Anomaly Patterns</h2>
 
 <img data-src="images/single-defect-types.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
-<section id="two-defect-combinations" class="slide level2">
-<h2>Two-Defect Combinations</h2>
+<section id="two-anomaly-combinations" class="slide level2">
+<h2>Two-Anomaly Combinations</h2>
 
 <img data-src="images/two-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
-<section id="three-defect-combinations" class="slide level2">
-<h2>Three-Defect Combinations</h2>
+<section id="three-anomaly-combinations" class="slide level2">
+<h2>Three-Anomaly Combinations</h2>
 
 <img data-src="images/three-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
-<section id="four-defect-combinations" class="slide level2">
-<h2>Four-Defect Combinations</h2>
+<section id="four-anomaly-combinations" class="slide level2">
+<h2>Four-Anomaly Combinations</h2>
 
 <img data-src="images/four-defects.png" class="quarto-figure quarto-figure-center r-stretch" style="width:90.0%"></section>
 <section id="our-dataset" class="slide level2">
@@ -270,15 +279,15 @@ WaferGuardML
 <p>We worked with a dataset of <strong>38,015 wafer maps</strong> from real semiconductor manufacturing.</p>
 <ul>
 <li>Each image: <strong>52 × 52 pixels</strong></li>
-<li><strong>38 unique defect patterns</strong> (8 base + 29 combinations)</li>
+<li><strong>38 unique anomaly patterns</strong> (8 base + 29 combinations)</li>
 <li>Some patterns are rare (as few as ~200 samples)</li>
 <li>Some are common (~1,000+ samples)</li>
 </ul>
-<p>This imbalance reflects real manufacturing — some defects genuinely occur more often than others.</p>
+<p>This imbalance reflects real manufacturing — some anomalies genuinely occur more often than others.</p>
 </div><div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
-<p><img data-src="images/pattern-distribution.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
+<p><img data-src="images/anomaly_dst.png" class="quarto-figure quarto-figure-center" style="width:95.0%"></p>
 </figure>
 </div>
 </div></div>
@@ -291,9 +300,9 @@ WaferGuardML
 <ul>
 <li><strong>Inputs</strong>: Raw data (e.g., pixel values of a wafer image)</li>
 <li><strong>Hidden layers</strong>: Each layer learns to detect increasingly complex patterns</li>
-<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch defect”)</li>
+<li><strong>Output</strong>: A prediction (e.g., “this wafer has a scratch anomaly”)</li>
 </ul>
-<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type.</p>
+<p>The network <strong>learns by example</strong> — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each anomaly type.</p>
 </div><div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
 <figure>
@@ -302,8 +311,8 @@ WaferGuardML
 </div>
 </div></div>
 </section>
-<section id="phase-1-detecting-the-8-base-defect-types" class="slide level2">
-<h2>Phase 1: Detecting the 8 Base Defect Types</h2>
+<section id="phase-1-detecting-the-8-base-anomaly-types" class="slide level2">
+<h2>Phase 1: Detecting the 8 Base Anomaly Types</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
 <div class="quarto-figure quarto-figure-center">
@@ -321,9 +330,9 @@ WaferGuardML
 </ul>
 </div></div>
 </section>
-<section id="phase-2-from-8-base-types-to-38-defect-patterns" class="slide level2">
-<h2>Phase 2: From 8 Base Types to 38 Defect Patterns</h2>
-<p>We take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all <strong>38 defect patterns.</strong></p>
+<section id="phase-2-from-8-base-types-to-38-anomaly-patterns" class="slide level2">
+<h2>Phase 2: From 8 Base Types to 38 Anomaly Patterns</h2>
+<p>We take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all <strong>38 anomaly patterns.</strong></p>
 <div class="columns">
 <div class="column" style="width:30%;">
 <div class="quarto-figure quarto-figure-center">
@@ -334,14 +343,14 @@ WaferGuardML
 </div><div class="column" style="width:70%;">
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Transfer learning from Phase 1 Model</strong><br><br>Detects 8 base defect patterns<br>(Center, Donut, Scratch, etc.)
+<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Transfer learning from Phase 1 Model</strong><br><br>Detects 8 base anomaly patterns<br>(Center, Donut, Scratch, etc.)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 2 Model</strong><br><br>Classify all 38 defect patterns<br>(base + combinations)
+<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br><br>Classify all 38 anomaly patterns<br>(base + combinations)
 </td>
 </tr>
 </tbody></table>
@@ -353,15 +362,15 @@ WaferGuardML
 <table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
 <tbody><tr>
 <td style="vertical-align: top; width: 30%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
-<p><strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br><br> <span>Center → 90% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br> <span>Loc → 95% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br> <span>Scratch → 88% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br><br> <em>Above 50% = Yes, Below = No</em></p>
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br><br> <span>Center → 90% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br> <span>Loc → 95% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br> <span>Scratch → 88% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br><br> <em>Above 50% = Yes, Below = No</em></p>
 </div>
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
 →
 </td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: center;">
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: center;">
 <p><strong style="font-size: 1.1em;">Transfer<br>Learning</strong><br><br> Freeze Phase 1<br>knowledge<br><br> Pass features<br>to Phase 2</p>
 </div>
 </td>
@@ -369,39 +378,56 @@ WaferGuardML
 →
 </td>
 <td style="vertical-align: top; width: 22%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
-<p><strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br><br> <span style="color: #888;">Center — 2%</span><br> <span style="color: #888;">Loc+Scratch — 1%</span><br> <span style="color: #4CAF50; font-weight: bold;">Center+Loc+Scratch — 97%</span><br> <span style="color: #888;">Center+Scratch — 0.5%</span><br> <span style="color: #888;">… 34 others &lt;1%</span><br><br> <em>Highest probability wins</em></p>
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br><br> <span style="color: #888;">Center — 2%</span><br> <span style="color: #888;">Loc+Scratch — 1%</span><br> <span style="color: #86BC25; font-weight: bold;">Center+Loc+Scratch — 97%</span><br> <span style="color: #888;">Center+Scratch — 0.5%</span><br> <span style="color: #888;">… 34 others &lt;1%</span><br><br> <em>Highest probability wins</em></p>
 </div>
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
 →
 </td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #4CAF50; border-radius: 8px; padding: 15px; text-align: center;">
-<p><strong style="font-size: 1.1em;">Accuracy Check</strong><br><br> Predicted:<br><strong>Center+Loc+Scratch</strong><br><br> Actual:<br><strong>Center+Loc+Scratch</strong><br><br> <span style="color: #4CAF50; font-size: 1.3em;">✓ Correct</span></p>
+<div style="background: #86BC25; border-radius: 8px; padding: 15px; text-align: center; color: #1A1A2E;">
+<p><strong style="font-size: 1.1em;">Accuracy Check</strong><br><br> Predicted:<br><strong>Center+Loc+Scratch</strong><br><br> Actual:<br><strong>Center+Loc+Scratch</strong><br><br> <span style="font-size: 1.3em;">✓ Correct</span></p>
 </div>
 </td>
 </tr>
 </tbody></table>
 <ul>
-<li><strong>Phase 1:</strong> Each defect scored independently — above 50% means “present.” Accuracy measured per defect type (F1 score)</li>
+<li><strong>Phase 1:</strong> Each anomaly scored independently — above 50% means “present.” Accuracy measured per anomaly type (F1 score)</li>
 <li><strong>Phase 2:</strong> Picks the single highest-probability pattern out of 38. Correct if it matches the true label</li>
 <li>We repeat this for every wafer in the test set — <strong>97%+ are predicted correctly</strong></li>
 </ul>
 </section>
 <section id="the-problem" class="slide level2">
 <h2>The Problem</h2>
-<p>Every day, semiconductor manufacturers produce thousands of wafers. Defects happen. The real challenge isn’t finding them — it’s knowing <strong>what to do about them</strong>.</p>
-<table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
+<p>Every day, semiconductor manufacturers produce thousands of wafers. Anomalies happen. The real challenge isn’t finding them — it’s knowing <strong>what to do about them</strong>.</p>
+<table style="margin: 1em auto; border-collapse: separate; border-spacing: 12px 0; font-size: 0.6em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
-<strong>Today</strong><br><br> Engineers analyze defects<br>pattern by pattern<br><br> Weeks to connect defects<br>to root causes<br><br> No clear picture of<br>financial impact
+<td style="background: #2A2A40; color: white; padding: 18px 15px; border-radius: 8px; text-align: center; width: 320px; vertical-align: middle;">
+<strong>Today</strong><br><br> Pattern-by-pattern analysis · Weeks to find root causes · No financial visibility
 </td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4CAF50; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
-<strong>With WaferGuardML</strong><br><br> Automatic defect detection<br>with 97%+ accuracy<br><br> Instant link to the<br>manufacturing process causing it<br><br> Clear cost of inaction<br>and recommended fixes
+<td style="background: #86BC25; color: #1A1A2E; padding: 18px 15px; border-radius: 8px; text-align: center; width: 320px; vertical-align: middle;">
+<strong>With WaferGuardML</strong><br><br> 97%+ accuracy · Instant root cause · Clear cost of inaction
+</td>
+</tr>
+</tbody></table>
+<p><strong>Key Stakeholders</strong></p>
+<table style="margin: 0.5em auto; border-collapse: separate; border-spacing: 12px 0; font-size: 0.6em;">
+<tbody><tr>
+<td style="background: #2A2A40; color: white; padding: 15px 12px; border-radius: 8px; text-align: center; width: 170px; vertical-align: middle;">
+<strong>Plant Operations</strong><br><br>Reduce downtime<br>Improve efficiency
+</td>
+<td style="background: #2A2A40; color: white; padding: 15px 12px; border-radius: 8px; text-align: center; width: 170px; vertical-align: middle;">
+<strong>Process Engineering</strong><br><br>Root cause<br>identification
+</td>
+<td style="background: #2A2A40; color: white; padding: 15px 12px; border-radius: 8px; text-align: center; width: 170px; vertical-align: middle;">
+<strong>Quality Assurance</strong><br><br>Anomaly trends<br>Yield tracking
+</td>
+<td style="background: #2A2A40; color: white; padding: 15px 12px; border-radius: 8px; text-align: center; width: 170px; vertical-align: middle;">
+<strong>Finance</strong><br><br>Cost-benefit analysis<br>Repair decisions
 </td>
 </tr>
 </tbody></table>
@@ -410,25 +436,25 @@ WaferGuardML
 <h2>What is WaferGuardML?</h2>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Upload</strong><br><br>Wafer inspection<br>data goes into<br>the system
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Detect</strong><br><br>AI identifies<br>defect patterns<br>with 97%+ accuracy
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Detect</strong><br><br>AI identifies<br>anomaly patterns<br>with 97%+ accuracy
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Diagnose</strong><br><br>Traces each defect<br>to the specific<br>process step
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Diagnose</strong><br><br>Traces each anomaly<br>to the specific<br>process step
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Recommend</strong><br><br>Tells you what to fix,<br>what it costs,<br>and what you save
 </td>
 </tr>
@@ -437,38 +463,38 @@ WaferGuardML
 </section>
 <section id="the-key-insight-fix-the-process-not-the-pattern" class="slide level2">
 <h2>The Key Insight: Fix the Process, Not the Pattern</h2>
-<p>Most defect analysis tools report results <strong>per defect pattern</strong>. That’s useful for engineers, but it doesn’t tell the business what to actually do.</p>
+<p>Most anomaly analysis tools report results <strong>per anomaly pattern</strong>. That’s useful for engineers, but it doesn’t tell the business what to actually do.</p>
 <p><strong>Our approach is different.</strong> We group results by <strong>action</strong> — the manufacturing process step you need to fix.</p>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
 <strong>Old Approach</strong><br><br> “You have 4,725 wafers<br>with Donut+Edge_Loc+<br>Loc+Scratch”<br><br> <em style="color: #AAAAAA;">What do I do with that?</em>
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">
 →
 </td>
-<td style="background: #4CAF50; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
-<strong>Our Approach</strong><br><br> “Replace your CMP pad.<br>Cost: $130K.<br>This fixes Donut defects<br>across 12 patterns.<br>You save $2.1M/month.”
+<td style="background: #86BC25; color: #1A1A2E; padding: 25px 20px; border-radius: 8px; text-align: center; width: 280px; vertical-align: middle;">
+<strong>Our Approach</strong><br><br> “Replace your CMP pad.<br>Cost: $130K.<br>This fixes Donut anomalies<br>across 12 patterns.<br>You save $2.1M/month.”
 </td>
 </tr>
 </tbody></table>
 </section>
 <section id="the-cascade-effect" class="slide level2">
 <h2>The Cascade Effect</h2>
-<p>When you fix one process step, you don’t just fix one defect pattern. You fix <strong>every pattern that involves that defect type</strong>.</p>
+<p>When you fix one process step, you don’t just fix one anomaly pattern. You fix <strong>every pattern that involves that anomaly type</strong>.</p>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 90%;">
 <tbody><tr>
 <td style="vertical-align: top; width: 45%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 20px; text-align: left;">
-<p><strong style="font-size: 1.1em;">Fix CMP Process ($130K)</strong><br><br> <span style="color: #4CAF50;">✓</span> Donut (single)<br> <span style="color: #4CAF50;">✓</span> Donut+Loc<br> <span style="color: #4CAF50;">✓</span> Donut+Scratch<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Loc<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Ring<br> <span style="color: #4CAF50;">✓</span> Donut+Loc+Scratch<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Loc+Loc<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Loc+Scratch<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Ring+Loc<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Ring+Scratch<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Loc+Loc+Scratch<br> <span style="color: #4CAF50;">✓</span> Donut+Edge_Ring+Loc+Scratch</p>
+<div style="background: #2A2A40; border-radius: 8px; padding: 20px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Fix CMP Process ($130K)</strong><br><br> <span style="color: #86BC25;">✓</span> Donut (single)<br> <span style="color: #86BC25;">✓</span> Donut+Loc<br> <span style="color: #86BC25;">✓</span> Donut+Scratch<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Loc<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Ring<br> <span style="color: #86BC25;">✓</span> Donut+Loc+Scratch<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Loc+Loc<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Loc+Scratch<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Ring+Loc<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Ring+Scratch<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Loc+Loc+Scratch<br> <span style="color: #86BC25;">✓</span> Donut+Edge_Ring+Loc+Scratch</p>
 </div>
 </td>
 <td style="vertical-align: middle; text-align: center; width: 10%;">
 <span style="color: #AAAAAA; font-size: 2em;">=</span>
 </td>
 <td style="vertical-align: middle; width: 45%; padding: 10px;">
-<div style="background: #4CAF50; border-radius: 8px; padding: 30px; text-align: center;">
-<p><strong style="font-size: 1.3em;">12 patterns eliminated</strong><br><br> <span style="font-size: 1.1em;">One repair, one cost</span><br><br> <strong style="font-size: 1.5em;">$130K investment</strong><br> <span style="color: #AAAAAA;">vs.&nbsp;millions in avoided losses</span></p>
+<div style="background: #86BC25; border-radius: 8px; padding: 30px; text-align: center; color: #1A1A2E;">
+<p><strong style="font-size: 1.3em;">12 patterns eliminated</strong><br><br> <span style="font-size: 1.1em;">One repair, one cost</span><br><br> <strong style="font-size: 1.5em;">$130K investment</strong><br> <span style="color: #333;">vs.&nbsp;millions in avoided losses</span></p>
 </div>
 </td>
 </tr>
@@ -479,25 +505,25 @@ WaferGuardML
 <p><strong>Walking through the full WaferGuardML experience</strong></p>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Upload</strong><br><br>Wafer batch data
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Detect</strong><br><br>AI classifies<br>each wafer
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Analyze</strong><br><br>Financial impact<br>by process action
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Act</strong><br><br>Prioritized repair<br>recommendations
 </td>
 </tr>
@@ -532,37 +558,37 @@ Appendix
 <h2>Wafer Map Generation — Detail</h2>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Fabrication</strong><br><br>Wafer goes through<br>hundreds of process<br>steps (etching, deposition…)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Probe Testing</strong><br><br>Probe card contacts<br>each die and measures<br>electrical characteristics
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Classification</strong><br><br>Each die marked as<br>pass (1), fail (2),<br>or blank (0)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Wafer Map</strong><br><br>52×52 grid preserving<br>physical layout of<br>dies on the wafer
 </td>
 </tr>
 </tbody></table>
-<p>Each pixel in a wafer map is not a color or brightness value — it represents the <strong>electrical test outcome of a single die</strong>. The spatial arrangement reveals defect patterns that point to specific manufacturing problems.</p>
+<p>Each pixel in a wafer map is not a color or brightness value — it represents the <strong>electrical test outcome of a single die</strong>. The spatial arrangement reveals anomaly patterns that point to specific manufacturing problems.</p>
 </section>
 <section id="dataset-details" class="slide level2 smaller" data-visibility="uncounted">
 <h2>Dataset Details</h2>
 <ul>
 <li><strong>38,015 wafer map images</strong>, each 52×52 pixels</li>
 <li><strong>3 pixel states:</strong> 0 (blank), 1 (pass), 2 (fail)</li>
-<li><strong>8 base defect types</strong> that combine into <strong>38 unique patterns</strong></li>
+<li><strong>8 base anomaly types</strong> that combine into <strong>38 unique patterns</strong></li>
 <li>Labels use one-hot encoding (8-dimensional vector)</li>
 <li>Data split: 70% train / 15% validation / 15% test (stratified to preserve all 38 patterns)</li>
 <li>Class imbalance handled with focal loss and per-label class weights</li>
@@ -636,9 +662,9 @@ Appendix
 <p><strong>Phase 1 (8 base types)</strong></p>
 <ul>
 <li>4 layers of filters that learn to detect shapes (edges, rings, clusters)</li>
-<li>Each defect type scored independently (yes/no)</li>
-<li>Above 50% confidence = defect is present</li>
-<li>A wafer can have multiple defects at once</li>
+<li>Each anomaly type scored independently (yes/no)</li>
+<li>Above 50% confidence = anomaly is present</li>
+<li>A wafer can have multiple anomalies at once</li>
 </ul>
 </div><div class="column" style="width:50%;">
 <p><strong>Phase 2 (38 patterns)</strong></p>
@@ -709,10 +735,10 @@ Phase 2 — MobileNetV2<br>(38-class)
 </tr>
 </tbody>
 </table>
-<p>F1 score measures how well the model catches real defects without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases.</p>
+<p>F1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases.</p>
 </section>
-<section id="the-8-base-defect-types" class="slide level2 smaller" data-visibility="uncounted">
-<h2>The 8 Base Defect Types</h2>
+<section id="the-8-base-anomaly-types" class="slide level2 smaller" data-visibility="uncounted">
+<h2>The 8 Base Anomaly Types</h2>
 <table class="caption-top">
 <colgroup>
 <col style="width: 21%">
@@ -721,7 +747,7 @@ Phase 2 — MobileNetV2<br>(38-class)
 </colgroup>
 <thead>
 <tr class="header">
-<th>Defect</th>
+<th>Anomaly</th>
 <th>Process Step</th>
 <th>What Causes It</th>
 </tr>
@@ -776,7 +802,7 @@ Phase 2 — MobileNetV2<br>(38-class)
 <thead>
 <tr>
 <th>
-Defect
+Anomaly
 </th>
 <th>
 Repair Cost
@@ -958,7 +984,7 @@ Medium
 </tr>
 </tbody>
 </table>
-<p>For combination defects, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds.</p>
+<p>For combination anomalies, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds.</p>
 </section>
 <section id="how-accuracy-is-measured-1" class="slide level2" data-visibility="uncounted">
 <h2>How Accuracy is Measured</h2>
@@ -966,15 +992,15 @@ Medium
 <table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
 <tbody><tr>
 <td style="vertical-align: top; width: 30%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
-<p><strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br><br> <span>Center → 90% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br> <span>Loc → 95% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br> <span>Scratch → 88% → <span style="color: #4CAF50;">✓ Yes</span></span><br> <span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br><br> <em>Above 50% = Yes, Below = No</em></p>
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 1: 8 Yes/No Questions</strong><br><br> <span>Center → 90% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Donut → 5% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Loc → 3% → <span style="color: #F44336;">✗ No</span></span><br> <span>Edge_Ring → 2% → <span style="color: #F44336;">✗ No</span></span><br> <span>Loc → 95% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Near_Full → 1% → <span style="color: #F44336;">✗ No</span></span><br> <span>Scratch → 88% → <span style="color: #86BC25;">✓ Yes</span></span><br> <span>Random → 4% → <span style="color: #F44336;">✗ No</span></span><br><br> <em>Above 50% = Yes, Below = No</em></p>
 </div>
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
 →
 </td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: center;">
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: center;">
 <p><strong style="font-size: 1.1em;">Transfer<br>Learning</strong><br><br> Freeze Phase 1<br>knowledge<br><br> Pass features<br>to Phase 2</p>
 </div>
 </td>
@@ -982,16 +1008,16 @@ Medium
 →
 </td>
 <td style="vertical-align: top; width: 22%; padding: 10px;">
-<div style="background: #4A4A4A; border-radius: 8px; padding: 15px; text-align: left;">
-<p><strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br><br> <span style="color: #888;">Center — 2%</span><br> <span style="color: #888;">Loc+Scratch — 1%</span><br> <span style="color: #4CAF50; font-weight: bold;">Center+Loc+Scratch — 97%</span><br> <span style="color: #888;">Center+Scratch — 0.5%</span><br> <span style="color: #888;">… 34 others &lt;1%</span><br><br> <em>Highest probability wins</em></p>
+<div style="background: #2A2A40; border-radius: 8px; padding: 15px; text-align: left;">
+<p><strong style="font-size: 1.1em;">Phase 2: Pick Best Match</strong><br><br> <span style="color: #888;">Center — 2%</span><br> <span style="color: #888;">Loc+Scratch — 1%</span><br> <span style="color: #86BC25; font-weight: bold;">Center+Loc+Scratch — 97%</span><br> <span style="color: #888;">Center+Scratch — 0.5%</span><br> <span style="color: #888;">… 34 others &lt;1%</span><br><br> <em>Highest probability wins</em></p>
 </div>
 </td>
 <td style="text-align: center; vertical-align: middle; color: #AAAAAA; font-size: 1.8em; width: 5%;">
 →
 </td>
 <td style="vertical-align: top; width: 18%; padding: 10px;">
-<div style="background: #4CAF50; border-radius: 8px; padding: 15px; text-align: center;">
-<p><strong style="font-size: 1.1em;">Accuracy Check</strong><br><br> Predicted:<br><strong>Center+Loc+Scratch</strong><br><br> Actual:<br><strong>Center+Loc+Scratch</strong><br><br> <span style="color: #4CAF50; font-size: 1.3em;">✓ Correct</span></p>
+<div style="background: #86BC25; border-radius: 8px; padding: 15px; text-align: center; color: #1A1A2E;">
+<p><strong style="font-size: 1.1em;">Accuracy Check</strong><br><br> Predicted:<br><strong>Center+Loc+Scratch</strong><br><br> Actual:<br><strong>Center+Loc+Scratch</strong><br><br> <span style="font-size: 1.3em;">✓ Correct</span></p>
 </div>
 </td>
 </tr>
@@ -1001,34 +1027,34 @@ Medium
 <h2>Use Case: How a Manufacturer Benefits</h2>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Step 1</strong><br><br>Upload batch of<br>wafer inspection data<br>to the dashboard
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
-<strong>Step 2</strong><br><br>System detects<br>Donut defects trending<br>upward across batches
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<strong>Step 2</strong><br><br>System detects<br>Donut anomalies trending<br>upward across batches
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Step 3</strong><br><br>Dashboard shows:<br>CMP process is the<br>root cause
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
+<td style="background: #86BC25; color: #1A1A2E; padding: 20px 15px; border-radius: 8px; text-align: center; width: 200px; vertical-align: middle;">
 <strong>Step 4</strong><br><br>Recommendation:<br>Replace CMP pad<br>$130K to save $2.1M/mo
 </td>
 </tr>
 </tbody></table>
-<p>The manufacturer doesn’t need to understand defect patterns. They get a clear answer: <strong>what to fix, what it costs, and what they save</strong>.</p>
+<p>The manufacturer doesn’t need to understand anomaly patterns. They get a clear answer: <strong>what to fix, what it costs, and what they save</strong>.</p>
 </section>
 <section id="financial-impact-by-process-action" class="slide level2" data-visibility="uncounted">
 <h2>Financial Impact by Process Action</h2>
-<p>Instead of costs per defect pattern, we show costs per <strong>action the manufacturer can take</strong>:</p>
+<p>Instead of costs per anomaly pattern, we show costs per <strong>action the manufacturer can take</strong>:</p>
 <table style="font-size: 0.6em; margin: 1em auto;">
 <thead>
 <tr>
@@ -1061,7 +1087,7 @@ Replace CMP pad + refresh slurry
 CMP / Lithography
 </td>
 <td>
-<span class="math inline">\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style="color: #4CAF50;"&gt;\)</span>X
+<span class="math inline">\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style="color: #86BC25;"&gt;\)</span>X
 </td>
 <td>
 &lt; 1 day
@@ -1075,7 +1101,7 @@ Chamber clean + RF recalibration
 Deposition / Plasma
 </td>
 <td>
-<span class="math inline">\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style="color: #4CAF50;"&gt;\)</span>X
+<span class="math inline">\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style="color: #86BC25;"&gt;\)</span>X
 </td>
 <td>
 X days
@@ -1089,7 +1115,7 @@ Replace focus ring + edge hardware
 Plasma Etch
 </td>
 <td>
-<span class="math inline">\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style="color: #4CAF50;"&gt;\)</span>X
+<span class="math inline">\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style="color: #86BC25;"&gt;\)</span>X
 </td>
 <td>
 X days
@@ -1103,7 +1129,7 @@ Swap/clean robot end effectors
 Wafer Handling
 </td>
 <td>
-<span class="math inline">\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style="color: #4CAF50;"&gt;\)</span>X
+<span class="math inline">\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style="color: #86BC25;"&gt;\)</span>X
 </td>
 <td>
 &lt; 1 day
@@ -1117,7 +1143,7 @@ Furnace zone recalibration
 Diffusion / Thermal
 </td>
 <td>
-<span class="math inline">\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style="color: #4CAF50;"&gt;\)</span>X
+<span class="math inline">\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style="color: #86BC25;"&gt;\)</span>X
 </td>
 <td>
 X days
@@ -1125,22 +1151,22 @@ X days
 </tr>
 </tbody>
 </table>
-<p><em>Daily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple defect combinations.</em></p>
+<p><em>Daily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple anomaly combinations.</em></p>
 </section>
 <section id="key-takeaways" class="slide level2" data-visibility="uncounted">
 <h2>Key Takeaways</h2>
 <table style="margin: 2em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>97%+ Accuracy</strong><br><br>Our AI identifies<br>38 defect patterns<br>with high confidence
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>97%+ Accuracy</strong><br><br>Our AI identifies<br>38 anomaly patterns<br>with high confidence
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>Action-Based</strong><br><br>Financial impact grouped<br>by what you can fix,<br>not by defect pattern
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Action-Based</strong><br><br>Financial impact grouped<br>by what you can fix,<br>not by anomaly pattern
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
-<strong>Cascade Effect</strong><br><br>One process fix eliminates<br>defects across multiple<br>patterns simultaneously
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<strong>Cascade Effect</strong><br><br>One process fix eliminates<br>anomalies across multiple<br>patterns simultaneously
 </td>
-<td style="background: #4A4A4A; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
+<td style="background: #2A2A40; color: white; padding: 25px 20px; border-radius: 8px; text-align: center; width: 250px; vertical-align: middle;">
 <strong>Clear ROI</strong><br><br>Every recommendation<br>comes with cost, savings,<br>and break-even time
 </td>
 </tr>
@@ -1149,22 +1175,22 @@ X days
 </section>
 <section id="how-our-ai-model-works" class="slide level2" data-visibility="uncounted">
 <h2>How Our AI Model Works</h2>
-<p>We built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.</p>
+<p>We built a custom CNN model that looks at wafer maps and identifies the anomaly pattern automatically.</p>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">
 <tbody><tr>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
-<strong>Phase 1</strong><br><br>Model learns to detect<br>the 8 base defect types<br>(Donut, Center, Scratch…)
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Phase 1</strong><br><br>Model learns to detect<br>the 8 base anomaly types<br>(Donut, Center, Scratch…)
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4A4A4A; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
-<strong>Phase 2</strong><br><br>Uses that knowledge<br>to classify all 38<br>defect patterns
+<td style="background: #2A2A40; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<strong>Phase 2</strong><br><br>Uses that knowledge<br>to classify all 38<br>anomaly patterns
 </td>
 <td style="color: #AAAAAA; vertical-align: middle; font-size: 1.5em;">
 →
 </td>
-<td style="background: #4CAF50; color: white; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
+<td style="background: #86BC25; color: #1A1A2E; padding: 20px 15px; border-radius: 8px; text-align: center; width: 220px; vertical-align: middle;">
 <strong>Result</strong><br><br>97%+ accuracy<br>Outperformed Google’s<br>pre-trained model
 </td>
 </tr>
@@ -1177,7 +1203,7 @@ X days
     </div>
   <div class="quarto-auto-generated-content" style="display: none;">
 <div class="footer footer-default">
-<p>WaferGuardML</p>
+<p>Deloitte<span style="color: #86BC25; font-size: 1.2em;">.</span></p>
 </div>
 </div></div>
 

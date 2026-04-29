@@ -522,112 +522,112 @@
     "href": "slides/Pitch-Deck/pitch_deck.html#from-silicon-to-chips",
     "title": "WaferGuardML",
     "section": "From Silicon to Chips",
-    "text": "From Silicon to Chips\nSemiconductor chips power everything from phones to cars to medical devices. They start as a thin circular slice of silicon called a wafer.\n\n\n\nWaferA thin, round sliceof pure silicon(~12 inches wide)\n\n\n→\n\n\nDiesHundreds of tiny chipsbuilt onto one wafereach becomes a product\n\n\n→\n\n\nTestingEach die is electricallytested before beingcut and packaged\n\n\n→\n\n\nChipsPassing dies becomefinished chips used inphones, cars, etc.\n\n\n\nThe percentage of dies that pass testing is called yield. Higher yield = lower cost. Defects reduce yield."
+    "text": "From Silicon to Chips\n\n\n\n\n\n\n\n\nSemiconductor chips power everything from phones to cars to medical devices. They start as a thin circular slice of silicon called a wafer.\n\n\n\nWaferThin, round sliceof pure silicon(~12 inches wide)\n\n\n→\n\n\nDiesHundreds of tinychips built ontoone wafer\n\n\n→\n\n\nTestingEach die testedelectrically beforebeing packaged\n\n\n→\n\n\nChipsPassing dies becomechips in phones,cars, etc.\n\n\n\nThe percentage of dies that pass testing is called yield. Higher yield = lower cost. Anomalies reduce yield."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-wafer-maps-are-generated",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-wafer-maps-are-generated",
     "title": "WaferGuardML",
     "section": "How Wafer Maps Are Generated",
-    "text": "How Wafer Maps Are Generated\nAfter testing, the results are turned into a wafer map — a picture of the wafer showing which dies passed and which failed.\n\n\nEach pixel on the map represents one die:\n\n0 = blank (no die at this location)\n1 = passed electrical test ✓\n2 = failed electrical test ✗\n\nWhen many dies fail in a recognizable shape, that’s a defect pattern — and it usually points to a specific problem in the manufacturing process."
+    "text": "How Wafer Maps Are Generated\nAfter testing, the results are turned into a wafer map — a picture of the wafer showing which dies passed and which failed.\n\n\nEach pixel on the map represents one die:\n\n0 = blank (no die at this location)\n1 = passed electrical test ✓\n2 = failed electrical test ✗\n\nWhen many dies fail in a recognizable shape, that’s an anomaly pattern — and it usually points to a specific problem in the manufacturing process."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#defect-patterns-tell-a-story",
-    "href": "slides/Pitch-Deck/pitch_deck.html#defect-patterns-tell-a-story",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#anomaly-patterns-tell-a-story",
+    "href": "slides/Pitch-Deck/pitch_deck.html#anomaly-patterns-tell-a-story",
     "title": "WaferGuardML",
-    "section": "Defect Patterns Tell a Story",
-    "text": "Defect Patterns Tell a Story\nFailed dies don’t appear randomly. They form patterns that reveal what went wrong during manufacturing.\n\n\nEach pattern points to a specific manufacturing process:\n\nDonut → polishing problem (CMP)\nCenter → deposition chamber issue\nScratch → handling damage\nEdge Ring → etching problem\n\nThere are 8 base defect types, and they can appear in combinations — giving us 38 total patterns."
+    "section": "Anomaly Patterns Tell a Story",
+    "text": "Anomaly Patterns Tell a Story\nFailed dies don’t appear randomly. They form patterns that reveal what went wrong during manufacturing.\n\n\nEach pattern points to a specific manufacturing process:\n\nDonut → polishing problem (CMP)\nCenter → deposition chamber issue\nScratch → handling damage\nEdge Ring → etching problem\n\nThere are 8 base anomaly types, and they can appear in combinations — giving us 38 total patterns."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#single-defect-patterns",
-    "href": "slides/Pitch-Deck/pitch_deck.html#single-defect-patterns",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#single-anomaly-patterns",
+    "href": "slides/Pitch-Deck/pitch_deck.html#single-anomaly-patterns",
     "title": "WaferGuardML",
-    "section": "Single Defect Patterns",
-    "text": "Single Defect Patterns"
+    "section": "Single Anomaly Patterns",
+    "text": "Single Anomaly Patterns"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#two-defect-combinations",
-    "href": "slides/Pitch-Deck/pitch_deck.html#two-defect-combinations",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#two-anomaly-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#two-anomaly-combinations",
     "title": "WaferGuardML",
-    "section": "Two-Defect Combinations",
-    "text": "Two-Defect Combinations"
+    "section": "Two-Anomaly Combinations",
+    "text": "Two-Anomaly Combinations"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#three-defect-combinations",
-    "href": "slides/Pitch-Deck/pitch_deck.html#three-defect-combinations",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#three-anomaly-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#three-anomaly-combinations",
     "title": "WaferGuardML",
-    "section": "Three-Defect Combinations",
-    "text": "Three-Defect Combinations"
+    "section": "Three-Anomaly Combinations",
+    "text": "Three-Anomaly Combinations"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#four-defect-combinations",
-    "href": "slides/Pitch-Deck/pitch_deck.html#four-defect-combinations",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#four-anomaly-combinations",
+    "href": "slides/Pitch-Deck/pitch_deck.html#four-anomaly-combinations",
     "title": "WaferGuardML",
-    "section": "Four-Defect Combinations",
-    "text": "Four-Defect Combinations"
+    "section": "Four-Anomaly Combinations",
+    "text": "Four-Anomaly Combinations"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#our-dataset",
     "href": "slides/Pitch-Deck/pitch_deck.html#our-dataset",
     "title": "WaferGuardML",
     "section": "Our Dataset",
-    "text": "Our Dataset\n\n\nWe worked with a dataset of 38,015 wafer maps from real semiconductor manufacturing.\n\nEach image: 52 × 52 pixels\n38 unique defect patterns (8 base + 29 combinations)\nSome patterns are rare (as few as ~200 samples)\nSome are common (~1,000+ samples)\n\nThis imbalance reflects real manufacturing — some defects genuinely occur more often than others."
+    "text": "Our Dataset\n\n\nWe worked with a dataset of 38,015 wafer maps from real semiconductor manufacturing.\n\nEach image: 52 × 52 pixels\n38 unique anomaly patterns (8 base + 29 combinations)\nSome patterns are rare (as few as ~200 samples)\nSome are common (~1,000+ samples)\n\nThis imbalance reflects real manufacturing — some anomalies genuinely occur more often than others."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#what-is-a-neural-network",
     "href": "slides/Pitch-Deck/pitch_deck.html#what-is-a-neural-network",
     "title": "WaferGuardML",
     "section": "What is a Neural Network?",
-    "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch defect”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each defect type."
+    "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch anomaly”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each anomaly type."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
-    "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-defect-types",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
     "title": "WaferGuardML",
-    "section": "Phase 1: Detecting the 8 Base Defect Types",
-    "text": "Phase 1: Detecting the 8 Base Defect Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
+    "section": "Phase 1: Detecting the 8 Base Anomaly Types",
+    "text": "Phase 1: Detecting the 8 Base Anomaly Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-defect-patterns",
-    "href": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-defect-patterns",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
     "title": "WaferGuardML",
-    "section": "Phase 2: From 8 Base Types to 38 Defect Patterns",
-    "text": "Phase 2: From 8 Base Types to 38 Defect Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base defect types) and build on top of it to classify all 38 defect patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base defect patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 defect patterns(base + combinations)"
+    "section": "Phase 2: From 8 Base Types to 38 Anomaly Patterns",
+    "text": "Phase 2: From 8 Base Types to 38 Anomaly Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all 38 anomaly patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base anomaly patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 anomaly patterns(base + combinations)"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
     "title": "WaferGuardML",
     "section": "How Accuracy is Measured",
-    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each defect scored independently — above 50% means “present.” Accuracy measured per defect type (F1 score)\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nWe repeat this for every wafer in the test set — 97%+ are predicted correctly"
+    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each anomaly scored independently — above 50% means “present.” Accuracy measured per anomaly type (F1 score)\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nWe repeat this for every wafer in the test set — 97%+ are predicted correctly"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-problem",
     "href": "slides/Pitch-Deck/pitch_deck.html#the-problem",
     "title": "WaferGuardML",
     "section": "The Problem",
-    "text": "The Problem\nEvery day, semiconductor manufacturers produce thousands of wafers. Defects happen. The real challenge isn’t finding them — it’s knowing what to do about them.\n\n\n\nToday Engineers analyze defectspattern by pattern Weeks to connect defectsto root causes No clear picture offinancial impact\n\n\n→\n\n\nWith WaferGuardML Automatic defect detectionwith 97%+ accuracy Instant link to themanufacturing process causing it Clear cost of inactionand recommended fixes"
+    "text": "The Problem\nEvery day, semiconductor manufacturers produce thousands of wafers. Anomalies happen. The real challenge isn’t finding them — it’s knowing what to do about them.\n\n\n\nToday Pattern-by-pattern analysis · Weeks to find root causes · No financial visibility\n\n\n→\n\n\nWith WaferGuardML 97%+ accuracy · Instant root cause · Clear cost of inaction\n\n\n\nKey Stakeholders\n\n\n\nPlant OperationsReduce downtimeImprove efficiency\n\n\nProcess EngineeringRoot causeidentification\n\n\nQuality AssuranceAnomaly trendsYield tracking\n\n\nFinanceCost-benefit analysisRepair decisions"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#what-is-waferguardml",
     "href": "slides/Pitch-Deck/pitch_deck.html#what-is-waferguardml",
     "title": "WaferGuardML",
     "section": "What is WaferGuardML?",
-    "text": "What is WaferGuardML?\n\n\n\nUploadWafer inspectiondata goes intothe system\n\n\n→\n\n\nDetectAI identifiesdefect patternswith 97%+ accuracy\n\n\n→\n\n\nDiagnoseTraces each defectto the specificprocess step\n\n\n→\n\n\nRecommendTells you what to fix,what it costs,and what you save\n\n\n\nAn end-to-end platform that turns raw wafer data into prioritized, dollar-valued repair recommendations."
+    "text": "What is WaferGuardML?\n\n\n\nUploadWafer inspectiondata goes intothe system\n\n\n→\n\n\nDetectAI identifiesanomaly patternswith 97%+ accuracy\n\n\n→\n\n\nDiagnoseTraces each anomalyto the specificprocess step\n\n\n→\n\n\nRecommendTells you what to fix,what it costs,and what you save\n\n\n\nAn end-to-end platform that turns raw wafer data into prioritized, dollar-valued repair recommendations."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-key-insight-fix-the-process-not-the-pattern",
     "href": "slides/Pitch-Deck/pitch_deck.html#the-key-insight-fix-the-process-not-the-pattern",
     "title": "WaferGuardML",
     "section": "The Key Insight: Fix the Process, Not the Pattern",
-    "text": "The Key Insight: Fix the Process, Not the Pattern\nMost defect analysis tools report results per defect pattern. That’s useful for engineers, but it doesn’t tell the business what to actually do.\nOur approach is different. We group results by action — the manufacturing process step you need to fix.\n\n\n\nOld Approach “You have 4,725 waferswith Donut+Edge_Loc+Loc+Scratch” What do I do with that?\n\n\n→\n\n\nOur Approach “Replace your CMP pad.Cost: $130K.This fixes Donut defectsacross 12 patterns.You save $2.1M/month.”"
+    "text": "The Key Insight: Fix the Process, Not the Pattern\nMost anomaly analysis tools report results per anomaly pattern. That’s useful for engineers, but it doesn’t tell the business what to actually do.\nOur approach is different. We group results by action — the manufacturing process step you need to fix.\n\n\n\nOld Approach “You have 4,725 waferswith Donut+Edge_Loc+Loc+Scratch” What do I do with that?\n\n\n→\n\n\nOur Approach “Replace your CMP pad.Cost: $130K.This fixes Donut anomaliesacross 12 patterns.You save $2.1M/month.”"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-cascade-effect",
     "href": "slides/Pitch-Deck/pitch_deck.html#the-cascade-effect",
     "title": "WaferGuardML",
     "section": "The Cascade Effect",
-    "text": "The Cascade Effect\nWhen you fix one process step, you don’t just fix one defect pattern. You fix every pattern that involves that defect type.\n\n\n\n\nFix CMP Process ($130K) ✓ Donut (single) ✓ Donut+Loc ✓ Donut+Scratch ✓ Donut+Edge_Loc ✓ Donut+Edge_Ring ✓ Donut+Loc+Scratch ✓ Donut+Edge_Loc+Loc ✓ Donut+Edge_Loc+Scratch ✓ Donut+Edge_Ring+Loc ✓ Donut+Edge_Ring+Scratch ✓ Donut+Edge_Loc+Loc+Scratch ✓ Donut+Edge_Ring+Loc+Scratch\n\n\n\n=\n\n\n\n12 patterns eliminated One repair, one cost $130K investment vs. millions in avoided losses"
+    "text": "The Cascade Effect\nWhen you fix one process step, you don’t just fix one anomaly pattern. You fix every pattern that involves that anomaly type.\n\n\n\n\nFix CMP Process ($130K) ✓ Donut (single) ✓ Donut+Loc ✓ Donut+Scratch ✓ Donut+Edge_Loc ✓ Donut+Edge_Ring ✓ Donut+Loc+Scratch ✓ Donut+Edge_Loc+Loc ✓ Donut+Edge_Loc+Scratch ✓ Donut+Edge_Ring+Loc ✓ Donut+Edge_Ring+Scratch ✓ Donut+Edge_Loc+Loc+Scratch ✓ Donut+Edge_Ring+Loc+Scratch\n\n\n\n=\n\n\n\n12 patterns eliminated One repair, one cost $130K investment vs. millions in avoided losses"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#live-demo",
@@ -641,42 +641,42 @@
     "href": "slides/Pitch-Deck/pitch_deck.html#wafer-map-generation-detail",
     "title": "WaferGuardML",
     "section": "Wafer Map Generation — Detail",
-    "text": "Wafer Map Generation — Detail\n\n\n\nFabricationWafer goes throughhundreds of processsteps (etching, deposition…)\n\n\n→\n\n\nProbe TestingProbe card contactseach die and measureselectrical characteristics\n\n\n→\n\n\nClassificationEach die marked aspass (1), fail (2),or blank (0)\n\n\n→\n\n\nWafer Map52×52 grid preservingphysical layout ofdies on the wafer\n\n\n\nEach pixel in a wafer map is not a color or brightness value — it represents the electrical test outcome of a single die. The spatial arrangement reveals defect patterns that point to specific manufacturing problems."
+    "text": "Wafer Map Generation — Detail\n\n\n\nFabricationWafer goes throughhundreds of processsteps (etching, deposition…)\n\n\n→\n\n\nProbe TestingProbe card contactseach die and measureselectrical characteristics\n\n\n→\n\n\nClassificationEach die marked aspass (1), fail (2),or blank (0)\n\n\n→\n\n\nWafer Map52×52 grid preservingphysical layout ofdies on the wafer\n\n\n\nEach pixel in a wafer map is not a color or brightness value — it represents the electrical test outcome of a single die. The spatial arrangement reveals anomaly patterns that point to specific manufacturing problems."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#dataset-details",
     "href": "slides/Pitch-Deck/pitch_deck.html#dataset-details",
     "title": "WaferGuardML",
     "section": "Dataset Details",
-    "text": "Dataset Details\n\n38,015 wafer map images, each 52×52 pixels\n3 pixel states: 0 (blank), 1 (pass), 2 (fail)\n8 base defect types that combine into 38 unique patterns\nLabels use one-hot encoding (8-dimensional vector)\nData split: 70% train / 15% validation / 15% test (stratified to preserve all 38 patterns)\nClass imbalance handled with focal loss and per-label class weights\n\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
+    "text": "Dataset Details\n\n38,015 wafer map images, each 52×52 pixels\n3 pixel states: 0 (blank), 1 (pass), 2 (fail)\n8 base anomaly types that combine into 38 unique patterns\nLabels use one-hot encoding (8-dimensional vector)\nData split: 70% train / 15% validation / 15% test (stratified to preserve all 38 patterns)\nClass imbalance handled with focal loss and per-label class weights\n\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
     "title": "WaferGuardML",
     "section": "How Our AI Model Works — Detail",
-    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach defect type scored independently (yes/no)\nAbove 50% confidence = defect is present\nA wafer can have multiple defects at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
+    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach anomaly type scored independently (yes/no)\nAbove 50% confidence = anomaly is present\nA wafer can have multiple anomalies at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#model-performance",
     "href": "slides/Pitch-Deck/pitch_deck.html#model-performance",
     "title": "WaferGuardML",
     "section": "Model Performance",
-    "text": "Model Performance\n\n\n\n\n\n\nPhase 1 — Custom CNN(8-label)\n\n\nPhase 1 — MobileNetV2(8-label)\n\n\nPhase 2 — Custom CNN(38-class)\n\n\nPhase 2 — MobileNetV2(38-class)\n\n\n\n\n\n\nMacro F1\n\n\n0.9779\n\n\n0.8998\n\n\n0.9736\n\n\n0.9667\n\n\n\n\nWeighted F1\n\n\n0.9905\n\n\n0.8847\n\n\n0.9735\n\n\n0.9658\n\n\n\n\nF1 score measures how well the model catches real defects without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases."
+    "text": "Model Performance\n\n\n\n\n\n\nPhase 1 — Custom CNN(8-label)\n\n\nPhase 1 — MobileNetV2(8-label)\n\n\nPhase 2 — Custom CNN(38-class)\n\n\nPhase 2 — MobileNetV2(38-class)\n\n\n\n\n\n\nMacro F1\n\n\n0.9779\n\n\n0.8998\n\n\n0.9736\n\n\n0.9667\n\n\n\n\nWeighted F1\n\n\n0.9905\n\n\n0.8847\n\n\n0.9735\n\n\n0.9658\n\n\n\n\nF1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#the-8-base-defect-types",
-    "href": "slides/Pitch-Deck/pitch_deck.html#the-8-base-defect-types",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#the-8-base-anomaly-types",
+    "href": "slides/Pitch-Deck/pitch_deck.html#the-8-base-anomaly-types",
     "title": "WaferGuardML",
-    "section": "The 8 Base Defect Types",
-    "text": "The 8 Base Defect Types\n\n\n\n\n\n\n\n\nDefect\nProcess Step\nWhat Causes It\n\n\n\n\nCenter\nDeposition / Plasma\nChamber contamination, RF/temp drift\n\n\nDonut\nCMP / Lithography\nWorn polishing pad, contaminated slurry\n\n\nEdge_Loc\nDiffusion / Thermal\nFurnace temperature imbalance\n\n\nEdge_Ring\nPlasma Etch\nWorn focus ring, edge hardware issues\n\n\nLoc\nTool-specific\nRobot vibration, chamber wall contamination\n\n\nNear_Full\nMajor Excursion\nCritical process failure, requires immediate stop\n\n\nScratch\nWafer Handling / CMP\nDamaged robot end effectors, FOUP contamination\n\n\nRandom\nEnvironment\nParticle contamination, filter degradation"
+    "section": "The 8 Base Anomaly Types",
+    "text": "The 8 Base Anomaly Types\n\n\n\n\n\n\n\n\nAnomaly\nProcess Step\nWhat Causes It\n\n\n\n\nCenter\nDeposition / Plasma\nChamber contamination, RF/temp drift\n\n\nDonut\nCMP / Lithography\nWorn polishing pad, contaminated slurry\n\n\nEdge_Loc\nDiffusion / Thermal\nFurnace temperature imbalance\n\n\nEdge_Ring\nPlasma Etch\nWorn focus ring, edge hardware issues\n\n\nLoc\nTool-specific\nRobot vibration, chamber wall contamination\n\n\nNear_Full\nMajor Excursion\nCritical process failure, requires immediate stop\n\n\nScratch\nWafer Handling / CMP\nDamaged robot end effectors, FOUP contamination\n\n\nRandom\nEnvironment\nParticle contamination, filter degradation"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#financial-parameters",
     "href": "slides/Pitch-Deck/pitch_deck.html#financial-parameters",
     "title": "WaferGuardML",
     "section": "Financial Parameters",
-    "text": "Financial Parameters\n\n\n\n\nDefect\n\n\nRepair Cost\n\n\nReplacement Cost\n\n\nDowntime/hr\n\n\nYield Loss\n\n\nRisk\n\n\n\n\n\n\nCenter\n\n\n$275K\n\n\n$6.0M\n\n\n$2.05M\n\n\n10–40%\n\n\nHigh\n\n\n\n\nDonut\n\n\n$130K\n\n\n$5.25M\n\n\n$550K\n\n\n15–50%\n\n\nHigh\n\n\n\n\nEdge_Loc\n\n\n$110K\n\n\n$6.0M\n\n\n$550K\n\n\n1–10%\n\n\nMedium\n\n\n\n\nEdge_Ring\n\n\n$255K\n\n\n$12.5M\n\n\n$2.25M\n\n\n0–15%\n\n\nHigh\n\n\n\n\nLoc\n\n\n$155K\n\n\n$8.5M\n\n\n$2.05M\n\n\n1–10%\n\n\nMedium\n\n\n\n\nNear_Full\n\n\n$525K\n\n\n$8.5M\n\n\n$2.45M\n\n\n50–100%\n\n\nCritical\n\n\n\n\nScratch\n\n\n$77.5K\n\n\n$5.25M\n\n\n$550K\n\n\n5–50%\n\n\nCritical\n\n\n\n\nRandom\n\n\n$130K\n\n\nN/A\n\n\n$2.05M\n\n\n1–20%\n\n\nMedium\n\n\n\n\nFor combination defects, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds."
+    "text": "Financial Parameters\n\n\n\n\nAnomaly\n\n\nRepair Cost\n\n\nReplacement Cost\n\n\nDowntime/hr\n\n\nYield Loss\n\n\nRisk\n\n\n\n\n\n\nCenter\n\n\n$275K\n\n\n$6.0M\n\n\n$2.05M\n\n\n10–40%\n\n\nHigh\n\n\n\n\nDonut\n\n\n$130K\n\n\n$5.25M\n\n\n$550K\n\n\n15–50%\n\n\nHigh\n\n\n\n\nEdge_Loc\n\n\n$110K\n\n\n$6.0M\n\n\n$550K\n\n\n1–10%\n\n\nMedium\n\n\n\n\nEdge_Ring\n\n\n$255K\n\n\n$12.5M\n\n\n$2.25M\n\n\n0–15%\n\n\nHigh\n\n\n\n\nLoc\n\n\n$155K\n\n\n$8.5M\n\n\n$2.05M\n\n\n1–10%\n\n\nMedium\n\n\n\n\nNear_Full\n\n\n$525K\n\n\n$8.5M\n\n\n$2.45M\n\n\n50–100%\n\n\nCritical\n\n\n\n\nScratch\n\n\n$77.5K\n\n\n$5.25M\n\n\n$550K\n\n\n5–50%\n\n\nCritical\n\n\n\n\nRandom\n\n\n$130K\n\n\nN/A\n\n\n$2.05M\n\n\n1–20%\n\n\nMedium\n\n\n\n\nFor combination anomalies, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured-1",
@@ -690,28 +690,28 @@
     "href": "slides/Pitch-Deck/pitch_deck.html#use-case-how-a-manufacturer-benefits",
     "title": "WaferGuardML",
     "section": "Use Case: How a Manufacturer Benefits",
-    "text": "Use Case: How a Manufacturer Benefits\n\n\n\nStep 1Upload batch ofwafer inspection datato the dashboard\n\n\n→\n\n\nStep 2System detectsDonut defects trendingupward across batches\n\n\n→\n\n\nStep 3Dashboard shows:CMP process is theroot cause\n\n\n→\n\n\nStep 4Recommendation:Replace CMP pad$130K to save $2.1M/mo\n\n\n\nThe manufacturer doesn’t need to understand defect patterns. They get a clear answer: what to fix, what it costs, and what they save."
+    "text": "Use Case: How a Manufacturer Benefits\n\n\n\nStep 1Upload batch ofwafer inspection datato the dashboard\n\n\n→\n\n\nStep 2System detectsDonut anomalies trendingupward across batches\n\n\n→\n\n\nStep 3Dashboard shows:CMP process is theroot cause\n\n\n→\n\n\nStep 4Recommendation:Replace CMP pad$130K to save $2.1M/mo\n\n\n\nThe manufacturer doesn’t need to understand anomaly patterns. They get a clear answer: what to fix, what it costs, and what they save."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
     "href": "slides/Pitch-Deck/pitch_deck.html#financial-impact-by-process-action",
     "title": "WaferGuardML",
     "section": "Financial Impact by Process Action",
-    "text": "Financial Impact by Process Action\nInstead of costs per defect pattern, we show costs per action the manufacturer can take:\n\n\n\n\nAction\n\n\nProcess Step\n\n\nRepair Cost\n\n\nPatterns Fixed\n\n\nTotal Daily Savings\n\n\nBreak-Even\n\n\n\n\n\n\nReplace CMP pad + refresh slurry\n\n\nCMP / Lithography\n\n\n\\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nChamber clean + RF recalibration\n\n\nDeposition / Plasma\n\n\n\\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nReplace focus ring + edge hardware\n\n\nPlasma Etch\n\n\n\\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nSwap/clean robot end effectors\n\n\nWafer Handling\n\n\n\\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nFurnace zone recalibration\n\n\nDiffusion / Thermal\n\n\n\\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style=\"color: #4CAF50;\"&gt;\\)X\n\n\nX days\n\n\n\n\nDaily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple defect combinations."
+    "text": "Financial Impact by Process Action\nInstead of costs per anomaly pattern, we show costs per action the manufacturer can take:\n\n\n\n\nAction\n\n\nProcess Step\n\n\nRepair Cost\n\n\nPatterns Fixed\n\n\nTotal Daily Savings\n\n\nBreak-Even\n\n\n\n\n\n\nReplace CMP pad + refresh slurry\n\n\nCMP / Lithography\n\n\n\\(130K&lt;/td&gt;&lt;td&gt;12 patterns with Donut&lt;/td&gt;&lt;td style=\"color: #86BC25;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nChamber clean + RF recalibration\n\n\nDeposition / Plasma\n\n\n\\(275K&lt;/td&gt;&lt;td&gt;10 patterns with Center&lt;/td&gt;&lt;td style=\"color: #86BC25;\"&gt;\\)X\n\n\nX days\n\n\n\n\nReplace focus ring + edge hardware\n\n\nPlasma Etch\n\n\n\\(255K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Ring&lt;/td&gt;&lt;td style=\"color: #86BC25;\"&gt;\\)X\n\n\nX days\n\n\n\n\nSwap/clean robot end effectors\n\n\nWafer Handling\n\n\n\\(77.5K&lt;/td&gt;&lt;td&gt;12 patterns with Scratch&lt;/td&gt;&lt;td style=\"color: #86BC25;\"&gt;\\)X\n\n\n&lt; 1 day\n\n\n\n\nFurnace zone recalibration\n\n\nDiffusion / Thermal\n\n\n\\(110K&lt;/td&gt;&lt;td&gt;10 patterns with Edge_Loc&lt;/td&gt;&lt;td style=\"color: #86BC25;\"&gt;\\)X\n\n\nX days\n\n\n\n\nDaily savings values will be populated from the final app output. “Patterns Fixed” shows how one action cascades across multiple anomaly combinations."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
     "href": "slides/Pitch-Deck/pitch_deck.html#key-takeaways",
     "title": "WaferGuardML",
     "section": "Key Takeaways",
-    "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 defect patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by defect pattern\n\n\nCascade EffectOne process fix eliminatesdefects across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
+    "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 anomaly patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by anomaly pattern\n\n\nCascade EffectOne process fix eliminatesanomalies across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "title": "WaferGuardML",
     "section": "How Our AI Model Works",
-    "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the defect pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base defect types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38defect patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
+    "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the anomaly pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base anomaly types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38anomaly patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
   },
   {
     "objectID": "slides/Sprint-2-Model/Sprint_2_Model.html#agenda",
