@@ -205,63 +205,34 @@ The network **learns by example** — we show it thousands of labeled wafer imag
 ::::
 
 
+## How Our AI Model Works — Detail
 
-## Phase 1: Detecting the 8 Base Anomaly Types
+We built a **custom Convolutional Neural Network (CNN)** — a type of AI designed specifically for image recognition.
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-![](images/phase1.webp){width="100%" fig-align="center"}
+**Phase 1 (8 base types)**
+
+- 4 layers of filters that learn to detect shapes (edges, rings, clusters)
+- Each anomaly type scored independently (yes/no)
+- Above 50% confidence = anomaly is present
+- A wafer can have multiple anomalies at once
 :::
 
 ::: {.column width="50%"}
-### Output (Threshold = 50%)
-Center = 80% ✅
-Edge Ring = 85% ✅
-Scratch = 80% ✅
-Donut = 30% ❌
-Edge Loc = 40% ❌
-Loc = 10% ❌
-Near Full = 1% ❌
-Random = 23% ❌
+**Phase 2 (38 patterns)**
 
-### How we validated it
-- Compared against MobileNetV2 — a model Google trained on millions of images
-- If our custom model matches or beats it, we know our approach works
+- Reuses everything Phase 1 learned
+- Adds a new layer that picks the exact combination
+- Picks the single most likely pattern out of 38
+- 97%+ accuracy on unseen test data
 :::
 
 ::::
 
+We compared our model against **MobileNetV2** (Google's pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.
 
-## Phase 2: From 8 Base Types to 38 Anomaly Patterns
-
-We take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all **38 anomaly patterns.**
-
-:::: {.columns}
-
-::: {.column width="30%"}
-
-![](images/phase2.webp){width="70%" fig-align="center"}
-
-:::
-
-::: {.column width="70%"}
-
-<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
-<tr>
-<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Transfer learning from Phase 1 Model</strong><br/><br/>Detects 8 base anomaly patterns<br/>(Center, Donut, Scratch, etc.)
-</td>
-<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
-<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
-<strong>Phase 2 Model</strong><br/><br/>Classify all 38 anomaly patterns<br/>(base + combinations)
-</td>
-</tr>
-</table>
-
-:::
-
-::::
 
 ## How Accuracy is Measured
 
@@ -315,9 +286,10 @@ Actual:<br/><strong>Center+Loc+Scratch</strong><br/><br/>
 </tr>
 </table>
 
-- **Phase 1:** Each anomaly scored independently — above 50% means "present." Accuracy measured per anomaly type (F1 score)
+
+- **Phase 1:** Each anomaly scored independently — above 50% means "present."
 - **Phase 2:** Picks the single highest-probability pattern out of 38. Correct if it matches the true label
-- We repeat this for every wafer in the test set — **97%+ are predicted correctly**
+- F1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases. — **97%+ are predicted correctly**
 
 
 ## The Problem
@@ -536,34 +508,62 @@ Each pixel in a wafer map is not a color or brightness value — it represents t
 | Random | 606 | 130 | 130 |
 
 
-## How Our AI Model Works — Detail {data-visibility="uncounted"}
-
-We built a **custom Convolutional Neural Network (CNN)** — a type of AI designed specifically for image recognition.
+## Phase 1: Detecting the 8 Base Anomaly Types {data-visibility="uncounted"}
 
 :::: {.columns}
 
 ::: {.column width="50%"}
-**Phase 1 (8 base types)**
-
-- 4 layers of filters that learn to detect shapes (edges, rings, clusters)
-- Each anomaly type scored independently (yes/no)
-- Above 50% confidence = anomaly is present
-- A wafer can have multiple anomalies at once
+![](images/phase1.webp){width="100%" fig-align="center"}
 :::
 
 ::: {.column width="50%"}
-**Phase 2 (38 patterns)**
+### Output (Threshold = 50%)
+Center = 80% ✅
+Edge Ring = 85% ✅
+Scratch = 80% ✅
+Donut = 30% ❌
+Edge Loc = 40% ❌
+Loc = 10% ❌
+Near Full = 1% ❌
+Random = 23% ❌
 
-- Reuses everything Phase 1 learned
-- Adds a new layer that picks the exact combination
-- Picks the single most likely pattern out of 38
-- 97%+ accuracy on unseen test data
+### How we validated it
+- Compared against MobileNetV2 — a model Google trained on millions of images
+- If our custom model matches or beats it, we know our approach works
 :::
 
 ::::
 
-We compared our model against **MobileNetV2** (Google's pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.
 
+## Phase 2: From 8 Base Types to 38 Anomaly Patterns {data-visibility="uncounted"}
+
+We take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all **38 anomaly patterns.**
+
+:::: {.columns}
+
+::: {.column width="30%"}
+
+![](images/phase2.webp){width="70%" fig-align="center"}
+
+:::
+
+::: {.column width="70%"}
+
+<table style="margin: 2em auto; border-collapse: separate; border-spacing: 30px 0; font-size: 0.75em;">
+<tr>
+<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Transfer learning from Phase 1 Model</strong><br/><br/>Detects 8 base anomaly patterns<br/>(Center, Donut, Scratch, etc.)
+</td>
+<td style="color: #AAAAAA; vertical-align: middle; font-size: 2em;">→</td>
+<td style="background: #2A2A40; color: white; padding: 25px 30px; border-radius: 8px; text-align: center; width: 240px; vertical-align: middle;">
+<strong>Phase 2 Model</strong><br/><br/>Classify all 38 anomaly patterns<br/>(base + combinations)
+</td>
+</tr>
+</table>
+
+:::
+
+::::
 
 ## Model Performance {data-visibility="uncounted"}
 
