@@ -581,25 +581,18 @@
     "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch anomaly”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each anomaly type."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
-    "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
     "title": "WaferGuardML",
-    "section": "Phase 1: Detecting the 8 Base Anomaly Types",
-    "text": "Phase 1: Detecting the 8 Base Anomaly Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
-  },
-  {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
-    "href": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
-    "title": "WaferGuardML",
-    "section": "Phase 2: From 8 Base Types to 38 Anomaly Patterns",
-    "text": "Phase 2: From 8 Base Types to 38 Anomaly Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all 38 anomaly patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base anomaly patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 anomaly patterns(base + combinations)"
+    "section": "How Our AI Model Works — Detail",
+    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach anomaly type scored independently (yes/no)\nAbove 50% confidence = anomaly is present\nA wafer can have multiple anomalies at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
     "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
     "title": "WaferGuardML",
     "section": "How Accuracy is Measured",
-    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each anomaly scored independently — above 50% means “present.” Accuracy measured per anomaly type (F1 score)\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nWe repeat this for every wafer in the test set — 97%+ are predicted correctly"
+    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each anomaly scored independently — above 50% means “present.”\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nF1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases. — 97%+ are predicted correctly"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-problem",
@@ -651,11 +644,18 @@
     "text": "Dataset Details\n\n38,015 wafer map images, each 52×52 pixels\n3 pixel states: 0 (blank), 1 (pass), 2 (fail)\n8 base anomaly types that combine into 38 unique patterns\nLabels use one-hot encoding (8-dimensional vector)\nData split: 70% train / 15% validation / 15% test (stratified to preserve all 38 patterns)\nClass imbalance handled with focal loss and per-label class weights\n\n\n\n\nLabel\nTrain\nVal\nTest\n\n\n\n\nCenter\n9,100\n1,950\n1,950\n\n\nDonut\n8,400\n1,800\n1,800\n\n\nEdge_Loc\n9,100\n1,950\n1,950\n\n\nEdge_Ring\n8,400\n1,800\n1,800\n\n\nLoc\n12,600\n2,700\n2,700\n\n\nNear_Full\n104\n22\n23\n\n\nScratch\n13,300\n2,850\n2,850\n\n\nRandom\n606\n130\n130"
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-1-detecting-the-8-base-anomaly-types",
     "title": "WaferGuardML",
-    "section": "How Our AI Model Works — Detail",
-    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach anomaly type scored independently (yes/no)\nAbove 50% confidence = anomaly is present\nA wafer can have multiple anomalies at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
+    "section": "Phase 1: Detecting the 8 Base Anomaly Types",
+    "text": "Phase 1: Detecting the 8 Base Anomaly Types\n\n\n\n\n\n\n\n\nOutput (Threshold = 50%)\nCenter = 80% ✅ Edge Ring = 85% ✅ Scratch = 80% ✅ Donut = 30% ❌ Edge Loc = 40% ❌ Loc = 10% ❌ Near Full = 1% ❌ Random = 23% ❌\nHow we validated it\n\nCompared against MobileNetV2 — a model Google trained on millions of images\nIf our custom model matches or beats it, we know our approach works"
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
+    "href": "slides/Pitch-Deck/pitch_deck.html#phase-2-from-8-base-types-to-38-anomaly-patterns",
+    "title": "WaferGuardML",
+    "section": "Phase 2: From 8 Base Types to 38 Anomaly Patterns",
+    "text": "Phase 2: From 8 Base Types to 38 Anomaly Patterns\nWe take our trained Phase 1 model (which learned to detect 8 base anomaly types) and build on top of it to classify all 38 anomaly patterns.\n\n\n\n\n\n\n\n\n\n\n\nTransfer learning from Phase 1 ModelDetects 8 base anomaly patterns(Center, Donut, Scratch, etc.)\n\n\n→\n\n\nPhase 2 ModelClassify all 38 anomaly patterns(base + combinations)"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#model-performance",
