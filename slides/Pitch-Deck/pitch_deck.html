@@ -10,7 +10,7 @@
   <meta name="generator" content="quarto-1.9.37">
 
   <meta name="author" content="Hernan · Milos · Oliver · Rolando">
-  <meta name="dcterms.date" content="2026-04-30">
+  <meta name="dcterms.date" content="2026-05-01">
   <title>WaferGuard ML Slides – WaferGuardML</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -163,7 +163,7 @@ Hernan · Milos · Oliver · Rolando
 </div>
 </div>
 
-  <p class="date">2026-04-30</p>
+  <p class="date">2026-05-01</p>
 </section>
 <section id="agenda" class="slide level2">
 <h2>Agenda</h2>
@@ -311,31 +311,8 @@ Hernan · Milos · Oliver · Rolando
 </div>
 </div></div>
 </section>
-<section id="how-our-ai-model-works-detail" class="slide level2">
-<h2>How Our AI Model Works — Detail</h2>
-<p>We built a <strong>custom Convolutional Neural Network (CNN)</strong> — a type of AI designed specifically for image recognition.</p>
-<div class="columns">
-<div class="column" style="width:50%;">
-<p><strong>Phase 1 (8 base types)</strong></p>
-<ul>
-<li>4 layers of filters that learn to detect shapes (edges, rings, clusters)</li>
-<li>Each anomaly type scored independently (yes/no)</li>
-<li>Above 50% confidence = anomaly is present</li>
-<li>A wafer can have multiple anomalies at once</li>
-</ul>
-</div><div class="column" style="width:50%;">
-<p><strong>Phase 2 (38 patterns)</strong></p>
-<ul>
-<li>Reuses everything Phase 1 learned</li>
-<li>Adds a new layer that picks the exact combination</li>
-<li>Picks the single most likely pattern out of 38</li>
-<li>97%+ accuracy on unseen test data</li>
-</ul>
-</div></div>
-<p>We compared our model against <strong>MobileNetV2</strong> (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.</p>
-</section>
-<section id="how-accuracy-is-measured" class="slide level2">
-<h2>How Accuracy is Measured</h2>
+<section id="how-our-ai-model-works" class="slide level2">
+<h2>How Our AI Model Works</h2>
 <p><strong>Example wafer - Center + Loc + Scratch</strong></p>
 <table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
 <tbody><tr>
@@ -986,7 +963,7 @@ Medium
 </table>
 <p>For combination anomalies, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds.</p>
 </section>
-<section id="how-accuracy-is-measured-1" class="slide level2" data-visibility="uncounted">
+<section id="how-accuracy-is-measured" class="slide level2" data-visibility="uncounted">
 <h2>How Accuracy is Measured</h2>
 <p><strong>Example wafer: Center + Loc + Scratch</strong></p>
 <table style="margin: 1em auto; border-collapse: separate; border-spacing: 0; font-size: 0.65em; width: 95%;">
@@ -1173,7 +1150,30 @@ X days
 </tbody></table>
 <p>WaferGuardML doesn’t just tell manufacturers they have a problem. It tells them <strong>exactly what to fix, how much it costs, and how much they save</strong>.</p>
 </section>
-<section id="how-our-ai-model-works" class="slide level2" data-visibility="uncounted">
+<section id="how-our-ai-model-works-detail" class="slide level2" data-visibility="uncounted">
+<h2>How Our AI Model Works — Detail</h2>
+<p>We built a <strong>custom Convolutional Neural Network (CNN)</strong> — a type of AI designed specifically for image recognition.</p>
+<div class="columns">
+<div class="column" style="width:50%;">
+<p><strong>Phase 1 (8 base types)</strong></p>
+<ul>
+<li>4 layers of filters that learn to detect shapes (edges, rings, clusters)</li>
+<li>Each anomaly type scored independently (yes/no)</li>
+<li>Above 50% confidence = anomaly is present</li>
+<li>A wafer can have multiple anomalies at once</li>
+</ul>
+</div><div class="column" style="width:50%;">
+<p><strong>Phase 2 (38 patterns)</strong></p>
+<ul>
+<li>Reuses everything Phase 1 learned</li>
+<li>Adds a new layer that picks the exact combination</li>
+<li>Picks the single most likely pattern out of 38</li>
+<li>97%+ accuracy on unseen test data</li>
+</ul>
+</div></div>
+<p>We compared our model against <strong>MobileNetV2</strong> (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.</p>
+</section>
+<section id="how-our-ai-model-works-1" class="slide level2" data-visibility="uncounted">
 <h2>How Our AI Model Works</h2>
 <p>We built a custom CNN model that looks at wafer maps and identifies the anomaly pattern automatically.</p>
 <table style="margin: 1.5em auto; border-collapse: separate; border-spacing: 15px 0; font-size: 0.7em;">

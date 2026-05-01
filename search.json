@@ -581,18 +581,11 @@
     "text": "What is a Neural Network?\n\n\nThink of it as a decision-making system inspired by the brain:\n\nInputs: Raw data (e.g., pixel values of a wafer image)\nHidden layers: Each layer learns to detect increasingly complex patterns\nOutput: A prediction (e.g., “this wafer has a scratch anomaly”)\n\nThe network learns by example — we show it thousands of labeled wafer images, and it figures out what patterns correspond to each anomaly type."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
     "title": "WaferGuardML",
-    "section": "How Our AI Model Works — Detail",
-    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach anomaly type scored independently (yes/no)\nAbove 50% confidence = anomaly is present\nA wafer can have multiple anomalies at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
-  },
-  {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
-    "title": "WaferGuardML",
-    "section": "How Accuracy is Measured",
-    "text": "How Accuracy is Measured\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each anomaly scored independently — above 50% means “present.”\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nF1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases. — 97%+ are predicted correctly"
+    "section": "How Our AI Model Works",
+    "text": "How Our AI Model Works\nExample wafer - Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct\n\n\n\n\n\nPhase 1: Each anomaly scored independently — above 50% means “present.”\nPhase 2: Picks the single highest-probability pattern out of 38. Correct if it matches the true label\nF1 score measures how well the model catches real anomalies without raising false alarms. Our Custom CNN outperformed MobileNetV2 in both phases. — 97%+ are predicted correctly"
   },
   {
     "objectID": "slides/Pitch-Deck/pitch_deck.html#the-problem",
@@ -679,8 +672,8 @@
     "text": "Financial Parameters\n\n\n\n\nAnomaly\n\n\nRepair Cost\n\n\nReplacement Cost\n\n\nDowntime/hr\n\n\nYield Loss\n\n\nRisk\n\n\n\n\n\n\nCenter\n\n\n$275K\n\n\n$6.0M\n\n\n$2.05M\n\n\n10–40%\n\n\nHigh\n\n\n\n\nDonut\n\n\n$130K\n\n\n$5.25M\n\n\n$550K\n\n\n15–50%\n\n\nHigh\n\n\n\n\nEdge_Loc\n\n\n$110K\n\n\n$6.0M\n\n\n$550K\n\n\n1–10%\n\n\nMedium\n\n\n\n\nEdge_Ring\n\n\n$255K\n\n\n$12.5M\n\n\n$2.25M\n\n\n0–15%\n\n\nHigh\n\n\n\n\nLoc\n\n\n$155K\n\n\n$8.5M\n\n\n$2.05M\n\n\n1–10%\n\n\nMedium\n\n\n\n\nNear_Full\n\n\n$525K\n\n\n$8.5M\n\n\n$2.45M\n\n\n50–100%\n\n\nCritical\n\n\n\n\nScratch\n\n\n$77.5K\n\n\n$5.25M\n\n\n$550K\n\n\n5–50%\n\n\nCritical\n\n\n\n\nRandom\n\n\n$130K\n\n\nN/A\n\n\n$2.05M\n\n\n1–20%\n\n\nMedium\n\n\n\n\nFor combination anomalies, costs are aggregated from components. Repair costs sum, downtime takes the maximum, yield loss compounds."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured-1",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured-1",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-accuracy-is-measured",
     "title": "WaferGuardML",
     "section": "How Accuracy is Measured",
     "text": "How Accuracy is Measured\nExample wafer: Center + Loc + Scratch\n\n\n\n\nPhase 1: 8 Yes/No Questions Center → 90% → ✓ Yes Donut → 5% → ✗ No Edge_Loc → 3% → ✗ No Edge_Ring → 2% → ✗ No Loc → 95% → ✓ Yes Near_Full → 1% → ✗ No Scratch → 88% → ✓ Yes Random → 4% → ✗ No Above 50% = Yes, Below = No\n\n\n\n→\n\n\n\nTransferLearning Freeze Phase 1knowledge Pass featuresto Phase 2\n\n\n\n→\n\n\n\nPhase 2: Pick Best Match Center — 2% Loc+Scratch — 1% Center+Loc+Scratch — 97% Center+Scratch — 0.5% … 34 others &lt;1% Highest probability wins\n\n\n\n→\n\n\n\nAccuracy Check Predicted:Center+Loc+Scratch Actual:Center+Loc+Scratch ✓ Correct"
@@ -707,8 +700,15 @@
     "text": "Key Takeaways\n\n\n\n97%+ AccuracyOur AI identifies38 anomaly patternswith high confidence\n\n\nAction-BasedFinancial impact groupedby what you can fix,not by anomaly pattern\n\n\nCascade EffectOne process fix eliminatesanomalies across multiplepatterns simultaneously\n\n\nClear ROIEvery recommendationcomes with cost, savings,and break-even time\n\n\n\nWaferGuardML doesn’t just tell manufacturers they have a problem. It tells them exactly what to fix, how much it costs, and how much they save."
   },
   {
-    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
-    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works",
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-detail",
+    "title": "WaferGuardML",
+    "section": "How Our AI Model Works — Detail",
+    "text": "How Our AI Model Works — Detail\nWe built a custom Convolutional Neural Network (CNN) — a type of AI designed specifically for image recognition.\n\n\nPhase 1 (8 base types)\n\n4 layers of filters that learn to detect shapes (edges, rings, clusters)\nEach anomaly type scored independently (yes/no)\nAbove 50% confidence = anomaly is present\nA wafer can have multiple anomalies at once\n\n\nPhase 2 (38 patterns)\n\nReuses everything Phase 1 learned\nAdds a new layer that picks the exact combination\nPicks the single most likely pattern out of 38\n97%+ accuracy on unseen test data\n\n\nWe compared our model against MobileNetV2 (Google’s pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one."
+  },
+  {
+    "objectID": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-1",
+    "href": "slides/Pitch-Deck/pitch_deck.html#how-our-ai-model-works-1",
     "title": "WaferGuardML",
     "section": "How Our AI Model Works",
     "text": "How Our AI Model Works\nWe built a custom CNN model that looks at wafer maps and identifies the anomaly pattern automatically.\n\n\n\nPhase 1Model learns to detectthe 8 base anomaly types(Donut, Center, Scratch…)\n\n\n→\n\n\nPhase 2Uses that knowledgeto classify all 38anomaly patterns\n\n\n→\n\n\nResult97%+ accuracyOutperformed Google’spre-trained model\n\n\n\nWe validated our model by comparing it against MobileNetV2 — a well-known model from Google trained on millions of images. Our purpose-built model outperformed it on every metric."
