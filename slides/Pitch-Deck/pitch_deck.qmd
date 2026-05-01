@@ -205,36 +205,8 @@ The network **learns by example** — we show it thousands of labeled wafer imag
 ::::
 
 
-## How Our AI Model Works — Detail
 
-We built a **custom Convolutional Neural Network (CNN)** — a type of AI designed specifically for image recognition.
-
-:::: {.columns}
-
-::: {.column width="50%"}
-**Phase 1 (8 base types)**
-
-- 4 layers of filters that learn to detect shapes (edges, rings, clusters)
-- Each anomaly type scored independently (yes/no)
-- Above 50% confidence = anomaly is present
-- A wafer can have multiple anomalies at once
-:::
-
-::: {.column width="50%"}
-**Phase 2 (38 patterns)**
-
-- Reuses everything Phase 1 learned
-- Adds a new layer that picks the exact combination
-- Picks the single most likely pattern out of 38
-- 97%+ accuracy on unseen test data
-:::
-
-::::
-
-We compared our model against **MobileNetV2** (Google's pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.
-
-
-## How Accuracy is Measured
+## How Our AI Model Works
 
 **Example wafer - Center + Loc + Scratch**
 
@@ -737,6 +709,37 @@ Instead of costs per anomaly pattern, we show costs per **action the manufacture
 </table>
 
 WaferGuardML doesn't just tell manufacturers they have a problem. It tells them **exactly what to fix, how much it costs, and how much they save**.
+
+
+## How Our AI Model Works — Detail {data-visibility="uncounted"}
+
+We built a **custom Convolutional Neural Network (CNN)** — a type of AI designed specifically for image recognition.
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Phase 1 (8 base types)**
+
+- 4 layers of filters that learn to detect shapes (edges, rings, clusters)
+- Each anomaly type scored independently (yes/no)
+- Above 50% confidence = anomaly is present
+- A wafer can have multiple anomalies at once
+:::
+
+::: {.column width="50%"}
+**Phase 2 (38 patterns)**
+
+- Reuses everything Phase 1 learned
+- Adds a new layer that picks the exact combination
+- Picks the single most likely pattern out of 38
+- 97%+ accuracy on unseen test data
+:::
+
+::::
+
+We compared our model against **MobileNetV2** (Google's pre-trained model). Our custom model scored higher on every metric, proving that a purpose-built solution outperforms a general one.
+
+
 
 ## How Our AI Model Works {data-visibility="uncounted"}
 
